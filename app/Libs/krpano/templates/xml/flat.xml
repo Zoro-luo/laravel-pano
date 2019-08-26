@@ -1,0 +1,13 @@
+﻿<krpano bgcolor="0x000000">
+
+	<!-- the skin and the flat fr.blade.php viewing and controlling setup -->
+	<include url="skin/defaultskin.xml" />
+	<include url="skin/flatpano_setup.xml" />
+	
+	<!-- preview fr.blade.php image -->
+	[PREVIEW]
+
+	<!-- fr.blade.php image -->
+	[IMAGE]
+
+</krpano>

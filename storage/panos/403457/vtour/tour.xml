@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<krpano version="1.19" title="Virtual Tour">
+
+	<include url="skin/vtourskin.xml"/>
+
+	<!-- customize skin settings: maps, gyro, webvr, thumbnails, tooltips, layout, design, ... -->
+	<skin_settings maps="false" maps_type="google" maps_bing_api_key="" maps_google_api_key="" maps_zoombuttons="false" gyro="true" webvr="true" webvr_gyro_keeplookingdirection="false" webvr_prev_next_hotspots="true" littleplanetintro="true" title="true" thumbs="true" thumbs_width="100" thumbs_height="75" thumbs_padding="10" thumbs_crop="0|40|240|160" thumbs_opened="false" thumbs_text="true" thumbs_dragging="true" thumbs_onhoverscrolling="false" thumbs_scrollbuttons="false" thumbs_scrollindicator="false" thumbs_loop="false" tooltips_buttons="false" tooltips_thumbs="false" tooltips_hotspots="false" tooltips_mapspots="false" deeplinking="true" loadscene_flags="MERGE" loadscene_blend="OPENBLEND(0.5, 0.0, 0.75, 0.05, linear)" loadscene_blend_prev="SLIDEBLEND(0.5, 180, 0.75, linear)" loadscene_blend_next="SLIDEBLEND(0.5,   0, 0.75, linear)" loadingtext="" layout_width="100%" layout_maxwidth="100%" controlbar_width="-24" controlbar_height="40" controlbar_offset="110" controlbar_offset_closed="-40" controlbar_overlap.no-fractionalscaling="50" controlbar_overlap.fractionalscaling="50" design_skin_images="vtourskin_light.png" design_bgcolor="0x2D3E50" design_bgalpha="0.5" design_bgborder="0" design_bgroundedge="1" design_bgshadow="0 4 10 0x000000 0.3" design_thumbborder_bgborder="2 0x0000FFFF 1.0" design_thumbborder_padding="2" design_thumbborder_bgroundedge="0" design_text_css="color:#FFFFFF; font-family:Arial;" design_text_shadow="1"/>
+
+	<!--
+	    For an alternative skin design either change the <skin_settings> values
+	    from above or optionally include one of the predefined designs from below.
+	-->
+	<!-- <include url="skin/vtourskin_design_flat_light.xml"  /> -->
+	<!-- <include url="skin/vtourskin_design_glass.xml"       /> -->
+	<!-- <include url="skin/vtourskin_design_ultra_light.xml" /> -->
+	<!-- <include url="skin/vtourskin_design_117.xml"         /> -->
+	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
+	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
+
+
+	<!-- startup action - load the first scene -->
+	<action name="startup" autorun="onstart">
+		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );
+		loadscene(get(startscene), null, MERGE);
+		if(startactions !== null, startactions() );
+	</action>
+
+
+
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>	<scene name="scene_AA" title="&#x5BA2;&#x5385;" onstart="" thumburl="../thumb/AA.jpg" lat="" lng="" heading="">
+
+
+<preview url="panos/AA.tiles/preview.jpg"/>
+
+		<image type="CUBE" multires="true" tilesize="512">
+			<level tiledimagewidth="2176" tiledimageheight="2176">
+				<cube url="panos/AA.tiles/%s/l2/%v/l2_%s_%v_%h.jpg"/>
+			</level>
+			<level tiledimagewidth="1152" tiledimageheight="1152">
+				<cube url="panos/AA.tiles/%s/l1/%v/l1_%s_%v_%h.jpg"/>
+			</level>
+		</image>
+
+	</scene>
+
+	<scene name="scene_BB" title="&#x5367;&#x5BA4;" onstart="" thumburl="../thumb/BB.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/BB.tiles/preview.jpg"/>
+
+		<image type="CUBE" multires="true" tilesize="512">
+			<level tiledimagewidth="2176" tiledimageheight="2176">
+				<cube url="panos/BB.tiles/%s/l2/%v/l2_%s_%v_%h.jpg"/>
+			</level>
+			<level tiledimagewidth="1152" tiledimageheight="1152">
+				<cube url="panos/BB.tiles/%s/l1/%v/l1_%s_%v_%h.jpg"/>
+			</level>
+		</image>
+
+	</scene>
+
+	<scene name="scene_CC" title="&#x536B;&#x751F;&#x95F4;" onstart="" thumburl="../thumb/CC.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/CC.tiles/preview.jpg"/>
+
+		<image type="CUBE" multires="true" tilesize="512">
+			<level tiledimagewidth="2176" tiledimageheight="2176">
+				<cube url="panos/CC.tiles/%s/l2/%v/l2_%s_%v_%h.jpg"/>
+			</level>
+			<level tiledimagewidth="1152" tiledimageheight="1152">
+				<cube url="panos/CC.tiles/%s/l1/%v/l1_%s_%v_%h.jpg"/>
+			</level>
+		</image>
+
+	</scene>
+
+	<scene name="scene_DD" title="&#x53A8;&#x623F;" onstart="" thumburl="../thumb/DD.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/DD.tiles/preview.jpg"/>
+
+		<image type="CUBE" multires="true" tilesize="512">
+			<level tiledimagewidth="2176" tiledimageheight="2176">
+				<cube url="panos/DD.tiles/%s/l2/%v/l2_%s_%v_%h.jpg"/>
+			</level>
+			<level tiledimagewidth="1152" tiledimageheight="1152">
+				<cube url="panos/DD.tiles/%s/l1/%v/l1_%s_%v_%h.jpg"/>
+			</level>
+		</image>
+
+	</scene>
+
+	<scene name="scene_EE" title="&#x5916;&#x666F;&#x623F;" onstart="" thumburl="../thumb/EE.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto"/>
+
+		<preview url="panos/EE.tiles/preview.jpg"/>
+
+		<image type="CUBE" multires="true" tilesize="512">
+			<level tiledimagewidth="2176" tiledimageheight="2176">
+				<cube url="panos/EE.tiles/%s/l2/%v/l2_%s_%v_%h.jpg"/>
+			</level>
+			<level tiledimagewidth="1152" tiledimageheight="1152">
+				<cube url="panos/EE.tiles/%s/l1/%v/l1_%s_%v_%h.jpg"/>
+			</level>
+		</image>
+
+	</scene>
+
+
+<layer name="set_alert_table" url="../../../static/images/set-alert.png" scale="0.5" zorder="20" align="topcenter" keep="true" x="0" y="34%" visible="false" devices="all"><layer name="set_title_text" background="false" url="%SWFPATH%/plugins/textfield.swf" align="topcenter" y="18%" zorder="32" html="&#x8BBE;&#x7F6E;" devices="all" css="text-align:center;color:#FFFFFF;font-family:Arial;font-weight:bold;font-size:16px;"/><layer name="gyro_control_text" background="false" url="%SWFPATH%/plugins/textfield.swf" align="lefttop" x="14%" y="38%" zorder="32" html="&#x9640;&#x87BA;&#x4EEA;" devices="all" css="text-align:center;color:#FFFFFF;font-family:Arial;font-weight:bold;font-size:12px;"/><layer name="gyro_fill_space" backgroundcolor="0x00FFFFFF" roundedge="25" align="righttop" x="14%" y="40%" width="30" height="15" devices="all" url="%SWFPATH%/plugins/textfield.swf" onclick="if(layer[gyro_on].visible,&#13;&#10;               set(skin_settings.gyro,false);set(layer[gyro_on].visible,false);set(layer[gyro_off].visible,true),&#13;&#10;               set(skin_settings.gyro,true);set(layer[gyro_off].visible,false);set(layer[gyro_on].visible,true););"><layer name="gyro_off" backgroundcolor="0x007F7F7F" roundedge="50" visible="false" align="leftcenter" x="4%" width="14" height="13" devices="all" url="%SWFPATH%/plugins/textfield.swf"/><layer name="gyro_on" backgroundcolor="0x006CDA00" roundedge="50" visible="true" align="rightcenter" x="4%" width="14" height="13" devices="all" url="%SWFPATH%/plugins/textfield.swf"/></layer><layer name="rotate_control_text" background="false" url="%SWFPATH%/plugins/textfield.swf" align="lefttop" x="14%" y="62%" zorder="32" html="&#x81EA;&#x52A8;&#x65CB;&#x8F6C;" devices="all" css="text-align:center;color:#FFFFFF;font-family:Arial;font-weight:bold;font-size:12px;"/><layer name="rotate_fill_space" backgroundcolor="0x00FFFFFF" roundedge="25" align="righttop" x="14%" y="62%" width="30" height="15" devices="all" url="%SWFPATH%/plugins/textfield.swf" onclick="if(layer[rotate_on].visible,set(autorotate.enabled,false);&#13;&#10;               set(layer[rotate_on].visible,false);set(layer[rotate_off].visible,true),set(autorotate.enabled,true);&#13;&#10;                set(layer[rotate_off].visible,false);set(layer[rotate_on].visible,true););"><layer name="rotate_off" backgroundcolor="0x007F7F7F" roundedge="50" visible="false" align="leftcenter" x="4%" width="14" height="13" devices="all" url="%SWFPATH%/plugins/textfield.swf"/><layer name="rotate_on" backgroundcolor="0x006CDA00" roundedge="50" visible="true" align="rightcenter" x="4%" width="14" height="13" devices="all" url="%SWFPATH%/plugins/textfield.swf"/></layer></layer><layer name="share_alert_table" width="102%" height="102%" keep="true" visible="false" zorder="20" devices="touchdevice" backgroundcolor="0x000000" backgroundalpha="0.5" url="%SWFPATH%/plugins/textfield.swf"><layer name="share_buttom_table" width="102%" height="30%" keep="true" zorder="22" align="centerbuttom" y="40%" backgroundcolor="0x00FFFFFF" url="%SWFPATH%/plugins/textfield.swf"><layer name="share_buttom_line" width="102%" height="1" keep="true" zorder="25" align="centerbuttom" backgroundcolor="0x00666666" backgroundalpha="0.2" url="%SWFPATH%/plugins/textfield.swf"/><layer name="share_weixin" url="../../../static/images/weixin.png" scale="0.5" zorder="25" align="leftbuttom" keep="true" x="10%" y="-56"/><layer name="share_weixin_text" background="false" keep="true" align="leftbuttom" zorder="25" url="%SWFPATH%/plugins/textfield.swf" html="&#x5FAE;&#x4FE1;&#x597D;&#x53CB;" x="10%" y="-20" css="color:#ccc;font-size:13px;font-family:Arial;"/><layer name="share_friend" url="../../../static/images/friends.png" scale="0.5" zorder="25" align="leftbuttom" keep="true" x="43%" y="-56"/><layer name="share_friend_text" background="false" keep="true" align="leftbuttom" zorder="25" url="%SWFPATH%/plugins/textfield.swf" html="&#x670B;&#x53CB;&#x5708;" x="44%" y="-20" css="color:#ccc;font-size:13px;font-family:Arial;"/><layer name="share_copy_link" url="../../../static/images/copylink.png" scale="0.5" zorder="25" align="leftbuttom" keep="true" x="76%" y="-56"/><layer name="share_copylink_text" background="false" keep="true" align="leftbuttom" zorder="25" url="%SWFPATH%/plugins/textfield.swf" html="&#x590D;&#x5236;&#x94FE;&#x63A5;" x="76%" y="-20" css="color:#ccc;font-size:13px;font-family:Arial;"/><layer name="share_cancel" background="false" keep="true" align="centerbuttom" zorder="32" url="%SWFPATH%/plugins/textfield.swf" html="&#x53D6;&#x6D88;" y="30" backgroundcolor="0x002C1F18" css="font-size:15px;font-family:Arial;font-weight:bold;" onclick="if(layer[share_alert_table].visible,&#13;&#10;                    set(layer[share_alert_table].visible,false),set(layer[share_alert_table].visible,true);)"/></layer></layer><layer name="vr_all_screen" width="100%" height="100%" keep="true" visible="false" zorder="30" devices="touchdevice" backgroundcolor="0x000000" backgroundalpha="0.5" url="%SWFPATH%/plugins/textfield.swf"><layer name="vr_title_master" background="false" keep="true" url="%SWFPATH%/plugins/textfield.swf" align="lefttop" x="25%" y="25%" zorder="32" html="VR&#x865A;&#x62DF;&#x73B0;&#x5B9E;&#x4F53;&#x9A8C;&#x6A21;&#x5F0F;" css="text-align:center;color:#FFFFFF;font-family:Arial;font-weight:bold;font-size:20px;"/><layer name="vr_title_one" background="false" keep="true" url="%SWFPATH%/plugins/textfield.swf" align="lefttop" x="25%" y="35%" zorder="32" html="1&#x3001;&#x89E3;&#x9664;&#x624B;&#x673A;&#x81EA;&#x5E26;&#x65CB;&#x8F6C;&#x9501;&#x5B9A;" alpha="0.9" css="text-align:center;color:#F3F3F3;font-family:Arial;font-size:14px;"/><layer name="vr_title_two" background="false" keep="true" url="%SWFPATH%/plugins/textfield.swf" align="lefttop" x="25%" y="40.5%" zorder="32" html="2&#x3001;&#x65CB;&#x8F6C;&#x624B;&#x673A;&#x81F3;&#x6A2A;&#x5C4F;&#x6A21;&#x5F0F;" alpha="0.9" css="text-align:center;color:#F3F3F3;font-family:Arial;font-size:14px;"/><layer name="vr_title_three" background="false" keep="true" url="%SWFPATH%/plugins/textfield.swf" align="lefttop" x="25%" y="46%" zorder="32" html="3&#x3001;&#x4F69;&#x6234;VR&#x773C;&#x955C;,&#x611F;&#x53D7;&#x6C89;&#x6D78;&#x5F0F;&#x4F53;&#x9A8C;" alpha="0.9" css="text-align:center;color:#F3F3F3;font-family:Arial;font-size:14px;"/><layer name="vr_tiyan_button" url="../../../static/images/tiyan-back.png" scale="0.45" zorder="32" align="lefttop" x="25%" y="56%" width="100%" height="" keep="true" onclick="webvr.enterVR();"><layer name="vr_tiyan_title" background="false" keep="true" url="%SWFPATH%/plugins/textfield.swf" align="center" x="" y="-1" zorder="30" html="&#x7ACB;&#x5373;&#x4F53;&#x9A8C;" onclick="webvr.enterVR();" css="text-align:center;color:#F3F3F3;font-family:Arial;font-size:13px;"/></layer></layer><layer name="startpic_container" preload="true" alpha="1" children="true" visible="true" zorder="90" url="../../../static/images/background.jpg" maskchildren="true" keep="true" width="100%" height="100%" bgalpha="4"><layer name="loading_back" type="container" url="%SWFPATH%/plugins/textfield.swf" keep="true" devices="touchdevice" width="25" height="25" background="false" align="lefttop" x="5%" y="5%"><layer name="loading_back_icon" url="../../../static/images/loading-left.png" scale="0.22" zorder="12" style="skin_base|skin_glow" keep="true" onclick=""/></layer><layer name="skin_title_logo3" zorder="100" keep="true" x="0" y="32%" align="top" width="410px" height="110px" url="../../../static/images/logo.png" scale="0.4" onloaded="tween(alpha,1.0);tween(layer[skin_title_pr].alpha,1.0);" enabled="false"/><layer name="loadingbar_bg" type="container" bgcolor="0x0068696B" bgalpha="0.3" align="top" y="46%" width="40%" height="7" enabled="false" visible="false"><layer name="loadingbar_space" type="container" align="left" x="2" y="1" width="-3" height="7"><layer name="loadingbar_fill" type="container" bgcolor="0x0064C506" bgalpha="0.8" align="lefttop" width="0" height="4"/></layer></layer><layer name="loadingpercent_text" url="%SWFPATH%/plugins/textfield.swf" align="top" y="48%" background="false" css="color:#FFFFFF; font-family:Arial; font-weight:bold; font-size:12px; font-style:italic;" textshadow="2" html=""/><layer name="skin_title_pr" background="false" visible="true" keep="true" align="top" zorder="100" url="%SWFPATH%/plugins/textfield.swf" html="&#x5168;&#x666F;&#x6A21;&#x5F0F;   &#x5F39;&#x6307;&#x53EF;&#x89E6;" css="text-align:center; color:#F2F2F2; font-family:SimHei; font-weight:bold; font-size:14px;" x="0" y="38.5%" enabled="false"/></layer><events name="startlogoevents" keep="true" onxmlcomplete="loadingbar_startloading();" onloadcomplete="delayedcall(0.1,tween(layer[startpic_container].ox,-2500,1));delayedcall(0.5, loadingbar_stoploading() );"/><action name="loadingbar_startloading">set(loadingbar_loading, true);set(layer[loadingbar_bg].visible, true);set(layer[loadingpercent_text].visible, true);asyncloop(loadingbar_loading,mul(pv, progress.progress, 100);roundval(pv,0);txtadd(pv, '%');txtadd(layer[loadingpercent_text].html, '', get(pv));copy(layer[loadingbar_fill].width, pv););</action><action name="loadingbar_stoploading">set(loadingbar_loading, false);set(layer[loadingbar_bg].visible, false);set(layer[loadingpercent_text].visible, false);</action><layer name="top_back_layer" keep="true" url="../../../static/images/top-back.png" align="top" width="101%" height="50" visible="true" x="" y="1" bgalpha="0.24" zorder="10" scale="1" devices="touchdevice"/><layer name="left_icon" url="../../../static/images/left.png" scale="1.5" zorder="12" align="lefttop" style="skin_base|skin_glow" keep="true" x="5%" y="15" devices="touchdevice"/><layer name="right_share" url="../../../static/images/link.png" scale="0.16" zorder="12" align="righttop" style="skin_base|skin_glow" keep="true" x="22" y="20" devices="touchdevice" onclick="if(layer[share_alert_table].visible,set(layer[share_alert_table].visible,false),&#13;&#10;                    set(layer[share_alert_table].visible,true);set(layer[set_alert_table].visible,false);)"/><layer name="top_shade_layer" width="65%" zorder="12" align="top" visible="false" backgroundalpha="0.2" keep="true" x="10" y="5" devices="touchdevice" backgroundcolor="0x000000" height="45" background="true" roundedge="25" url="%SWFPATH%/plugins/textfield.swf"/><layer name="top_shade_layer_pc" width="18%" zorder="12" align="topcenter" visible="true" backgroundalpha="0.4" keep="true" y="5" devices="html5+!touchdevice" backgroundcolor="0x000000" height="45" background="true" roundedge="25" url="%SWFPATH%/plugins/textfield.swf"/><layer name="top_screen_pc" url="../../../static/images/screen-pc.png" scale="0.95" width="54" height="54" zorder="12" align="righttop" style="skin_base|skin_glow" keep="true" x="42" y="50" onclick="switch(fullscreen);" devices="html5+!touchdevice"/><layer name="right_vr_pc" url="../../../static/images/vr_1.png" scale="0.95" width="54" height="54" zorder="12" align="righttop" style="skin_base|skin_glow" keep="true" x="42" y="120" visible="true" devices="html5+!touchdevice" onclick="webvr.enterVR();"/><layer name="right_vr" url="../../../static/images/vr_1.png" scale="0.7" zorder="12" align="righttop" style="skin_base|skin_glow" keep="true" x="25" y="90" visible="true" devices="touchdevice" onclick="if(layer[vr_all_screen].visible,set(layer[vr_all_screen].visible, 'false'),&#13;&#10;           set(layer[set_alert_table].visible, 'false');set(layer[vr_all_screen].visible, 'true'););"/><layer name="right_set_pc" url="../../../static/images/set_1.png" scale="0.95" width="54" height="54" zorder="12" align="righttop" style="skin_base|skin_glow" keep="true" x="42" y="190" visible="true" devices="html5+!touchdevice" onclick="if(layer[set_alert_table].visible,&#13;&#10;           set(layer[set_alert_table].visible, 'false'),set(layer[iframelayer_new].visible,false);set(layer[iframelayer].visible,false);set(layer[set_alert_table].visible, 'true'););"/><layer name="right_set" url="../../../static/images/set_1.png" scale="0.7" zorder="12" align="righttop" style="skin_base|skin_glow" keep="true" x="25" y="150" visible="true" devices="touchdevice" onclick="if(layer[set_alert_table].visible,&#13;&#10;           set(layer[set_alert_table].visible, 'false'),set(layer[iframelayer_new].visible,false);set(layer[iframelayer].visible,false);set(layer[set_alert_table].visible, 'true'););"/><control mousetype="drag2d"/><preview type="grid();"/><layer name="iframelayer_new" type="text" align="center" width="100%" height="100%" zorder="-100" keep="true" visible="false" background="false" backgroundalpha="0.1"/><layer name="iframelayer" type="text" align="center" width="100%" height="100%" zorder="-100" keep="true" visible="false" background="false" backgroundalpha="0.1"/><layer name="button_3" background="false" keep="true" url="%SWFPATH%/plugins/textfield.swf" enabled="true" align="topcenter" y="15" width="220" height="32" css="text-align:center;color:#FFFFFF;font-family:Arial;font-weight:bold;font-size:14px;" zorder="15" html="&#x8001;&#x5929;&#x7237;&#x5416; &#x901A;&#x900F;&#x4E24;&#x623F; &#x968F;&#x65F6;&#x770B;&#x623F;" onclick="if(layer[iframelayer].visible,set(layer[top_shade_layer].visible,false);&#13;&#10;                set(layer[top_back_layer].visible,true);remove_iframe(iframelayer);set(layer[iframelayer].visible,false),&#13;&#10;                set(layer[top_back_layer].visible,false);set(layer[top_shade_layer].visible,true);&#13;&#10;                set(layer[top_shade_layer_pc].visible,true);set(layer[set_alert_table].visible,false);set(layer[iframelayer_new].visible,false);&#13;&#10;                call_iframe(iframelayer,/pano/krpano/fr/403457););"><layer name="icon" url="../../../static/images/down.png" zorder="10" scale="1.3" keep="true" align="right" y="-3" x="1"/></layer><action name="call_iframe">callwith(layer[%1],add_iframe(%2, 100%, 100%);set(visible,true));</action><action name="add_iframe" type="Javascript">var iframe = document.createElement("iframe");&#xD;
+				iframe.style.position = "fixed";&#xD;
+				iframe.style.left = 0;&#xD;
+				iframe.style.top = 0;&#xD;
+				iframe.style.width = "100%";&#xD;
+				iframe.style.height = "100%";&#xD;
+				iframe.style.border = 0;&#xD;
+				iframe.src = args[1];&#xD;
+			    iframe.setAttribute('id',resolve(caller.name));&#xD;
+				caller.registercontentsize(args[2], args[3]);&#xD;
+				caller.sprite.appendChild(iframe);&#xD;
+				caller.sprite.style.webkitOverflowScrolling = "touch";&#xD;
+		        caller.sprite.style.overflowY = "auto";&#xD;
+		        caller.sprite.style.overflowX = "auto";</action><action name="remove_iframe" type="Javascript">var lastIframe = document.getElementById(args[1]);&#xD;
+		 lastIframe.parentNode.removeChild(lastIframe);</action><krpano title="" idletime="0.0001"/><autorotate enabled="true" waittime="0.5" speed="20.0"/></krpano>
