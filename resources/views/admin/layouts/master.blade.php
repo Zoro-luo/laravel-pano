@@ -136,10 +136,10 @@ desired effect
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">主菜单</li>
                     <!-- Optionally, you can add icons to the links -->
-                    <li class="active"><a href="{{url('admin')}}"><i class="glyphicon glyphicon-paperclip"></i> <span>仪表盘</span></a></li>
-                    <li><a href="{{url('user/index')}}"><i class="glyphicon glyphicon-home"></i> <span>用户管理</span></a></li>
+                    <li ><a href="{{url('admin')}}"><i class="glyphicon glyphicon-paperclip"></i> <span>仪表盘</span></a></li>
+                    <li ><a href="{{url('user/index')}}"><i class="glyphicon glyphicon-home"></i> <span>用户管理</span></a></li>
                     {{--<li><a href="#"><i class="glyphicon glyphicon-tags"></i> <span>分类管理</span></a></li>--}}
-                    <li><a href="{{url('pano/index')}}"><i class="glyphicon glyphicon-film"></i> <span>全景管理</span></a></li>
+                    <li class="active"><a href="{{url('pano/index')}}"><i class="glyphicon glyphicon-film"></i> <span>全景管理</span></a></li>
                     {{--<li class="treeview">
                         <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
                             <span class="pull-right-container">
