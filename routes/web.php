@@ -106,7 +106,7 @@ Route::get('krpano/agent/{panoId}', function ($panoId){
 });
 
 //前台登录验证ajax
-Route::post('member/checkEmail', 'AuthMember\\LoginController@checkEmail');
+//Route::post('member/checkEmail', 'AuthMember\\LoginController@checkEmail');
 
 
 

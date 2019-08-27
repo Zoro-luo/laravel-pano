@@ -78,7 +78,7 @@ class LoginController extends Controller
     }
 
     //ajax、 验证邮箱登录
-    public function checkEmail(Request $request)
+    /*public function checkEmail(Request $request)
     {
         $email = $request->get('email');
         $emails = DB::table('members')->pluck('email')->toArray();
@@ -86,7 +86,7 @@ class LoginController extends Controller
             return $res = 'No';
         }
         return true;
-    }
+    }*/
 
 
 }

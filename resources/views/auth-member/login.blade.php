@@ -74,7 +74,7 @@
 
 @section('scriptCode')
     <script>
-        $(document).ready(function () {
+        /*$(document).ready(function () {
             $("#email").blur(function () {
                 var test = $(this).val();
                 $.ajax({
@@ -95,7 +95,7 @@
                     }
                 })
             })
-        })
+        })*/
     </script>
 @endsection
 
