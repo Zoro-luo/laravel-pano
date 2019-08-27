@@ -1351,7 +1351,7 @@ function changTourXml($xmlFile = null, $mb_name = null,$content,$paonId)
     /*****************
      * 小行星动画设置
      *****************/
-    $tourXmlObj->skin_settings['littleplanetintro'] = "false";       //打开小行星动画效果
+    $tourXmlObj->skin_settings['littleplanetintro'] = "true";       //打开小行星动画效果
 
     /**************
      * 导航条容器设置
