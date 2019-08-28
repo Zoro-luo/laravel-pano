@@ -693,12 +693,12 @@ function addSetting($xmlFile = null)
     $setAlertTable = $vtourDocXml->createElement("layer");
     $setAlertTable->setAttribute("name","set_alert_table");
     $setAlertTable->setAttribute("url","../../../static/images/set-alert.png");
-    $setAlertTable->setAttribute("scale","0.5");
+    $setAlertTable->setAttribute("scale","0.7");
     $setAlertTable->setAttribute("zorder","20");
     $setAlertTable->setAttribute("align","topcenter");
     $setAlertTable->setAttribute("keep","true");
     $setAlertTable->setAttribute("x","0");
-    $setAlertTable->setAttribute("y","34%");
+    $setAlertTable->setAttribute("y","30%");
     $setAlertTable->setAttribute("visible","false");
     $setAlertTable->setAttribute("devices","all");
 
