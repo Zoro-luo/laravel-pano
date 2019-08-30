@@ -3,10 +3,9 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">11111111</div>
-
+                    <div class="panel-heading">全景</div>
                     <div class="panel-body">
-                       22222222222
+                       前台首页内容区块 1
                     </div>
                 </div>
             </div>
