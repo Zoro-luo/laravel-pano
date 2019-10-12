@@ -40,8 +40,13 @@ class UploadController extends Controller
                 Cache::forever("agentInfo"."_".$panoId,$frApiData->Data->AgentInfo);
             }
 
-            $title = $frApiData->Data->EsfInfo->Title;
-            if($frApiData->Data->AgentInfo){
+            if ($frApiData->Code==200 && $frApiData->Data->EsfInfo) {
+                $title = $frApiData->Data->EsfInfo->Title;
+            }else{
+                $title = "";
+            }
+
+            if($frApiData->Code==200 && $frApiData->Data->AgentInfo){
                 $agentImgUrl = $frApiData->Data->AgentInfo->ImageUrl;
                 $agentPhone = $frApiData->Data->AgentInfo->Mobile;
             }else{
