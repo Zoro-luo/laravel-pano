@@ -32,6 +32,7 @@ class UploadController extends Controller
             $panoId = '403458';
             $frContent = file_get_contents("http://120.76.210.152:8077/api/Esf/ApiEsf720VRModel?id=".$panoId);
             $frApiData = json_decode($frContent);
+
             //$userId = $frApiData->Data->AgentInfo->ID;
 
             //房源信息和经纪人信息存入缓存
@@ -96,7 +97,6 @@ class UploadController extends Controller
 
 
             //批量插入数据库
-            $en_name = array();
             $zh_name = array();
             foreach ($fileNames as $key => $val) {
                 foreach ($val as $min_k => $min_v) {

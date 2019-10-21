@@ -25,45 +25,47 @@
                     <ul class="text-list">
                         <li class="text-item">
                             <span class="title">售价</span>
-                            <span class="data">{{$houseInfo->Price}}万元</span>
+
+                            <span class="data">{{$houseInfo =="NULL" ? "NULL" : $houseInfo->Price}}万元</span>
                         </li>
                         <li class="text-item">
                             <span class="title">单价</span>
-                            <span class="data">{{ $houseInfo->UnitPrice }}元/m²</span>
+                            <span class="data">{{$houseInfo =="NULL" ? "NULL" : $houseInfo->UnitPrice}}元/m²</span>
                         </li>
                         <li class="text-item">
                             <span class="title">户型</span>
-                            <span class="data">{{$houseInfo->CountF}}室{{$houseInfo->CountT}}厅{{$houseInfo->CountW}}</span>
+                            <span class="data">{{$houseInfo =="NULL" ? "NULL" : $houseInfo->CountF}}室{{$houseInfo =="NULL" ? "NULL" : $houseInfo->CountT}}厅{{$houseInfo =="NULL" ? "NULL" : $houseInfo->CountW}}</span>
                         </li>
                         <li class="text-item">
                             <span class="title">面积</span>
-                            <span class="data">{{$houseInfo->ProducingArea}}㎡</span>
+                            <span class="data">{{$houseInfo =="NULL" ? "NULL" : $houseInfo->ProducingArea}}㎡</span>
                         </li>
                         <li class="text-item">
                             <span class="title">电梯</span>
                             <span class="data">
-                                {{ $houseInfo->HasElevator ? '有电梯' : '无电梯' }}
+                                {{$houseInfo =="NULL" ? "无电梯" : $houseInfo->HasElevator}}
+                               {{-- {{ $houseInfo->HasElevator ? '有电梯' : '无电梯' }}--}}
                             </span>
                         </li>
                         <li class="text-item">
                             <span class="title">朝向</span>
-                            <span class="data">{{$houseInfo->OrientationName}}</span>
+                            <span class="data">{{$houseInfo =="NULL" ? "NULL" : $houseInfo->OrientationName}}</span>
                         </li>
                         <li class="text-item">
                             <span class="title">楼层</span>
-                            <span class="data">{{$houseInfo->LouCengStr}}</span>
+                            <span class="data">{{$houseInfo =="NULL" ? "NULL" : $houseInfo->LouCengStr}}</span>
                         </li>
                         <li class="text-item">
                             <span class="title">用途</span>
-                            <span class="data">{{$houseInfo->PurposeTypeName}}</span>
+                            <span class="data">{{$houseInfo =="NULL" ? "NULL" : $houseInfo->PurposeTypeName}}</span>
                         </li>
                         <li class="text-item">
                             <span class="title">挂牌</span>
-                            <span class="data">{{$houseInfo->ListedTime}}</span>
+                            <span class="data">{{$houseInfo =="NULL" ? "NULL" : $houseInfo->ListedTime}}</span>
                         </li>
                         <li class="text-item">
                             <span class="title">年代</span>
-                            <span class="data">{{$houseInfo->CompletionDate}}</span>
+                            <span class="data">{{$houseInfo =="NULL" ? "NULL" : $houseInfo->CompletionDate}}</span>
                         </li>
                     </ul>
                     <div class="more-container">
