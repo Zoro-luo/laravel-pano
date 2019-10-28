@@ -39,7 +39,7 @@
                 <ul class="info-middle">
                     <li class="m-item">
                         <span class="title">成交</span>
-                        <h3 class="data">{{$agentInfo = "NULL" ? "NULL" : $agentInfo->EsfDealNum}}</h3>
+                        <h3 class="data">{{$agentInfo == "NULL" ? "NULL" : $agentInfo->EsfDealNum}}</h3>
                     </li>
                     <li class="m-item">
                         <span class="title">带看</span>

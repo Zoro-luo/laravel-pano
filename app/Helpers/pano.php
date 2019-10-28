@@ -151,8 +151,13 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $userIconPc->addAttribute("align","leftcenter");
     $userIconPc->addAttribute("keep","true");
     $userIconPc->addAttribute("x","35");
-    $userIconPc->addAttribute("onclick","if(layer[iframelayer_new].visible,remove_iframe(iframelayer_new);
-                                    set(layer[iframelayer_new].visible,false),set(layer[iframelayer].visible,false);set(layer[set_alert_table].visible,false);call_iframe(iframelayer_new,/pano/krpano/vr/".$panoId."););");
+    $userIconPc->addAttribute("onclick","if(layer[iframelayer_new].visible,
+    remove_iframe(iframelayer_new);
+    set(layer[iframelayer_new].visible,false),
+    set(layer[iframelayer].visible,false);
+    remove_iframe(iframelayer);
+    set(layer[set_alert_table].visible,false);
+    call_iframe(iframelayer_new,/pano/krpano/vr/".$panoId."););");
     // 添加 phone_value_pc
     $phoneValuePc = $backPhonePc->addChild("layer");
     $phoneValuePc->addAttribute("name","phone_value_pc");
@@ -290,6 +295,8 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $skin_user->addAttribute("onclick","if(layer[iframelayer_new].visible,
                                     remove_iframe(iframelayer_new);
                                     set(layer[iframelayer_new].visible,false),
+                                    set(layer[iframelayer].visible,false);
+                                    remove_iframe(iframelayer);
                                     set(layer[set_alert_table].visible,false);
                                     call_iframe(iframelayer_new,/pano/krpano/vr/".$panoId."););");
 
@@ -1011,11 +1018,20 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $layerButton->setAttribute("css", "text-align:center;color:#FFFFFF;font-family:Arial;font-weight:bold;font-size:14px;");
     $layerButton->setAttribute("zorder", "15");
     $layerButton->setAttribute("html", $content);
-    $layerButton->setAttribute("onclick", "if(layer[iframelayer].visible,set(layer[top_shade_layer].visible,false);
-                set(layer[top_back_layer].visible,true);remove_iframe(iframelayer);set(layer[iframelayer].visible,false),
-                set(layer[top_back_layer].visible,false);set(layer[top_shade_layer].visible,true);
-                set(layer[top_shade_layer_pc].visible,true);set(layer[set_alert_table].visible,false);set(layer[iframelayer_new].visible,false);
-                call_iframe(iframelayer,/pano/krpano/fr/".$paonId."););");
+    $layerButton->setAttribute("onclick", "if(layer[iframelayer].visible,
+    set(layer[top_shade_layer].visible,false);
+        set(layer[top_back_layer].visible,true);
+        remove_iframe(iframelayer);
+        set(layer[icon].url, '../../static/images/down.png');
+        set(layer[iframelayer].visible,false),
+        set(layer[top_back_layer].visible,false);
+        set(layer[top_shade_layer].visible,true);
+        set(layer[top_shade_layer_pc].visible,true);
+        set(layer[set_alert_table].visible,false);
+        set(layer[iframelayer_new].visible,false);
+        remove_iframe(iframelayer_new);
+        set(layer[icon].url, '../../static/images/up.png');
+        call_iframe(iframelayer,/pano/krpano/fr/".$paonId."););");
 
     //icon 上下标签图标
     $layerIcon = $vtourDocXml->createElement("layer");
@@ -1090,9 +1106,9 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $rightSetPc->setAttribute("y","190");
     $rightSetPc->setAttribute("visible","true");
     $rightSetPc->setAttribute("devices","html5+!touchdevice");
-    $rightSetPc->setAttribute("onclick","if(layer[set_alert_table].visible,
-           set(layer[set_alert_table].visible, 'false'),set(layer[iframelayer_new].visible,false);set(layer[iframelayer].visible,false);set(layer[set_alert_table].visible, 'true'););");
-
+    $rightSetPc->setAttribute("onclick","if(layer[set_alert_table].visible,set(layer[set_alert_table].visible,false),
+           set(layer[iframelayer_new].visible,false);set(layer[iframelayer].visible,false);
+           remove_iframe(iframelayer);remove_iframe(iframelayer_new);set(layer[set_alert_table].visible,true););");
 
     //right_set
     $rightSet = $vtourDocXml->createElement("layer");
@@ -1107,10 +1123,9 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $rightSet->setAttribute("y","150");
     $rightSet->setAttribute("visible","true");
     $rightSet->setAttribute("devices","touchdevice");
-    $rightSet->setAttribute("onclick","if(layer[set_alert_table].visible,
-           set(layer[set_alert_table].visible, 'false'),set(layer[iframelayer_new].visible,false);set(layer[iframelayer].visible,false);set(layer[set_alert_table].visible, 'true'););");
-
-
+    $rightSet->setAttribute("onclick","if(layer[set_alert_table].visible,set(layer[set_alert_table].visible,false),
+    set(layer[iframelayer_new].visible,false);set(layer[iframelayer].visible,false);remove_iframe(iframelayer);
+    remove_iframe(iframelayer_new);set(layer[set_alert_table].visible,true););");
 
     //top_shade_layer
     $topShadeLayer = $vtourDocXml->createElement("layer");

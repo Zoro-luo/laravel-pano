@@ -27,9 +27,10 @@ class UploadController extends Controller
 
         if ($request->isMethod("POST")) {
 
-            //$panoId = $request->get('pano_id');   //demo : 403456
+            //$panoId = $request->get('pano_id');   //demo : 15477
             $userId = $request->get('user_id');
-            $panoId = '403458';
+            //$panoId = '15477';
+            $panoId = '2100';
             $frContent = file_get_contents("http://120.76.210.152:8077/api/Esf/ApiEsf720VRModel?id=".$panoId);
             $frApiData = json_decode($frContent);
 
@@ -55,13 +56,11 @@ class UploadController extends Controller
                 $agentPhone = "";
             }
 
-
             $houseName = $request->get("house_name");   //楼盘名称
             $houseUsed = $request->get("house_used");   //房源类型
             $houseType = $request->get("house_type");   //户型
             $houseArea = $request->get("house_area");   //面积
             $houseRemark = $request->get("remark");     //备注
-
 
             $fileNames = $request->file("filename");
 
