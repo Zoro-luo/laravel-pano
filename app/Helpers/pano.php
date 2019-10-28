@@ -140,9 +140,23 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $backPhonePc->addAttribute("keep","true");
     $backPhonePc->addAttribute("scale","0.9");
 
+    //图片圆角 user_icon_pc_radius 层
+    $userIconPcRadius = $backPhonePc->addChild("layer");
+    $userIconPcRadius->addAttribute("name","user_icon_pc_radius");
+    $userIconPcRadius->addAttribute("type","container");
+    $userIconPcRadius->addAttribute("maskchildren","true");
+    $userIconPcRadius->addAttribute("visible","true");
+    $userIconPcRadius->addAttribute("zorder","20");
+    $userIconPcRadius->addAttribute("keep","true");
+    $userIconPcRadius->addAttribute("width","50");
+    $userIconPcRadius->addAttribute("height","50");
+    $userIconPcRadius->addAttribute("bgroundedge","360");
+    $userIconPcRadius->addAttribute("align","leftcenter");
+    $userIconPcRadius->addAttribute("x","35");
+    $userIconPcRadius->addAttribute("bgalpha","0");
 
     // 内嵌 user_icon_pc 层
-    $userIconPc = $backPhonePc->addChild("layer");
+    $userIconPc = $userIconPcRadius->addChild("layer");
     $userIconPc->addAttribute("name","user_icon_pc");
     $userIconPc->addAttribute("url",$agentImgUrl?$agentImgUrl:"../../../../static/images/manager.png");
     $userIconPc->addAttribute("zorder","25");
@@ -150,7 +164,9 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $userIconPc->addAttribute("scale","0.35");
     $userIconPc->addAttribute("align","leftcenter");
     $userIconPc->addAttribute("keep","true");
-    $userIconPc->addAttribute("x","35");
+    $userIconPc->addAttribute("x","");
+    $userIconPc->addAttribute("width","140");
+    $userIconPc->addAttribute("height","140");
     $userIconPc->addAttribute("onclick","if(layer[iframelayer_new].visible,
     remove_iframe(iframelayer_new);
     set(layer[iframelayer_new].visible,false),
@@ -158,6 +174,7 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     remove_iframe(iframelayer);
     set(layer[set_alert_table].visible,false);
     call_iframe(iframelayer_new,/pano/krpano/vr/".$panoId."););");
+
     // 添加 phone_value_pc
     $phoneValuePc = $backPhonePc->addChild("layer");
     $phoneValuePc->addAttribute("name","phone_value_pc");
@@ -278,20 +295,32 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $iconTitleDown->addAttribute("x","56%");
     $iconTitleDown->addAttribute("scale","0.25");
 
+    //添加图片圆角 skin_user_radius 层
+    $skin_user_radius = $fatherControlBar->addChild("layer");
+    $skin_user_radius->addAttribute("name","skin_user_radius");
+    $skin_user_radius->addAttribute("type","container");
+    $skin_user_radius->addAttribute("maskchildren","true");
+    $skin_user_radius->addAttribute("visible","true");
+    $skin_user_radius->addAttribute("zorder","20");
+    $skin_user_radius->addAttribute("keep","true");
+    $skin_user_radius->addAttribute("width","45");
+    $skin_user_radius->addAttribute("height","45");
+    $skin_user_radius->addAttribute("bgroundedge","360");
+    $skin_user_radius->addAttribute("align","leftcenter");
+    $skin_user_radius->addAttribute("x","3.5%");
+    $skin_user_radius->addAttribute("bgalpha","");
 
     //添加 skin_user 层
-    $skin_user = $fatherControlBar->addChild("layer");
+    $skin_user = $skin_user_radius->addChild("layer");
     $skin_user->addAttribute("name","skin_user");
+    $skin_user->addAttribute("style","skin_base|skin_glow");
     $skin_user->addAttribute("url",$agentImgUrl?$agentImgUrl:"../../../../static/images/manager.png");
     $skin_user->addAttribute("zorder","24");
     $skin_user->addAttribute("keep","true");
-    $skin_user->addAttribute("align","lefttop");
-    $skin_user->addAttribute("edge","leftbottom");
-    $skin_user->addAttribute("width","40");
-    $skin_user->addAttribute("height","42");
-    $skin_user->addAttribute("bg","true");
-    $skin_user->addAttribute("x","4%");
-    $skin_user->addAttribute("y","52");
+    $skin_user->addAttribute("align","leftcenter");
+    $skin_user->addAttribute("scale","0.35");
+    $skin_user->addAttribute("width","140");
+    $skin_user->addAttribute("height","140");
     $skin_user->addAttribute("onclick","if(layer[iframelayer_new].visible,
                                     remove_iframe(iframelayer_new);
                                     set(layer[iframelayer_new].visible,false),
