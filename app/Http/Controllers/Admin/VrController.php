@@ -235,14 +235,29 @@ class VrController extends Controller
             $hotspot->created_at = date('Y-m-d H:i:s', time());
             $result = $hotspot->save();
 
-            if ($result) {     // 向xml追加新的热点标签
-
+            if ($result) {     // 向xml中去旧添新
                 $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
                 $vtourXmlStr = file_get_contents($xmlFile);
                 $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
+
+                //删除旧的热点标签
+                $vtourSceneArr = $vtourXmlObj->xpath('scene');
+                $hotspots = $vtourSceneArr[$sceneIndex]->xpath("hotspot");
+                foreach ($hotspots as $hsVal) {    //
+                    if ($hsVal["name"] == $hsOldName) {
+                        $hsVal['name'] = "";
+                        $hsVal['style'] = "";
+                        $hsVal['tooltip'] = "";
+                        $hsVal['ath'] = "";
+                        $hsVal['atv'] = "";
+                        $hsVal['zoom'] = "";
+                        $hsVal['linkedscene'] = "";
+                        $hsVal['visible'] = "";
+                    }
+                }
+                // 追加新的热点标签
                 $sceneIndex = intval($sceneIndex);
                 $currScene = $vtourXmlObj->scene[$sceneIndex];
-
                 $currHotSpot = $currScene->addChild('hotspot');
                 $currHotSpot->addAttribute("name", $hsNewName);
                 $currHotSpot->addAttribute("style", "hotspot_style_animated");
@@ -251,7 +266,6 @@ class VrController extends Controller
                 $currHotSpot->addAttribute("atv", $atv);
                 $currHotSpot->addAttribute("zoom", "true");
                 $currHotSpot->addAttribute("linkedscene", $sceneName);
-
                 file_put_contents($xmlFile, $vtourXmlObj->asXML());
             }
 
@@ -297,16 +311,27 @@ class VrController extends Controller
             $hotspot->linkedscene = $linkedTitle;
             $hotspot->created_at = date('Y-m-d H:i:s', time());
             $result = $hotspot->save();
-            //插库成功后 想xml追加新的热点标签
+            //插库成功后 向xml中去旧添新
             if ($result) {
                 $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
                 $vtourXmlStr = file_get_contents($xmlFile);
                 $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
 
                 //删除旧的热点标签
-                /*$vtourSceneArr = $vtourXmlObj->xpath('scene');
+                $vtourSceneArr = $vtourXmlObj->xpath('scene');
                 $hotspots = $vtourSceneArr[$sceneIndex]->xpath("hotspot");
-                var_dump($hotspots);*/
+                foreach ($hotspots as $hsVal) {    //
+                    if ($hsVal["name"] == $hsOldName) {
+                        $hsVal['name'] = "";
+                        $hsVal['style'] = "";
+                        $hsVal['tooltip'] = "";
+                        $hsVal['ath'] = "";
+                        $hsVal['atv'] = "";
+                        $hsVal['zoom'] = "";
+                        $hsVal['linkedscene'] = "";
+                        $hsVal['visible'] = "";
+                    }
+                }
 
                 //新增新的热点标签
                 $sceneIndex = intval($sceneIndex);
