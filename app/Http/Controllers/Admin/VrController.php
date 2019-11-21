@@ -401,12 +401,13 @@ class VrController extends Controller
         file_put_contents($xmlFile, $vtourXmlObj->asXML());
 
         //sql返回该热点的坐标值
-        $panoData = DB::select('select pano_id,hotsName,ath,atv,type from hotspots where pano_id=? and hotsName=?', [$panoId, $hostName]);
+        $panoData = DB::select('select pano_id,hotsName,ath,atv,type,linkedscene from hotspots where pano_id=? and hotsName=?', [$panoId, $hostName]);
         $res["panoId"] = $panoData[0]->pano_id;
         $res["hotsName"] = $panoData[0]->hotsName;
         $res["type"] = $panoData[0]->type;
         $res["ath"] = $panoData[0]->ath;
         $res["atv"] = $panoData[0]->atv;
+        $res["linkedscene"] = $panoData[0]->linkedscene;
         $res["sceneName"] = $sceneName;
         return $res;
     }

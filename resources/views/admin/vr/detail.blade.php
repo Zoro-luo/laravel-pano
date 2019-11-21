@@ -239,8 +239,8 @@
                     var offsetSize = 30;
                     var mx = krpano.get("mouse.x");
                     var my = krpano.get("mouse.y");
-                    var mx_new = mx;
-                    var my_new = my - offsetSize;
+                    var mx_new = mx - offsetSize;
+                    var my_new = my + offsetSize;
                     var pnt = krpano.screentosphere(mx, my);
                     var hh = pnt.x.toFixed(3);
                     var vv = pnt.y.toFixed(3);
@@ -394,7 +394,8 @@
                     var ath = e.ath;
                     var atv = e.atv;
                     var sceneName = e.sceneName;
-                    //console.log(panoId,type,hsName,ath,atv,sceneName);
+                    var linkedTitle = e.linkedscene;
+                    //console.log(panoId,type,hsName,ath,atv,sceneName,linkedTitle);
 
                     var hsNewName = sceneName + '_' + Math.abs((Date.now() + Math.random()) | 0);
                     krpano.call("addhotspot(" + hsNewName + ")");
@@ -422,6 +423,7 @@
                             var vv_p = pnt_p.y.toFixed(3);
                             myFun.layer.opens("#titleSetting", "标题标签设置", "small", function (layero) {
                                 var _this = this;
+                                $(".input-point").val(linkedTitle);
                                 layero.find(".my-btn-green").click(function () {
                                     var flag = zFun.utils.validationAll();
                                     if (flag) _this.close(index);
@@ -521,7 +523,7 @@
                                             'linkedTitle': linkedTitle,
                                         },
                                         success: function (e) {
-                                            console.log(e);
+
                                             if (flag) _this.close(index);
                                             var hotspotStr = '';
                                             for (var j = 0; j < e.count; j++) {
@@ -634,6 +636,9 @@
                     // krpano.call("lookat(" + hlookat + "," + vlookat + ",120)");
                     krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
                     krpano.call("loadscene(" + sceneName + ", NULL, MERGE, BLEND(0.1));");
+
+                    //hason ? $(".txt-box").text("展示") : $(".txt-box").text("隐藏");
+
                 }
             })
         }
