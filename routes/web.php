@@ -47,7 +47,7 @@ Route::post('member/logout','AuthMember\\LoginController@logout');
 
 //生成全景漫游路由组
 Route::get('/pano/{id}', function ($id) {                               //用于iframe来展示的漫游
-    return redirect('/storage/panoImg/' . $id . '/tour.html');
+    return redirect('/storage/pano/' . $id . '/tour.html');
 });
 Route::get('/show/{id}', 'Krpano\\PanoController@show');                //显示漫游页
 
@@ -57,13 +57,14 @@ Route::post('krpano/upload', 'Krpano\\PanoController@uploadImgs');      //上传
 Route::post('krpano/pano', 'Krpano\\PanoController@panoImgs');          //切片漫游api
 
 //房源信息
-Route::get('krpano/fr/{panoId}', function($panoId){
+Route::get('/krpano/fr/{panoId}', function($panoId){
+
     $houseInfo = Cache::get("houseInfo"."_".$panoId,"NULL");
     return view('krpano.fr',['houseInfo'=>$houseInfo]);
 });
 
 //经纪人信息
-Route::get('krpano/vr/{panoId}', function ($panoId){
+Route::get('/krpano/vr/{panoId}', function ($panoId){
     $agentInfo = Cache::get("agentInfo"."_".$panoId,"NULL");
     return view('krpano.vr',['agentInfo'=>$agentInfo]);
 });

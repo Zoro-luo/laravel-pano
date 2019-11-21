@@ -14,7 +14,7 @@
 </head>
 
 <body>
-{{--<section class="main vr-index">
+{{--<section class="main hotsport-index">
     <!-- 头部 -->
     <header class="header show">
         <a href="javascript:;" class="h-left">
@@ -34,7 +34,7 @@
     </header>
     <!-- 按钮 -->
     <div class="btn-container">
-        <i class="btn icon-vr"></i>
+        <i class="btn icon-hotsport"></i>
         <i class="btn icon-setting"></i>
     </div>
     <!-- 内容展示 -->

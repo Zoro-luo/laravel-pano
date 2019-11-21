@@ -142,11 +142,11 @@
 			);
 			skin_hideskin(instant);
 		  ,
-			<!-- remove the enter vr button from the webvr.xml -->
+			<!-- remove the enter hotsport button from the webvr.xml -->
 			removelayer(webvr_enterbutton);
 		);
 
-		<!-- update the skin buttons to add the skin vr button -->
+		<!-- update the skin buttons to add the skin hotsport button -->
 		skin_arrange_buttons();
 
 		<!-- call the original onavailable event from the webvr.xml -->

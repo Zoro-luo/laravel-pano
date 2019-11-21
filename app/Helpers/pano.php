@@ -1344,6 +1344,10 @@ function changTourXml($xmlFile = null, $mb_name = null,$content,$paonId)
 {
     //热点动态操作[后台]
     makeSelectAction($xmlFile);
+
+    //动态热点 [后台热点编辑块]
+    handleHsAnimate($xmlFile);
+
     //设置的弹窗
     addSetting($xmlFile);
     //分享弹窗

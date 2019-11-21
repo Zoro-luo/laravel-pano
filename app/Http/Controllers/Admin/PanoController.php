@@ -19,10 +19,17 @@ class PanoController extends Controller
         return view('admin.pano.index', ['panos' => $panos]);
     }
 
-    public function indexHotspot(Request $request)
+//    public function indexHotspot(Request $request)
+//    {
+//        $pano_id = $request->pano_id;
+//        return view("admin.pano.indhs", ["panoId" => $pano_id]);
+//    }
+
+
+    public function indexNewSpot(Request $request)
     {
         $pano_id = $request->pano_id;
-        return view("admin.pano.indhs", ["panoId" => $pano_id]);
+        return view("admin.pano.indhss", ["panoId" => $pano_id]);
     }
 
     //缓存热点的下拉选择的NAME
@@ -187,11 +194,9 @@ class PanoController extends Controller
         $vtourXmlStr = file_get_contents($xmlFile);
         $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
         $vtourSceneArr = $vtourXmlObj->xpath('scene');
-
         $hotspots = $vtourSceneArr[$sceneIndex]->xpath("hotspot");
 
         foreach ($hotspots as $hsVal) {
-
             if (!$hsVal['ondown'] || !$hsVal['onclick']) {
                 $hsVal->addAttribute("ondown", "draghotspot();");
                 $hsVal->addAttribute("onclick", "js(handleTackAction( " . $hsVal['name'] . " ))");
@@ -224,5 +229,50 @@ class PanoController extends Controller
 
         $lookat = ['h' => $hlookat, 'v' => $vlookat];
         return $lookat;
+    }
+
+    //设置为封面
+    public function setcover(Request $request)
+    {
+        $sceneIndex = $request->get("sceneIndex");
+        $panoId = $request->get("panoId");
+        $sceneTitle = $request->get("sceneTitle");
+        echo $sceneIndex,$panoId, $sceneTitle;
+        dd("as");
+
+        if ($sceneIndex != null ) {         //第一个默认的场景就不做xml操作
+            //操作xml
+            $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
+            $vtourDocXml = new \DOMDocument();
+            $vtourDocXml->load($xmlFile);
+            $actionDom = $vtourDocXml->getElementsByTagName("action");
+            $nodeVal = "if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[" . $sceneIndex . "].name); );loadscene(get(startscene), null, MERGE);if(startactions !== null, startactions() );";
+            $actionDom->item(0)->nodeValue = $nodeVal;
+            $vtourDocXml->save($xmlFile);
+
+            return $sceneTitle;
+        }
+    }
+
+    //热点隐藏显示切换
+    public function toggleHs(Request $request)
+    {
+        $sceneIndex = $request->get("sceneIndex");
+        $panoId = $request->get("panoId");
+        $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
+        $vtourXmlStr = file_get_contents($xmlFile);
+        $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
+        $vtourSceneArr = $vtourXmlObj->xpath('scene');
+        $hotspots = $vtourSceneArr[$sceneIndex]->xpath("hotspot");
+
+        foreach($hotspots as $hsVal){
+            if ($hsVal['visible'] == "true"){
+                $hsVal['visible'] = "false";
+            }else{
+                $hsVal['visible'] = "true";
+            }
+        }
+        file_put_contents($xmlFile, $vtourXmlObj->asXML());
+
     }
 }

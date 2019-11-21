@@ -59,9 +59,8 @@
                                         <td><a href="{{$pano->panoUrl}}" target="_blank">{{$pano->panoUrl}}</a></td>
                                         <td>{{ $pano->updated_at }}</td>
                                         <td>
-                                            {{--<a href="{{route('indexspot',array('pano_id'=>$pano->pano_id ) ) }}" target="_blank"><span>热点编辑</span></a>--}}
-                                            <a href="{{url('admin/indexspot/'.$pano->pano_id)}}" target="_blank"><span>热点编辑</span></a>
-
+                                            <a href="{{url('admin/indexspot/'.$pano->pano_id)}}" target="_blank"><span>Updated Old</span></a> |
+                                            <a href="{{url('admin/indexhs/'.$pano->pano_id)}}" target="_blank"><span>Updated New</span></a>
                                         </td>
                                     </tr>
                                 @endforeach

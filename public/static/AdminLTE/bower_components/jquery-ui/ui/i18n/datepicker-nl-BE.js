@@ -23,7 +23,7 @@ datepicker.regional['nl-BE'] = {
 	'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
 	dayNames: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
 	dayNamesShort: ['zon', 'maa', 'din', 'woe', 'don', 'vri', 'zat'],
-	dayNamesMin: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
+	dayNamesMin: ['zo', 'ma', 'di', 'wo', 'do', 'hotsport', 'za'],
 	weekHeader: 'Wk',
 	dateFormat: 'dd/mm/yy',
 	firstDay: 1,

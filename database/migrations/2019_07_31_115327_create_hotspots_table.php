@@ -22,6 +22,7 @@ class CreateHotspotsTable extends Migration
             $table->string("ath")->comment("热点ath");
             $table->string("atv")->comment("热点atv");
 
+            $table->string("type")->default("hotspot")->comment("热点类型");
             $table->string("linkedscene")->default("")->comment("热点跳转场景");
             $table->string("visible")->default("true")->comment("软删除");
 

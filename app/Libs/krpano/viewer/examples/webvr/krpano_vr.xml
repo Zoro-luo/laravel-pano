@@ -5,7 +5,7 @@
 	<!-- webvr.xml - WebVR plugin, enter/exit VR buttons, VR cursor, VR setup -->
 	<include url="%SWFPATH%/plugins/webvr.xml" />
 
-	<!-- add/overwrite some settings from the webvr.xml for this example 
+	<!-- add/overwrite some settings from the webvr.xml for this example
 		- enable the fake mode
 		- add events for portrait usage
 	-->
@@ -15,7 +15,7 @@
 	        onexitvr="webvr_onexitvr(); tween(layer[webvr_rotate_to_landscape_request].alpha, 0.0, 0.0);"
 	        />
 
-	<!-- re-align the vr button and 'auto-start' the video when pressing the enterVR button -->
+	<!-- re-align the hotsport button and 'auto-start' the video when pressing the enterVR button -->
 	<layer name="webvr_enterbutton"
 	       align="bottom" y="10%"
 	       ondown="video_touch_auto_start();"

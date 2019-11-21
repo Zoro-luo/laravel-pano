@@ -25,8 +25,8 @@
 
 	<!-- save the url path of this xml file (the url value will be adjusted during xml parsing) -->
 	<videointerfacexmlpath url="./" />
-	
-	<!-- iPhone X safe-area support: use the horizontal safe-area only -->	
+
+	<!-- iPhone X safe-area support: use the horizontal safe-area only -->
 	<display safearea="h-only" />
 
 
@@ -198,7 +198,7 @@
 				</layer>
 			</layer>
 
-			<!-- right buttons - vr, settings, fullscreen -->
+			<!-- right buttons - hotsport, settings, fullscreen -->
 			<layer name="skin_btn_vr" style="skin_base|skin_glow" crop="0|0|80|64" align="right" x.fullscreensupport="80" x.no-fullscreensupport="43" y="0" scale="0.5" onclick="webvr.enterVR();" enabled="false" alpha="0.25" />
 
 			<layer name="skin_btn_settings" style="skin_base|skin_glow" crop="0|704|64|64" align="right" edge="center" x.fullscreensupport="57" x.no-fullscreensupport="20" y="0" scale="0.5" onclick="if(skin_settings_opened !== true, skin_open_settings(), skin_close_settings() );" />

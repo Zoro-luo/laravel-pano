@@ -29,8 +29,8 @@ class UploadController extends Controller
 
             //$panoId = $request->get('pano_id');   //demo : 15477
             $userId = $request->get('user_id');
-            //$panoId = '15477';
-            $panoId = '2100';
+            $panoId = '29571';
+            //$panoId = '2100';
             $frContent = file_get_contents("http://120.76.210.152:8077/api/Esf/ApiEsf720VRModel?id=".$panoId);
             $frApiData = json_decode($frContent);
 
@@ -202,6 +202,11 @@ class UploadController extends Controller
             clearDir($imgRealDir . KrpanoContants::THUMB_NAME);
         }
 
+        //注册激活
+        //$register = "\"FXsqTqaGNSZER5dSETEm+VzQEh9sWSa5DZMFsSmMxYV9GcXs8W3R8A/mWXrGNUceXvrihmh28hfRF1ivrW0HMzEychPvNiD8B/4/ZzDaUE9Rh6Ig22aKJGDbja1/kYIqmc/VKfItRE2RTSOIbIroxOtsz626NIpxWksAAifwhpNwuPXqDQpz2sRUMBzoPqZktpkItoSenN2mKd8Klfx7pOuB6CIK3e1CDXgyndqOt2mWybLZcU/wfJVAecfxk15ghiqrzaDsbqrdABDowg==\"";
+        //$exec =$krpano." register ".$register;
+        //exec($exec,$output);
+
         //执行切片
         exec($krpano . ' makepano -config=' . 'templates/vtour-multires.config' . " " . $imgRealStr, $opt, $r);
 
@@ -215,14 +220,16 @@ class UploadController extends Controller
                 changTourXml($imgRealDir . 'vtour/tour.xml', $zh_name,$title,$panoId);
 
                 foreach ($keepNameArr as $k_thumb => $v_mbName) {
-                    $thumb_path = $this->http_host . '/' . $this->base_name . '/storage/panos/' . $panoId . '/thumb/' . $k_thumb;
+                    //$thumb_path = $this->http_host . '/' . $this->base_name . '/storage/panos/' . $panoId . '/thumb/' . $k_thumb;
+                    $thumb_path = $this->http_host . '/' .'storage/panos/' . $panoId . '/thumb/' . $k_thumb;
                     DB::update("update imgs set thumb='" . $thumb_path . "',mb_name='" . $v_mbName . "' where name=?", [$k_thumb]);
                 }
 
                 $res['code'] = ApiErrDesc::SUCCESS_KRPANO[0];
                 $res['msg'] = ApiErrDesc::SUCCESS_KRPANO[1];
                 $res['pano_id'] = $panoId;
-                $res['url'] = $this->http_host . '/' . $this->base_name . '/storage/panos/' . $panoId . '/tour.html';
+                //$res['url'] = $this->http_host . '/' . $this->base_name . '/storage/panos/' . $panoId . '/tour.html';
+                $res['url'] = $this->http_host . '/' . 'storage/panos/' . $panoId . '/tour.html';
                 $updated_at = date('Y-m-d H:i', time());
                 DB::update("update panos set panoUrl='" . $res['url'] . "',updated_at='" . $updated_at . "' where pano_id=? and user_id=?", [$panoId, $userId]);
             }

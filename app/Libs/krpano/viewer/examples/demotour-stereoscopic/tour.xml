@@ -1,7 +1,7 @@
 ﻿<krpano onstart="loadscene(stereopano1);">
 
 	<scene name="stereopano1">
-		
+
 		<!-- startup view -->
 		<view hlookat="110" vlookat="10" />
 
@@ -33,7 +33,7 @@
 		<image stereo="true" stereolabels="l|r" prealign="0|25|0">
 			<cube url="panos/pano2_stereo_%t/pano_%s.jpg" />
 		</image>
-		
+
 		<hotspot name="spot2"
 			url="spot_curvedarrow.png"
 			ath="-109" atv="+32"
@@ -52,7 +52,7 @@
 	<!-- gyro plugin enabled by default -->
 	<plugin name="gyro" url="%SWFPATH%/plugins/gyro2.js" keep="true" enabled="true" softstart="1.0" />
 
-	<!-- webvr plugin + webvr.xml with fake-mode for desktop and a hidden enter-vr-button -->
+	<!-- webvr plugin + webvr.xml with fake-mode for desktop and a hidden enter-hotsport-button -->
 	<include url="%SWFPATH%/plugins/webvr.xml" />
 	<plugin name="WebVR" mobilevr_fake_support="true" webvr_onavailable="removelayer(webvr_enterbutton); webvr.loadsettings();" onexitvr="webvr_onexitvr(); layer[stereomodes].selectitembyname(item1);" />
 
