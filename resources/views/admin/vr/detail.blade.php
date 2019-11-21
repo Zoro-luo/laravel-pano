@@ -652,14 +652,18 @@
             var sceneName = krpano.get("xml.scene");
             var sceneIndex = krpano.get("scene[get(xml.scene)].index");
             var sceneTitle = krpano.get("scene[" + sceneIndex + "].title");
+
+            var hlookat = krpano.get("view.hlookat").toFixed(3);
+            var vlookat = krpano.get("view.vlookat").toFixed(3);
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 url: "{{url('vr/setcover')}}",
                 type: "POST",
-                data: {"sceneIndex": sceneIndex, "panoId": panoId, "sceneTitle": sceneTitle},
+                data: {"sceneIndex": sceneIndex, "panoId": panoId, "sceneTitle": sceneTitle,"hlookat": hlookat, "vlookat": vlookat},
                 success: function (e) {
                     // console.log(e);
-                    $(".isScene").html(e);
+                    $(".isScene").html(e.title);
+                    krpano.call("lookat(" + e.h + "," + e.v + ",120)");
                     krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
                     krpano.call("loadscene(" + sceneName + ", NULL, MERGE, BLEND(0.1));");
                 }

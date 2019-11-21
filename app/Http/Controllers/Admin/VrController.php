@@ -53,6 +53,9 @@ class VrController extends Controller
         $panoId = $request->get("panoId");
         $sceneTitle = $request->get("sceneTitle");
 
+        $hlookat = $request->get("hlookat");
+        $vlookat = $request->get("vlookat");
+
         if ($sceneIndex != null) {
             //操作xml
             $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
@@ -62,8 +65,18 @@ class VrController extends Controller
             $nodeVal = "if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[" . $sceneIndex . "].name); );loadscene(get(startscene), null, MERGE);if(startactions !== null, startactions() );";
             $actionDom->item(0)->nodeValue = $nodeVal;
             $vtourDocXml->save($xmlFile);
+            //设置场景视角
+            $vtourXmlStr = file_get_contents($xmlFile);
+            $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
+            $vtourSceneArr = $vtourXmlObj->xpath('scene');
+            $views = $vtourSceneArr[$sceneIndex]->xpath("view");
+            $views[0]['hlookat'] = $hlookat;
+            $views[0]['vlookat'] = $vlookat;
+            file_put_contents($xmlFile, $vtourXmlObj->asXML());
 
-            return $sceneTitle;
+            $ress = ['h' => $hlookat, 'v' => $vlookat,'title'=>$sceneTitle];
+
+            return $ress;
         }
     }
 
