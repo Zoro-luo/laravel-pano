@@ -58,6 +58,7 @@
                 <div class="set-cover-box section">
                     <div class="my-btn my-btn-green set-covers" onclick="setScene()">设置为封面图</div>
                     <span>已设置：<span class="isScene" >{{$sceneTitle}}</span></span>
+                    {{--<img class="avator" src="{{asset('storage/panos')}}/{{$panoId}}/thumb/{{$thumbName}}" alt="">--}}
                 </div>
                 <div class="set-hot-choice section">
                     <h3 class="s-title">热点选择</h3>

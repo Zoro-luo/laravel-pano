@@ -43,10 +43,12 @@ class VrController extends Controller
         $target = json_decode($target,true);
         $sceneTitle = $target[0][0];
         $thumburl = $target[1][0];
+        $thumbArr = explode('/',$thumburl);
+        $thumbName = $thumbArr[2];
 
         $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and visible=?', [$pano_id, "true"]);
         $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and visible=?', [$pano_id, "true"]);
-        return view("admin.vr.detail", ["panoId" => $pano_id, "panoData" => $panoData, "thumburl"=>$thumburl, "sceneTitle"=>$sceneTitle, "count" => $panoSum[0]->sum]);
+        return view("admin.vr.detail", ["panoId" => $pano_id, "panoData" => $panoData, "thumbName"=>$thumbName, "sceneTitle"=>$sceneTitle, "count" => $panoSum[0]->sum]);
     }
 
     //设置为封面
