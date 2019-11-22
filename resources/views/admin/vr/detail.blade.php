@@ -57,7 +57,7 @@
             <div class="vr-right">
                 <div class="set-cover-box section">
                     <div class="my-btn my-btn-green set-covers" onclick="setScene()">设置为封面图</div>
-                    <span>已设置：<span class="isScene" onclick="test()">{{$sceneTitle}}</span></span>
+                    <span>已设置：<span class="isScene" >{{$sceneTitle}}</span></span>
                 </div>
                 <div class="set-hot-choice section">
                     <h3 class="s-title">热点选择</h3>
@@ -82,8 +82,8 @@
                     <h3 class="s-title">热点展示</h3>
                     <div class="swich-box">
                         <label for=""  onclick="showHotsport()"><input type="checkbox" name="" id=""
-                                                                         class="a-switch "></label>
-                        <span class="txt-box">隐藏</span>
+                                                                         class="a-switch on"></label>
+                        <span class="txt-box">展示</span>
                     </div>
                 </div>
                 <div class="hot-manage section">
@@ -621,7 +621,8 @@
     }
 
     //热点隐藏显示切换
-    function showHotsport() {
+    function showHotsport(hason) {
+        hason ? $(".txt-box").text("展示") : $(".txt-box").text("隐藏");
         if (krpano) {
             var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
             var panoId = "{{$panoId}}";
@@ -636,9 +637,7 @@
                     // krpano.call("lookat(" + hlookat + "," + vlookat + ",120)");
                     krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
                     krpano.call("loadscene(" + sceneName + ", NULL, MERGE, BLEND(0.1));");
-
-                    //hason ? $(".txt-box").text("展示") : $(".txt-box").text("隐藏");
-
+                    //
                 }
             })
         }

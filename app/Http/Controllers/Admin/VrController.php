@@ -31,19 +31,22 @@ class VrController extends Controller
         $start = strpos($actionStr,'name');
         $start = $start-3;
         $targetId = substr($actionStr, $start, 1);   //获取到0
-        //根据拿到的场景index 获取场景的title
+        //根据拿到的场景index 获取场景的title 和缩略图
         $vtourXmlStr = file_get_contents($xmlFile);
         $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
         $vtourSceneArr = $vtourXmlObj->xpath('scene');
-        $goalScene = $vtourSceneArr[$targetId]['title'];
+        $goalScene = $vtourSceneArr[$targetId];
+        $target[] = $goalScene['title'];
+        $target[] = $goalScene['thumburl'];
         // SimpleXMLElement对象 转为数组取值
-        $goalScene = json_encode($goalScene);
-        $goalScene = json_decode($goalScene,true);
-        $sceneTitle = $goalScene[0];
+        $target = json_encode($target);
+        $target = json_decode($target,true);
+        $sceneTitle = $target[0][0];
+        $thumburl = $target[1][0];
 
         $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and visible=?', [$pano_id, "true"]);
         $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and visible=?', [$pano_id, "true"]);
-        return view("admin.vr.detail", ["panoId" => $pano_id, "panoData" => $panoData, "sceneTitle"=>$sceneTitle, "count" => $panoSum[0]->sum]);
+        return view("admin.vr.detail", ["panoId" => $pano_id, "panoData" => $panoData, "thumburl"=>$thumburl, "sceneTitle"=>$sceneTitle, "count" => $panoSum[0]->sum]);
     }
 
     //设置为封面
