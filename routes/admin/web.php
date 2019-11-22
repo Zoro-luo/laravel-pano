@@ -31,6 +31,9 @@
  */
 Route::get('vr/list', 'Admin\\VrController@index');                         //vr列表
 Route::get('vr/edit/{pano_id}', 'Admin\\VrController@update');              //热点编辑页
+Route::get('vr/view/{pano_id}', 'Admin\\VrController@preview');             //预览模型
+
+
 
 Route::post('vr/setcover', 'Admin\\VrController@setcover');                 //设置为封面
 Route::post('vr/toggle', 'Admin\\VrController@toggleHot');                  //显示/隐藏热点

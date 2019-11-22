@@ -8,7 +8,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{asset('public/static/hotsport')}}/css/p.min.css">
     <script src="{{asset('public/static/pano/js')}}/tour.js"></script>
-    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
     <style>
         .p-fixed {
             position: fixed;
@@ -133,7 +132,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="my-btn my-btn-gray preview ">预览</div>
+                <a class="my-btn my-btn-gray preview" target="_blank" href="{{url('vr/view/'.$panoId)}}">预览</a>
                 <div class="my-btn my-btn-green issue-btn" id="issueBtn">确认发布</div>
             </div>
         </div>

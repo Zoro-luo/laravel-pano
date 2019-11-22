@@ -17,6 +17,13 @@ class VrController extends Controller
         return view('admin.vr.list', ['panos' => $panos]);
     }
 
+    //预览
+    public function preview(Request $request){
+        $panoId = $request->pano_id;
+        return view("admin.vr.preview",["panoId" => $panoId]);
+    }
+
+
     //热点编辑页
     public function update(Request $request)
     {
