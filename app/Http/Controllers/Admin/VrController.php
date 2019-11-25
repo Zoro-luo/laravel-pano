@@ -98,6 +98,9 @@ class VrController extends Controller
         $sceneIndex = $request->get("sceneIndex");
         $panoId = $request->get("panoId");
 
+        $hlookat = $request->get("hlookat");
+        $vlookat = $request->get("vlookat");
+
 
         $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
         $vtourXmlStr = file_get_contents($xmlFile);
@@ -108,11 +111,20 @@ class VrController extends Controller
         foreach ($hotspots as $hsVal) {
             if ($hsVal['visible'] == "true") {
                 $hsVal['visible'] = "false";
+                $status = "隐藏";
             } else {
                 $hsVal['visible'] = "true";
+                $status = "显示";
             }
         }
+
+        //设置场景视角
+        $views = $vtourSceneArr[$sceneIndex]->xpath("view");
+        $views[0]['hlookat'] = $hlookat;
+        $views[0]['vlookat'] = $vlookat;
         file_put_contents($xmlFile, $vtourXmlObj->asXML());
+        $ress = ['h' => $hlookat, 'v' => $vlookat,'status'=>$status];
+        return $ress;
 
     }
 

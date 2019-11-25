@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>vr-详情页</title>
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{asset('public/static/hotsport')}}/css/p.min.css">
     <script src="{{asset('public/static/pano/js')}}/tour.js"></script>
@@ -628,15 +632,20 @@
             var panoId = "{{$panoId}}";
             var sceneName = krpano.get("xml.scene");
             var sceneIndex = krpano.get("scene[get(xml.scene)].index");
+
+            var hlookat = krpano.get("view.hlookat").toFixed(3);
+            var vlookat = krpano.get("view.vlookat").toFixed(3);
+
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 url: "{{url('vr/toggle')}}",
                 type: "POST",
-                data: {"sceneIndex": sceneIndex, "panoId": panoId},
-                success: function (res) {
-                    // krpano.call("lookat(" + hlookat + "," + vlookat + ",120)");
+                data: {"sceneIndex": sceneIndex, "panoId": panoId,"hlookat":hlookat,"vlookat":vlookat},
+                success: function (e) {
+                    $(".txt-box").html(e.status);
                     krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
                     krpano.call("loadscene(" + sceneName + ", NULL, MERGE, BLEND(0.1));");
+                    krpano.call("lookat(" + e.h + "," + e.v + ",120)");
                     //
                 }
             })
