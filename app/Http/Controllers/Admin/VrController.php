@@ -13,7 +13,8 @@ class VrController extends Controller
     //vr 列表页
     public function index()
     {
-        $panos = Pano::get();
+        //$panos = Pano::get();
+        $panos = DB::table("panos")->paginate(2);
         return view('admin.vr.list', ['panos' => $panos]);
     }
 

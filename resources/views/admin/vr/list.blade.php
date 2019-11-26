@@ -101,7 +101,8 @@
                 @endforeach
 
             </div>
-            <div class="turn-pageing">
+            {{ $panos->links('vendor.pagination.vr') }}
+            {{--<div class="turn-pageing">
                 <div class="turn-page-content">
                     <div class="page">
                         <a href="javascript:;" class="prev">上一页</a>
@@ -126,7 +127,7 @@
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div>--}}
         </div>
     </div>
 </div>

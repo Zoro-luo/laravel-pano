@@ -53,7 +53,19 @@
 
                         function krpano_onready_callback(krpano_interface) {
                             krpano = krpano_interface;
+
                         }
+
+                        /* vtourskin.xml */
+                        //krpano.set("layer[skin_thumbs].state", "opened");         // default: closed
+                        //krpano.set("layer[father_control_bar_pc].visible", "false");
+
+                        /* vtor.xml */
+                        //krpano.set("layer[top_screen_pc].visible", "false");
+                        //krpano.set("layer[right_vr_pc].visible", "false");
+                        //krpano.set("layer[right_set_pc].visible", "false");
+
+
                     </script>
                 </div>
             </div>
@@ -205,7 +217,11 @@
 <script>
 
     function test() {
-
+        if (window.performance.navigation.type == 1) {
+            console.log("页面被刷新")
+        }else{
+            console.log("首次被加载")
+        }
     }
 
     //添加热点
