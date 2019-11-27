@@ -510,8 +510,14 @@ class VrController extends Controller
         $title = $request->get("title");
         $panoId = $request->get("panoId");
         //无刷新动态更新热点管理列表
-        $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId,$title,"true"]);
-        $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId,$title,"true"]);
+        if ($title == "全部场景"){
+            $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and visible=?', [$panoId, "true"]);
+            $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and visible=?', [$panoId, "true"]);
+        }else{
+            $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId,$title,"true"]);
+            $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId,$title,"true"]);
+        }
+
         $ress['panoData'] = $panoData;
         $ress['count'] = $panoSum[0]->sum;
         return $ress;
