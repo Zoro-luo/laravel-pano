@@ -505,5 +505,17 @@ class VrController extends Controller
         return $ress;
     }
 
+    //热点管理场景下拉
+    public function showLabel(Request $request){
+        $title = $request->get("title");
+        $panoId = $request->get("panoId");
+        //无刷新动态更新热点管理列表
+        $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId,$title,"true"]);
+        $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId,$title,"true"]);
+        $ress['panoData'] = $panoData;
+        $ress['count'] = $panoSum[0]->sum;
+        return $ress;
+    }
+
 
 }

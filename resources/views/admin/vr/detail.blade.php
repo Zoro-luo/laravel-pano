@@ -115,10 +115,10 @@
                                         <ul class="my-select-list">
                                             <li class="on">全部场景</li>
                                             <li>客厅</li>
-                                            <li>餐厅</li>
-                                            <li>主卧</li>
-                                            <li>次卧</li>
-                                            <li>阳台</li>
+                                            <li>卧室</li>
+                                            <li>卫生间</li>
+                                            <li>厨房</li>
+                                            <li>外景房</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -774,8 +774,38 @@
 
     });
 
+    //热点管理场景下拉
     function addLabel(event) {
-        console.log(this, event, event.target.innerText);
+        var title = event.target.innerText;
+        var panoId = "{{$panoId}}";
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            type: "POST",
+            url: "{{url('vr/showlabel')}}",
+            data: {
+                'title':title,
+                'panoId':panoId,
+            },
+            success:function (e) {
+                var hotspotStr = '';
+                for (var j = 0; j < e.count; j++) {
+                    var hsTemplate = `<div class="table-item">
+                        <div class="table-text table-text1"><p>${e.panoData[j]['sceneName']}</p></div>
+                        <div class="table-text table-text2"><p>${e.panoData[j]['type'] == "point" ? "文本标签" : "场景跳转"}</p></div>
+                        <div class="table-text table-text3"><p>${e.panoData[j]['linkedscene']}</p></div>
+                        <div class="table-text table-text4">
+                             <i onclick="editHotspots('${e.panoData[j]['hotsName']}');" class="iconfont iconbianji1"></i>
+                             <i onclick="delHotspots('${e.panoData[j]['hotsName']}');" class="iconfont iconshanchu2"></i>
+                        </div>
+                        </div>`;
+                    hotspotStr += hsTemplate;
+                }
+                $(".redpoint-count").text("").text(e.count);
+                $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
+            }
+        });
+
+        //console.log(this, event, event.target.innerText);
     }
 
     /*

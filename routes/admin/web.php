@@ -34,7 +34,7 @@ Route::get('vr/edit/{pano_id}', 'Admin\\VrController@update');              //�
 Route::get('vr/view/{pano_id}', 'Admin\\VrController@preview');             //预览模型
 
 
-
+Route::post('vr/showlabel', 'Admin\\VrController@showLabel');               //ajax 热点管理场景下拉
 Route::post('vr/setcover', 'Admin\\VrController@setcover');                 //设置为封面
 Route::post('vr/toggle', 'Admin\\VrController@toggleHot');                  //显示/隐藏热点
 Route::post('vr/savespot', 'Admin\\VrController@saveHotspot');              //ajax 添加热点坐标
