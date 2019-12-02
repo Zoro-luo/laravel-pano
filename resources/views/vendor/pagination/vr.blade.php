@@ -52,8 +52,8 @@
 
 
             </div>
-            <div class="caption1 ">到第</div><div class="my-input page-num"><input type="text" class="inputs"></div><div class="caption1 ">页</div>
-            <div class="my-btn">确定</div>
+            <div class="caption1 ">到第</div><div class="my-input page-num"><input type="text" class="inputs inputs-page"></div><div class="caption1 ">页</div>
+            <div class="my-btn trip-page">确定</div>
             <div class="text">共有{{ $paginator->total() }}条</div>
             <div class="my-select my-select1 btn-30 bottom">
                 <div class="my-select-btn"><span class="btn-text">20条</span><i class="iconfont iconUtubiao-13"></i></div>

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{asset('public/static/hotsport')}}/css/p.min.css">
 </head>
 <body>
-<div class="header"></div>
+{{--<div class="header"></div>--}}
 <div class="container">
     <div class="vr-list-container mt-15">
         <div class="select-box">
@@ -147,6 +147,11 @@
         parent_li = parent_li || "";
         parent_child = parent_child || "";
         console.log(this, value, parent_li, parent_child);
-    }
+    };
+
+    $(".trip-page").click(function () {
+        var page = $(".inputs-page").val();
+        window.location.href = "/pano/vr/list?page=" + page;
+    })
 </script>
 </html>
