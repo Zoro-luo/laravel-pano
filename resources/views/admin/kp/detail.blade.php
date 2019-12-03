@@ -99,7 +99,7 @@
                     <div class="swich-box">
                         <label for=""  onclick="showHotsport()"><input type="checkbox" name="" id=""
                                                                          class="a-switch on"></label>
-                        <span class="txt-box">显示</span>
+                        <span class="txt-box">展示</span>
                     </div>
                 </div>
                 <div class="hot-manage section">
@@ -148,9 +148,7 @@
                         </div>
                     </div>
                 </div>
-                {{--<a class="my-btn my-btn-gray preview" target="_blank" href="{{url('vr/view/'.$panoId)}}">预览</a>--}}
-                <a class="my-btn my-btn-gray preview" onclick="preview()" href="javascript:;" >预览</a>
-
+                <a class="my-btn my-btn-gray preview" target="_blank" href="{{url('kp/view/'.$panoId)}}">预览</a>
                 <div class="my-btn my-btn-green issue-btn" id="issueBtn">确认发布</div>
             </div>
         </div>
@@ -226,23 +224,6 @@
         }
     }
 
-    //预览copy xml
-    function preview() {
-        var panoId = "{{$panoId}}";
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            url: "{{url('vr/preview')}}",
-            type: "POST",
-            data: {"panoId": panoId},
-            success: function (e) {
-                 if (e=="200"){
-                    window.open("{{url('vr/view')}}"+"/"+panoId);
-                 }
-            }
-        })
-    }
-
-
     //添加热点
     function addHotspots(args) {
         if (krpano) {
@@ -316,7 +297,7 @@
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                                 type: "POST",
-                                url: "{{url('vr/savespot')}}",
+                                url: "{{url('kp/savespot')}}",
                                 data: {
                                     'hostName': hs_name,
                                     'h': hh,
@@ -326,7 +307,8 @@
                                     'panoId': panoId,
                                     'sceneIndex': sceneIndex,
                                     'linkedscene': linkedscene,
-                                    'linkedTitle': linkedTitle
+                                    'linkedTitle': linkedTitle,
+                                    'count':count,
                                 },
                                 success: function (e) {
                                     if (flag) _this.close(index);
@@ -371,7 +353,7 @@
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                                 type: "POST",
-                                url: "{{url('vr/savepoint')}}",
+                                url: "{{url('kp/savepoint')}}",
                                 data: {
                                     'hostName': hs_name,
                                     'h': hh_p,
@@ -412,6 +394,7 @@
         }
     }
 
+
     //编辑热点
     function editHotspots(hsName) {
         if (krpano.get("device.html5")) {
@@ -424,7 +407,7 @@
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 type: "POST",
-                url: "{{url('vr/editspot')}}",
+                url: "{{url('kp/editspot')}}",
                 data: {"panoId": panoId, "sceneIndex": scene_index, "hostName": hsName, "sceneName": scene_name},
                 success: function (e) {
                     var panoId = e.panoId;
@@ -470,7 +453,7 @@
                                     $.ajax({
                                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                                         type: "POST",
-                                        url: "{{url('vr/espoint')}}",
+                                        url: "{{url('kp/espoint')}}",
                                         data: {
                                             'hsNewName': hsNewName,
                                             'hsOldName': hsOldName,
@@ -548,7 +531,7 @@
                                     $.ajax({
                                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                                         type: "POST",
-                                        url: "{{url('vr/esspot')}}",
+                                        url: "{{url('kp/esspot')}}",
                                         data: {
                                             'hsNewName': hsNewName,
                                             'hsOldName': hsOldName,
@@ -606,7 +589,7 @@
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 type: "POST",
-                url: "{{url('vr/delspot')}}",
+                url: "{{url('kp/delspot')}}",
                 data: {"panoId": panoId, "sceneIndex": scene_index, "hostName": hsName, "sceneName": scene_name},
                 success: function (e) {
                     var panoId = e.panoId;
@@ -622,7 +605,7 @@
                             $.ajax({
                                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                                 type: "POST",
-                                url: "{{url('vr/delhs')}}",
+                                url: "{{url('kp/delhs')}}",
                                 data: {
                                     "panoId": panoId,
                                     "sceneIndex": scene_index,
@@ -673,14 +656,14 @@
 
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                url: "{{url('vr/toggle')}}",
+                url: "{{url('kp/toggle')}}",
                 type: "POST",
                 data: {"sceneIndex": sceneIndex, "panoId": panoId,"hlookat":hlookat,"vlookat":vlookat},
                 success: function (e) {
                     $(".txt-box").html(e.status);
                     krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
                     krpano.call("loadscene(" + sceneName + ", NULL, MERGE, BLEND(0.1));");
-                    //krpano.call("lookat(" + e.h + "," + e.v + ",120)");
+                    krpano.call("lookat(" + e.h + "," + e.v + ",120)");
                     //
                 }
             })
@@ -700,7 +683,7 @@
             var vlookat = krpano.get("view.vlookat").toFixed(3);
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                url: "{{url('vr/setcover')}}",
+                url: "{{url('kp/setcover')}}",
                 type: "POST",
                 data: {"sceneIndex": sceneIndex, "panoId": panoId, "sceneTitle": sceneTitle,"hlookat": hlookat, "vlookat": vlookat},
                 success: function (e) {
@@ -714,85 +697,6 @@
         }
     }
 
-    $(function () {
-        $(".setScene1111").on("click", function () {
-            if (krpano) {
-                var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
-                var panoId = "{{$panoId}}";
-                var sceneName = krpano.get("xml.scene");
-                var sceneIndex = krpano.get("scene[get(xml.scene)].index");
-                var sceneTitle = krpano.get("scene[" + sceneIndex + "].title");
-                $.ajax({
-                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    url: "{{url('vr/setcover')}}",
-                    type: "POST",
-                    data: {"sceneIndex": sceneIndex, "panoId": panoId, "sceneTitle": sceneTitle},
-                    success: function (e) {
-                        // console.log(e);
-                        $(".isScene").html(e);
-                        krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
-                        krpano.call("loadscene(" + sceneName + ", NULL, MERGE, BLEND(0.1));");
-
-                    }
-                })
-            }
-        });
-
-
-
-
-        //热点隐藏显示切换
-        // function switchHanlder(hason) {
-        //     hason ? $(".txt-box").text("展示") : $(".txt-box").text("隐藏");
-        // }
-
-
-
-
-
-        // 场景跳转弹窗
-        $(".makeHs122").click(function () {
-            myFun.layer.opens("#sceneSetting", "场景跳转设置", "normal", function (layero) {
-                $(".img-child").click(function (e) {
-                    var event = e || window.event
-                    target = event.target || event.srcElement;
-                    $(target).parents(".img-box").find(".img-border").removeClass("img-border");
-                    $(target).addClass("img-border");
-                })
-                layero.find(".my-btn-green").click(function () {
-                    var flag = zFun.utils.validationAll();
-                    console.log(flag);
-                })
-            });
-        });
-
-        // 标题标签设置
-        $(".makeHs122").click(function () {
-            myFun.layer.opens("#titleSetting", "标题标签设置", "small", function (layero) {
-                layero.find(".my-btn-green").click(function () {
-                    var flag = zFun.utils.validationAll();
-                    console.log(flag);
-                })
-            });
-        });
-        // 发布按钮
-        // $("#issueBtn").click(function () {
-        //     // myFun.layer.opens("#confirmIssue","","small", function() {})
-        //     opensHint("发布", "您确定要发布吗？", "jc", function () {
-        //         console.log(this);
-        //     });
-        // });
-        // 热点管理删除
-        // $(".iconshanchu2").click(function () {
-        //     // myFun.layer.opens("#confirmIssue","","small", function() { })
-        //     const text1 = "【次卧】", text2 = "【文字】";
-        //     opensHint("删除", "您确定要删除" + text1 + "的" + text2 + "标签 ？", "jc", function () {
-        //         console.log(this);
-        //     });
-        // });
-
-    });
-
     //热点管理场景下拉
     function addLabel(event) {
         var title = event.target.innerText;
@@ -800,7 +704,7 @@
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             type: "POST",
-            url: "{{url('vr/showlabel')}}",
+            url: "{{url('kp/showlabel')}}",
             data: {
                 'title':title,
                 'panoId':panoId,

@@ -141,7 +141,8 @@ desired effect
                     {{--<li><a href="#"><i class="glyphicon glyphicon-tags"></i> <span>分类管理</span></a></li>--}}
                     <li class="active"><a href="{{url('pano/index')}}"><i class="glyphicon glyphicon-film"></i> <span>全景管理</span></a></li>
 
-                    <li class="active"><a href="{{url('vr/list')}}"><i class="glyphicon glyphicon-film"></i> <span>VR管理</span></a></li>
+                    <li class="active"><a href="{{url('vr/list')}}"><i class="glyphicon glyphicon-film"></i> <span>VR1.0管理</span></a></li>
+                    <li class="active"><a href="{{url('kp/list')}}"><i class="glyphicon glyphicon-film"></i> <span>VR2.0管理</span></a></li>
                     {{--<li class="treeview">
                         <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
                             <span class="pull-right-container">

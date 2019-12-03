@@ -8,36 +8,21 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-class VrController extends Controller
+class KpController extends Controller
 {
     //vr 列表页
     public function index()
     {
         //$panos = Pano::get();
         $panos = DB::table("panos")->paginate(2);
-        return view('admin.vr.list', ['panos' => $panos]);
+
+        return view('admin.kp.list', ['panos' => $panos]);
     }
 
     //预览
-    public function preview(Request $request)
-    {
+    public function preview(Request $request){
         $panoId = $request->pano_id;
-        return view("admin.vr.preview", ["panoId" => $panoId]);
-    }
-
-    public function copyUrl(Request $request)
-    {
-        $panoId = $request->panoId;
-        $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
-        $xmlNewFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_new.xml";
-        $vtourXmlStr = file_get_contents($xmlFile);
-        $res = file_put_contents($xmlNewFile, $vtourXmlStr);
-        if ($res) {
-            /*$tourXmlStr = file_get_contents($xmlNewFile);
-            $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
-            $tourXmlObj->*/
-            return '200';
-        }
+        return view("admin.kp.preview",["panoId" => $panoId]);
     }
 
 
@@ -52,8 +37,8 @@ class VrController extends Controller
         /* if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );loadscene(get(startscene), null, MERGE);
             if(startactions !== null, startactions() );
         */
-        $start = strpos($actionStr, 'name');
-        $start = $start - 3;
+        $start = strpos($actionStr,'name');
+        $start = $start-3;
         $targetId = substr($actionStr, $start, 1);   //获取到0
         //根据拿到的场景index 获取场景的title 和缩略图
         $vtourXmlStr = file_get_contents($xmlFile);
@@ -64,15 +49,15 @@ class VrController extends Controller
         $target[] = $goalScene['thumburl'];
         // SimpleXMLElement对象 转为数组取值
         $target = json_encode($target);
-        $target = json_decode($target, true);
+        $target = json_decode($target,true);
         $sceneTitle = $target[0][0];
         $thumburl = $target[1][0];
-        $thumbArr = explode('/', $thumburl);
+        $thumbArr = explode('/',$thumburl);
         $thumbName = $thumbArr[2];
 
         $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and visible=?', [$pano_id, "true"]);
         $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and visible=?', [$pano_id, "true"]);
-        return view("admin.vr.detail", ["panoId" => $pano_id, "panoData" => $panoData, "thumbName" => $thumbName, "sceneTitle" => $sceneTitle, "count" => $panoSum[0]->sum]);
+        return view("admin.kp.detail", ["panoId" => $pano_id, "panoData" => $panoData, "thumbName"=>$thumbName, "sceneTitle"=>$sceneTitle, "count" => $panoSum[0]->sum]);
     }
 
     //设置为封面
@@ -103,7 +88,7 @@ class VrController extends Controller
             $views[0]['vlookat'] = $vlookat;
             file_put_contents($xmlFile, $vtourXmlObj->asXML());
 
-            $ress = ['h' => $hlookat, 'v' => $vlookat, 'title' => $sceneTitle];
+            $ress = ['h' => $hlookat, 'v' => $vlookat,'title'=>$sceneTitle];
 
             return $ress;
         }
@@ -133,7 +118,6 @@ class VrController extends Controller
                 $hsVal['visible'] = "true";
                 $status = "显示";
             }
-
         }
 
         //设置场景视角
@@ -141,7 +125,7 @@ class VrController extends Controller
         $views[0]['hlookat'] = $hlookat;
         $views[0]['vlookat'] = $vlookat;
         file_put_contents($xmlFile, $vtourXmlObj->asXML());
-        $ress = ['h' => $hlookat, 'v' => $vlookat, 'status' => $status];
+        $ress = ['h' => $hlookat, 'v' => $vlookat,'status'=>$status];
         return $ress;
 
     }
@@ -158,6 +142,7 @@ class VrController extends Controller
         $sceneIndex = (int)$request->get("sceneIndex");
         $linkedscene = $request->get("linkedscene");
         $linkedTitle = $request->get("linkedTitle");
+        $count = $request->get("count");
 
         // 同pano_id 下的同热点名 则update 覆盖
         $resHotSpot = DB::select('select pano_id,hotsName from hotspots where pano_id=? and hotsName=?', [$panoId, $hostName]);
@@ -188,12 +173,22 @@ class VrController extends Controller
         $currScene = $vtourXmlObj->scene[$sceneIndex];
         $currHotSpot = $currScene->addChild('hotspot');
         $currHotSpot->addAttribute("name", $hostName);
-        $currHotSpot->addAttribute("style", "hotspot_style_animated");
-        $currHotSpot->addAttribute("tooltip", $linkedTitle);
+        $currHotSpot->addAttribute("url", "%SWFPATH%/../../../static/images/hotspot_max.png");
         $currHotSpot->addAttribute("ath", $ath);
         $currHotSpot->addAttribute("atv", $atv);
         $currHotSpot->addAttribute("zoom", "true");
-        $currHotSpot->addAttribute("linkedscene", $linkedscene);
+        $currHotSpot->addAttribute("scale", "0.8");
+        $currHotSpot->addAttribute("onloaded", "add_all_the_time_tooltip_error(".$hostName.");"."set(plugin[get(linename)].onclick,removehotspot(".$hostName.");set(plugin[get(linename)].visible,false););");
+        $currHotSpot->addAttribute("visible", "true");
+        $currHotSpot->addAttribute("ondown", "draghotspot();");
+        //$currHotSpot->addAttribute("onclick", "editHs(".$ath.",".$atv.",".$count.");");
+
+        /*$currHotSpot->addAttribute("tooltip", $linkedTitle);
+        $currHotSpot->addAttribute("style", "hotspot_style_animated");
+        $currHotSpot->addAttribute("ath", $ath);
+        $currHotSpot->addAttribute("atv", $atv);
+        $currHotSpot->addAttribute("zoom", "true");
+        $currHotSpot->addAttribute("linkedscene", $linkedscene);*/
         file_put_contents($xmlFile, $vtourXmlObj->asXML());
 
         //无刷新动态更新热点管理列表
@@ -523,17 +518,16 @@ class VrController extends Controller
     }
 
     //热点管理场景下拉
-    public function showLabel(Request $request)
-    {
+    public function showLabel(Request $request){
         $title = $request->get("title");
         $panoId = $request->get("panoId");
         //无刷新动态更新热点管理列表
-        if ($title == "全部场景") {
+        if ($title == "全部场景"){
             $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and visible=?', [$panoId, "true"]);
             $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and visible=?', [$panoId, "true"]);
-        } else {
-            $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId, $title, "true"]);
-            $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId, $title, "true"]);
+        }else{
+            $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId,$title,"true"]);
+            $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId,$title,"true"]);
         }
 
         $ress['panoData'] = $panoData;
