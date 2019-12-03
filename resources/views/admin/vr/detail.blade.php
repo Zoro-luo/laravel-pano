@@ -72,7 +72,7 @@
             <div class="vr-right">
                 <div class="set-cover-box section">
                     <div class="my-btn my-btn-green set-covers" onclick="setScene()">设置为封面图</div>
-                    <span>已设置：<span class="isScene" >{{$sceneTitle}}</span></span>
+                    <span>已设置：<span class="isScene">{{$sceneTitle}}</span></span>
                     {{--<img class="avator" src="{{asset('storage/panos')}}/{{$panoId}}/thumb/{{$thumbName}}" alt="">--}}
                 </div>
                 <div class="set-hot-choice section">
@@ -97,8 +97,8 @@
                 <div class="hot-show section">
                     <h3 class="s-title">热点展示</h3>
                     <div class="swich-box">
-                        <label for=""  onclick="showHotsport()"><input type="checkbox" name="" id=""
-                                                                         class="a-switch on"></label>
+                        <label for="" onclick="showHotsport()"><input type="checkbox" name="" id=""
+                                                                      class="a-switch on"></label>
                         <span class="txt-box">显示</span>
                     </div>
                 </div>
@@ -149,7 +149,7 @@
                     </div>
                 </div>
                 {{--<a class="my-btn my-btn-gray preview" target="_blank" href="{{url('vr/view/'.$panoId)}}">预览</a>--}}
-                <a class="my-btn my-btn-gray preview" onclick="preview()" href="javascript:;" >预览</a>
+                <a class="my-btn my-btn-gray preview" onclick="preview()" href="javascript:;">预览</a>
 
                 <div class="my-btn my-btn-green issue-btn" id="issueBtn">确认发布</div>
             </div>
@@ -221,7 +221,7 @@
     function test() {
         if (window.performance.navigation.type == 1) {
             console.log("页面被刷新")
-        }else{
+        } else {
             console.log("首次被加载")
         }
     }
@@ -235,9 +235,9 @@
             type: "POST",
             data: {"panoId": panoId},
             success: function (e) {
-                 if (e=="200"){
-                    window.open("{{url('vr/view')}}"+"/"+panoId);
-                 }
+                if (e == "200") {
+                    window.open("{{url('vr/view')}}" + "/" + panoId);
+                }
             }
         })
     }
@@ -274,11 +274,11 @@
 
             if (krpano.get("device.html5") && args == "hotspot") {  //跳转热点
                 krpano.set("hotspot[" + hs_name + "].onclick", function (hs) {
-
-                    var offsetSize = 20;
+                    var offsetSize = 30;
                     var mx = krpano.get("mouse.x");
                     var my = krpano.get("mouse.y");
-                    var pnt = krpano.screentosphere(mx, my);
+                    var new_y = my - offsetSize;
+                    var pnt = krpano.screentosphere(mx, new_y);
                     var hh = pnt.x.toFixed(3);
                     var vv = pnt.y.toFixed(3);
 
@@ -354,9 +354,13 @@
                 }.bind(null, hs_name));
             } else if (krpano.get("device.html5") && args == "point") {    //标签热点
                 krpano.set("hotspot[" + hs_name + "].onclick", function (hs) {
+                    var offsetSizeX = 10.5;
+                    var offsetSizeY = 15.5;
                     var mx_p = krpano.get("mouse.x");
                     var my_p = krpano.get("mouse.y");
-                    var pnt_p = krpano.screentosphere(mx_p, my_p);
+                    var new_x = mx_p - offsetSizeX;
+                    var new_y = my_p - offsetSizeY;
+                    var pnt_p = krpano.screentosphere(new_x, new_y);
                     var hh_p = pnt_p.x.toFixed(3);
                     var vv_p = pnt_p.y.toFixed(3);
                     //标题标签设置弹窗
@@ -674,7 +678,7 @@
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 url: "{{url('vr/toggle')}}",
                 type: "POST",
-                data: {"sceneIndex": sceneIndex, "panoId": panoId,"hlookat":hlookat,"vlookat":vlookat},
+                data: {"sceneIndex": sceneIndex, "panoId": panoId, "hlookat": hlookat, "vlookat": vlookat},
                 success: function (e) {
                     $(".txt-box").html(e.status);
                     krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
@@ -687,7 +691,7 @@
     }
 
     //设置为封面
-    function setScene(){
+    function setScene() {
         if (krpano) {
             var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
             var panoId = "{{$panoId}}";
@@ -701,7 +705,13 @@
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 url: "{{url('vr/setcover')}}",
                 type: "POST",
-                data: {"sceneIndex": sceneIndex, "panoId": panoId, "sceneTitle": sceneTitle,"hlookat": hlookat, "vlookat": vlookat},
+                data: {
+                    "sceneIndex": sceneIndex,
+                    "panoId": panoId,
+                    "sceneTitle": sceneTitle,
+                    "hlookat": hlookat,
+                    "vlookat": vlookat
+                },
                 success: function (e) {
                     // console.log(e);
                     $(".isScene").html(e.title);
@@ -714,66 +724,6 @@
     }
 
     $(function () {
-        $(".setScene1111").on("click", function () {
-            if (krpano) {
-                var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
-                var panoId = "{{$panoId}}";
-                var sceneName = krpano.get("xml.scene");
-                var sceneIndex = krpano.get("scene[get(xml.scene)].index");
-                var sceneTitle = krpano.get("scene[" + sceneIndex + "].title");
-                $.ajax({
-                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    url: "{{url('vr/setcover')}}",
-                    type: "POST",
-                    data: {"sceneIndex": sceneIndex, "panoId": panoId, "sceneTitle": sceneTitle},
-                    success: function (e) {
-                        // console.log(e);
-                        $(".isScene").html(e);
-                        krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
-                        krpano.call("loadscene(" + sceneName + ", NULL, MERGE, BLEND(0.1));");
-
-                    }
-                })
-            }
-        });
-
-
-
-
-        //热点隐藏显示切换
-        // function switchHanlder(hason) {
-        //     hason ? $(".txt-box").text("展示") : $(".txt-box").text("隐藏");
-        // }
-
-
-
-
-
-        // 场景跳转弹窗
-        $(".makeHs122").click(function () {
-            myFun.layer.opens("#sceneSetting", "场景跳转设置", "normal", function (layero) {
-                $(".img-child").click(function (e) {
-                    var event = e || window.event
-                    target = event.target || event.srcElement;
-                    $(target).parents(".img-box").find(".img-border").removeClass("img-border");
-                    $(target).addClass("img-border");
-                })
-                layero.find(".my-btn-green").click(function () {
-                    var flag = zFun.utils.validationAll();
-                    console.log(flag);
-                })
-            });
-        });
-
-        // 标题标签设置
-        $(".makeHs122").click(function () {
-            myFun.layer.opens("#titleSetting", "标题标签设置", "small", function (layero) {
-                layero.find(".my-btn-green").click(function () {
-                    var flag = zFun.utils.validationAll();
-                    console.log(flag);
-                })
-            });
-        });
         // 发布按钮
         // $("#issueBtn").click(function () {
         //     // myFun.layer.opens("#confirmIssue","","small", function() {})
@@ -801,10 +751,10 @@
             type: "POST",
             url: "{{url('vr/showlabel')}}",
             data: {
-                'title':title,
-                'panoId':panoId,
+                'title': title,
+                'panoId': panoId,
             },
-            success:function (e) {
+            success: function (e) {
                 var hotspotStr = '';
                 for (var j = 0; j < e.count; j++) {
                     var hsTemplate = `<div class="table-item">
