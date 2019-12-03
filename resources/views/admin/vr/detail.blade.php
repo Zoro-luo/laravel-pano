@@ -275,11 +275,9 @@
             if (krpano.get("device.html5") && args == "hotspot") {  //跳转热点
                 krpano.set("hotspot[" + hs_name + "].onclick", function (hs) {
 
-                    var offsetSize = 30;
+                    var offsetSize = 20;
                     var mx = krpano.get("mouse.x");
                     var my = krpano.get("mouse.y");
-                    var mx_new = mx - offsetSize;
-                    var my_new = my + offsetSize;
                     var pnt = krpano.screentosphere(mx, my);
                     var hh = pnt.x.toFixed(3);
                     var vv = pnt.y.toFixed(3);
@@ -532,6 +530,7 @@
                             myFun.layer.opens("#sceneSetting", "场景跳转设置", "normal", function (layero, index) {
                                 var _this = this;
                                 layero.find(".img-box").append(templateStr);
+                                layero.find(".my-input>.inputs").val(linkedTitle);
                                 $(".img-child").click(function (e) {
                                     var event = e || window.event
                                     target = event.target || event.srcElement;
