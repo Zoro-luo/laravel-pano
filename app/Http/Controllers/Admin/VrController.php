@@ -443,7 +443,7 @@ class VrController extends Controller
         $hostName = $request->get("hostName");
         $sceneName = $request->get("sceneName");
 
-        $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
+        /*$xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
         $vtourXmlStr = file_get_contents($xmlFile);
         $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
         $vtourSceneArr = $vtourXmlObj->xpath('scene');
@@ -453,7 +453,7 @@ class VrController extends Controller
                 $hsVal['visible'] = "false";
             }
         }
-        file_put_contents($xmlFile, $vtourXmlObj->asXML());
+        file_put_contents($xmlFile, $vtourXmlObj->asXML());*/
 
         //sql返回该热点的坐标值
         $panoData = DB::select('select pano_id,hotsName,ath,atv,type,linkedscene from hotspots where pano_id=? and hotsName=?', [$panoId, $hostName]);

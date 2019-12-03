@@ -448,7 +448,7 @@
                     krpano.set("hotspot[" + hsNewName + "].visible", "true");
                     krpano.set("hotspot[" + hsNewName + "].onloaded", "add_all_the_time_tooltip_error(" + hsNewName + ");" +
                         "set(plugin[get(linename)].onclick ,removehotspot(" + hsNewName + ");" +
-                        "checkRedErr(" + panoId + "," + scene_index + "," + hsOldName + "," + scene_name + ");" +
+                        /*"checkRedErr(" + panoId + "," + scene_index + "," + hsOldName + "," + scene_name + ");" +*/
                         "set(plugin[get(linename)].visible,false););");
                     krpano.set("hotspot[" + hsNewName + "].ondown", "draghotspot();");
                     if (krpano.get("device.html5") && type == "point") {
