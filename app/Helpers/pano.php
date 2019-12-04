@@ -1205,6 +1205,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $topScreenPc->setAttribute("keep","true");
     $topScreenPc->setAttribute("x","42");
     $topScreenPc->setAttribute("y","50");
+    $topScreenPc->setAttribute("visible","true");
     $topScreenPc->setAttribute("onclick","switch(fullscreen);");
     $topScreenPc->setAttribute("devices","html5+!touchdevice");
 

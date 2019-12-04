@@ -64,14 +64,23 @@ class VrController extends Controller
             $vtourIncludeArr[0]["url"] = "skin/vtourskin_new.xml";
         }
         $vtourLayerArr = $tourXmlObj->xpath("layer");
-        if ($vtourLayerArr[9]["visible"] == "false"){       // top_screen_pc
+        if ($vtourLayerArr[9]["visible"] == "false"){       //显示 top_screen_pc
             $vtourLayerArr[9]["visible"] = "true";
         }
-        if ($vtourLayerArr[10]["visible"] == "false"){      // right_vr_pc
+        if ($vtourLayerArr[10]["visible"] == "false"){      //显示 right_vr_pc
             $vtourLayerArr[10]["visible"] = "true";
         }
-        if ($vtourLayerArr[11]["visible"] == "false"){      // right_set_pc
-            $vtourLayerArr[11]["visible"] = "true";
+        if ($vtourLayerArr[12]["visible"] == "false"){      //显示 right_set_pc
+            $vtourLayerArr[12]["visible"] = "true";
+        }
+        if ($tourXmlObj->skin_settings['thumbs_opened'] == "true"){   //关闭 skin_settings['thumbs_opened']
+            $tourXmlObj->skin_settings['thumbs_opened'] = "false";
+        }
+        if ($tourXmlObj->autorotate['enabled'] == "false"){  //打开 自动旋转
+            $tourXmlObj->autorotate['enabled'] = "true";
+        }
+        if ($tourXmlObj->skin_settings['littleplanetintro'] == "false"){  //打开 小行星
+            $tourXmlObj->skin_settings['littleplanetintro'] = "true";
         }
         file_put_contents($xmlNewFile, $tourXmlObj->asXML());
 
@@ -130,15 +139,24 @@ class VrController extends Controller
         //3. 修改tour.xml配置显示经纪人等设置信息
         $tourXmlStr = file_get_contents($xmlFile);
         $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
+        if ( $tourXmlObj->skin_settings['thumbs_opened'] == "false"){   // 开启 skin_settings['thumbs_opened']
+            $tourXmlObj->skin_settings['thumbs_opened'] = "true";
+        }
         $vtourLayerArr = $tourXmlObj->xpath("layer");
-        if ($vtourLayerArr[9]["visible"] == "true"){       // top_screen_pc
+        if ($vtourLayerArr[9]["visible"] == "true"){       // 隐藏 top_screen_pc
             $vtourLayerArr[9]["visible"] = "false";
         }
-        if ($vtourLayerArr[10]["visible"] == "true"){      // right_vr_pc
+        if ($vtourLayerArr[10]["visible"] == "true"){      // 隐藏 right_vr_pc
             $vtourLayerArr[10]["visible"] = "false";
         }
-        if ($vtourLayerArr[11]["visible"] == "true"){      // right_set_pc
-            $vtourLayerArr[11]["visible"] = "false";
+        if ($vtourLayerArr[12]["visible"] == "true"){      // 隐藏 right_set_pc
+            $vtourLayerArr[12]["visible"] = "false";
+        }
+        if ($tourXmlObj->autorotate['enabled'] == "true"){  //关闭 自动旋转
+            $tourXmlObj->autorotate['enabled'] = "false";
+        }
+        if ($tourXmlObj->skin_settings['littleplanetintro'] == "true"){  //关闭 小行星
+            $tourXmlObj->skin_settings['littleplanetintro'] = "false";
         }
         file_put_contents($xmlFile, $tourXmlObj->asXML());
 

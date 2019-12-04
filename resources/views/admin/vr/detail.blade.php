@@ -217,15 +217,6 @@
 <script src="{{asset('public/static/hotsport')}}/js/common.js"></script>
 <script src="{{asset('public/static/hotsport')}}/js/zxc_common.js"></script>
 <script>
-
-    function test() {
-        if (window.performance.navigation.type == 1) {
-            console.log("页面被刷新")
-        } else {
-            console.log("首次被加载")
-        }
-    }
-
     //预览copy xml
     function preview() {
         var panoId = "{{$panoId}}";
@@ -241,7 +232,6 @@
             }
         })
     }
-
 
     //添加热点
     function addHotspots(args) {
@@ -740,6 +730,14 @@
         //     });
         // });
 
+        // function test() {
+        //     if (window.performance.navigation.type == 1) {
+        //         console.log("页面被刷新")
+        //     } else {
+        //         console.log("首次被加载")
+        //     }
+        // }
+
     });
 
     //热点管理场景下拉
@@ -789,7 +787,6 @@
             success ? success.call(_this, layero, index) : "";
         })
     }
-
 
 </script>
 </html>

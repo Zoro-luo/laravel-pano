@@ -200,22 +200,6 @@ function handleHsAnimate($xmlFile){
         set(plugin[get(tooltipname)].textshadow,1);set(plugin[get(tooltipname)].textshadowrange,6.0);set(plugin[get(tooltipname)].textshadowangle,90);
         copy(plugin[get(tooltipname)].html,hotspot[get(name)].tooltip);set(plugin[get(tooltipname)].enabled,false);";
 
-    //ajax  点编辑弹出热点后点红X的操作 checkRedErr
-    $checkRedErr = $vtourDocXml->createElement("action");
-    $checkRedErr->setAttribute("name","checkRedErr");
-    $checkRedErr->setAttribute("type","Javascript");
-    $checkRedErr->nodeValue = "
-            $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name=\"csrf-token\"]').attr('content')},
-            type:\"POST\",
-            url:\"/pano/vr/checkerr\",
-            data:{'panoId':args[1],'sceneIndex':args[2],'hostName':args[3],'sceneName':args[4]},
-            success:function(e){
-                krpano.call(\"loadpano(tour.xml, NULL, MERGE, BLEND(0.1));\");
-                krpano.call(\"loadscene(\" + e + \", NULL, MERGE, BLEND(0.1));\");
-            }
-        });";
-
 
     $krpanoNode->appendChild($point_style_animated);
     $krpanoNode->appendChild($hotspot_style_animated);
@@ -224,7 +208,6 @@ function handleHsAnimate($xmlFile){
     $krpanoNode->appendChild($add_all_the_time_tooltip_line);
     $krpanoNode->appendChild($add_all_the_time_tooltip_point);
     $krpanoNode->appendChild($add_all_the_time_tooltip_hotspot);
-    $krpanoNode->appendChild($checkRedErr);
 
     $vtourDocXml->save($xmlFile);
 
