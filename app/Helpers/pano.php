@@ -97,6 +97,7 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $fatherControlBarPc->addAttribute("y","-75");
     $fatherControlBarPc->addAttribute("devices","html5+!touchdevice");
     $fatherControlBarPc->addAttribute("keep","true");
+    $fatherControlBarPc->addAttribute("visible","true");
     $fatherControlBarPc->addAttribute("url","%SWFPATH%/plugins/textfield.swf");
 
     // 添加 bohao_saoma 层
@@ -1343,7 +1344,7 @@ function addHotSpot($tourSceneArr)
 function changTourXml($xmlFile = null, $mb_name = null,$content,$paonId)
 {
     //热点动态操作[后台]
-    makeSelectAction($xmlFile);
+    //makeSelectAction($xmlFile);
 
     //动态热点 [后台热点编辑块]
     handleHsAnimate($xmlFile);

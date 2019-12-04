@@ -18,24 +18,64 @@ class VrController extends Controller
         return view('admin.vr.list', ['panos' => $panos]);
     }
 
-    //预览
+    //预览视图
     public function preview(Request $request)
     {
         $panoId = $request->pano_id;
         return view("admin.vr.preview", ["panoId" => $panoId]);
     }
 
+    //预览后copy xml
     public function copyUrl(Request $request)
     {
         $panoId = $request->panoId;
         $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
         $xmlNewFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_new.xml";
+        $skinXmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\skin\\vtourskin.xml";
+        $skinXmlNewFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\skin\\vtourskin_new.xml";
+
+        //1. copy tour.xml 文件为tour_new.xml
         $vtourXmlStr = file_get_contents($xmlFile);
         $res = file_put_contents($xmlNewFile, $vtourXmlStr);
+        //2. copy vtourskin.xml 文件为vtourskin_new.xml
+        $vtourSkinXmlStr = file_get_contents($skinXmlFile);
+        $ress = file_put_contents($skinXmlNewFile, $vtourSkinXmlStr);
+
+        //3. 修改vtourskin_new.xml配置显示经纪人等设置信息
+        $tourSkinXmlStr = file_get_contents($skinXmlNewFile);
+        $tourSkinXmlObj = new \SimpleXMLElement($tourSkinXmlStr);
+        $vtourSkinLayerArr = $tourSkinXmlObj->xpath("layer");
+        $skin_thumbs = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[2]
+            ->xpath("layer")[0]->xpath("layer")[3];
+        if ($skin_thumbs["state"] == "opened"){             // skin_thumbs
+            $skin_thumbs["state"] = "closed";
+        }
+        $father_control_bar_pc = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[3];
+        if ($father_control_bar_pc["visible"] == "false"){  //father_control_bar_pc
+            $father_control_bar_pc["visible"] = "true";
+        }
+        file_put_contents($skinXmlNewFile, $tourSkinXmlObj->asXML());
+
+        //4. 修改tour_new.xml配置显示经纪人等设置信息
+        $tourXmlStr = file_get_contents($xmlNewFile);
+        $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
+        $vtourIncludeArr = $tourXmlObj->xpath("include");
+        if ($vtourIncludeArr[0]["url"] == "skin/vtourskin.xml"){    // <include url="skin/vtourskin.xml"/>
+            $vtourIncludeArr[0]["url"] = "skin/vtourskin_new.xml";
+        }
+        $vtourLayerArr = $tourXmlObj->xpath("layer");
+        if ($vtourLayerArr[9]["visible"] == "false"){       // top_screen_pc
+            $vtourLayerArr[9]["visible"] = "true";
+        }
+        if ($vtourLayerArr[10]["visible"] == "false"){      // right_vr_pc
+            $vtourLayerArr[10]["visible"] = "true";
+        }
+        if ($vtourLayerArr[11]["visible"] == "false"){      // right_set_pc
+            $vtourLayerArr[11]["visible"] = "true";
+        }
+        file_put_contents($xmlNewFile, $tourXmlObj->asXML());
+
         if ($res) {
-            /*$tourXmlStr = file_get_contents($xmlNewFile);
-            $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
-            $tourXmlObj->*/
             return '200';
         }
     }
@@ -46,6 +86,8 @@ class VrController extends Controller
     {
         $pano_id = $request->pano_id;
         $xmlFile = storage_path("panos") . "\\" . $pano_id . "\\vtour\\tour.xml";
+        $skinXmlFile = storage_path("panos") . "\\" . $pano_id . "\\vtour\\skin\\vtourskin.xml";
+        //1. 拿到当前场景scene id下的缩略图和title
         $vtourDocXml = new \DOMDocument();
         $vtourDocXml->load($xmlFile);
         $actionStr = $vtourDocXml->getElementsByTagName("action")->item(0)->nodeValue;
@@ -55,14 +97,14 @@ class VrController extends Controller
         $start = strpos($actionStr, 'name');
         $start = $start - 3;
         $targetId = substr($actionStr, $start, 1);   //获取到0
-        //根据拿到的场景index 获取场景的title 和缩略图
+        // a. 根据拿到的场景index 获取场景的title 和缩略图
         $vtourXmlStr = file_get_contents($xmlFile);
         $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
         $vtourSceneArr = $vtourXmlObj->xpath('scene');
         $goalScene = $vtourSceneArr[$targetId];
         $target[] = $goalScene['title'];
         $target[] = $goalScene['thumburl'];
-        // SimpleXMLElement对象 转为数组取值
+        // b. SimpleXMLElement对象 转为数组取值
         $target = json_encode($target);
         $target = json_decode($target, true);
         $sceneTitle = $target[0][0];
@@ -70,6 +112,37 @@ class VrController extends Controller
         $thumbArr = explode('/', $thumburl);
         $thumbName = $thumbArr[2];
 
+        //2. 修改vtourskin.xml 隐藏 经纪人信息
+        $tourSkinXmlStr = file_get_contents($skinXmlFile);
+        $tourSkinXmlObj = new \SimpleXMLElement($tourSkinXmlStr);
+        $vtourSkinLayerArr = $tourSkinXmlObj->xpath("layer");
+        $skin_thumbs = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[2]
+            ->xpath("layer")[0]->xpath("layer")[3];
+        if ($skin_thumbs["state"] == "closed"){             // skin_thumbs
+            $skin_thumbs["state"] = "opened";
+        }
+        $father_control_bar_pc = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[3];
+        if ($father_control_bar_pc["visible"] == "true"){  //father_control_bar_pc
+            $father_control_bar_pc["visible"] = "false";
+        }
+        file_put_contents($skinXmlFile, $tourSkinXmlObj->asXML());
+
+        //3. 修改tour.xml配置显示经纪人等设置信息
+        $tourXmlStr = file_get_contents($xmlFile);
+        $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
+        $vtourLayerArr = $tourXmlObj->xpath("layer");
+        if ($vtourLayerArr[9]["visible"] == "true"){       // top_screen_pc
+            $vtourLayerArr[9]["visible"] = "false";
+        }
+        if ($vtourLayerArr[10]["visible"] == "true"){      // right_vr_pc
+            $vtourLayerArr[10]["visible"] = "false";
+        }
+        if ($vtourLayerArr[11]["visible"] == "true"){      // right_set_pc
+            $vtourLayerArr[11]["visible"] = "false";
+        }
+        file_put_contents($xmlFile, $tourXmlObj->asXML());
+
+        //4. 返回视图热点数据
         $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and visible=?', [$pano_id, "true"]);
         $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and visible=?', [$pano_id, "true"]);
         return view("admin.vr.detail", ["panoId" => $pano_id, "panoData" => $panoData, "thumbName" => $thumbName, "sceneTitle" => $sceneTitle, "count" => $panoSum[0]->sum]);
