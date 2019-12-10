@@ -1281,6 +1281,22 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     screentosphere(dx, dy, ath, atv););";
     $actionDraghotspot->nodeValue = $draghotspotNode;
 
+    //添加补地logo  [nadirlogorotation]
+    $nadirlogorotation = $vtourDocXml->createElement("events");
+    $nadirlogorotation->setAttribute("name", "nadirlogorotation");
+    $nadirlogorotation->setAttribute("keep", "true");
+    $nadirlogorotation->setAttribute("onviewchange", "copy(hotspot[nadirlogo].rotate, view.hlookat);");
+    $nadirlogo = $vtourDocXml->createElement("hotspot");
+    $nadirlogo->setAttribute("name", "nadirlogo");
+    $nadirlogo->setAttribute("url", "../../../static/images/logo-round.png");
+    $nadirlogo->setAttribute("keep", "true");
+    $nadirlogo->setAttribute("ath", "0");
+    $nadirlogo->setAttribute("atv", "90");
+    $nadirlogo->setAttribute("distorted", "true");
+    $nadirlogo->setAttribute("scale", "0.8");
+    $nadirlogo->setAttribute("rotate", "0.0");
+
+
     //追加至根节点
     $krpanoNode->appendChild($topBackLayer);
     $krpanoNode->appendChild($leftIcon);
@@ -1307,6 +1323,8 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $krpanoNode->appendChild($actionAdd);
     $krpanoNode->appendChild($actionRemove);
     $krpanoNode->appendChild($actionDraghotspot);
+    $krpanoNode->appendChild($nadirlogorotation);
+    $krpanoNode->appendChild($nadirlogo);
     $vtourDocXml->save($xmlFile);
 
 
@@ -1414,11 +1432,7 @@ function changTourXml($xmlFile = null, $mb_name = null,$content,$paonId)
     $tourXmlObj->skin_settings['controlbar_overlap.no-fractionalscaling'] = "50";       //   [控制条皮肤]
     $tourXmlObj->skin_settings['controlbar_overlap.fractionalscaling'] = "50";          //   [控制条皮肤]
 
-
-
     $tourSceneArr = $tourXmlObj->xpath('scene');
-    //添加热点 [hotspot]
-    //addHotSpot($tourSceneArr);
 
     /**********************
      * 循环更改xml场景title
