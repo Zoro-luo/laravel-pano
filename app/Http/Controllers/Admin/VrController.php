@@ -13,16 +13,104 @@ class VrController extends Controller
     //vr 列表页
     public function index()
     {
-        //$panos = Pano::get();
         $panos = DB::table("panos")->paginate(2);
-        return view('admin.vr.list', ['panos' => $panos]);
+        $count = $panos->total();
+        return view('admin.vr.list', ['panos' => $panos,'count'=>$count]);
     }
 
-    //预览视图
+    //编辑页的预览视图
     public function preview(Request $request)
     {
         $panoId = $request->pano_id;
         return view("admin.vr.preview", ["panoId" => $panoId]);
+    }
+
+    //列表页的预览视图
+    public function lookto(Request $request)
+    {
+        $panoId = $request->pano_id;
+        return view("admin.vr.lookto", ["panoId" => $panoId]);
+    }
+
+    //发布页的VR视图
+    public function online(Request $request)
+    {
+        $panoId = $request->pano_id;
+        return view("admin.vr.online", ["panoId" => $panoId]);
+    }
+
+    //列表页上线
+    public function turnup(Request $request)
+    {
+        $panoId = $request->panoId;
+        $affected = DB::update("update panos set status= '1' where pano_id=?", [$panoId]);
+        if ($affected){
+            $panos = DB::table("panos")->paginate(2);
+            $count = $panos->total();
+            $ress["panos"] = $panos;
+            $ress["count"] = $count;
+            return $ress;
+        }
+    }
+
+    //列表页下线
+    public function turndown(Request $request)
+    {
+        $panoId = $request->panoId;
+        $affected = DB::update("update panos set status= '2' where pano_id=?", [$panoId]);
+        if ($affected){
+            return '200';
+        }
+    }
+
+
+    //列表页预览
+    public function listPreview(Request $request)
+    {
+        $panoId = $request->panoId;
+        $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
+        $xmlPreFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_pre.xml";
+        $skinXmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\skin\\vtourskin.xml";
+        $skinXmlNewFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\skin\\vtourskin_new.xml";
+
+        //1. copy vtourskin.xml 文件为vtourskin_new.xml
+        $vtourSkinXmlStr = file_get_contents($skinXmlFile);
+        file_put_contents($skinXmlNewFile, $vtourSkinXmlStr);
+
+        //2. copy tour.xml 文件为tour_pre.xml
+        $vtourXmlStr = file_get_contents($xmlFile);
+        $res = file_put_contents($xmlPreFile, $vtourXmlStr);
+
+        //3. tour_pre.xml 的include 嵌入skin/vtourskin_new.xml 文件
+        if ($res){
+            $tourXmlStr = file_get_contents($xmlPreFile);
+            $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
+            $vtourIncludeArr = $tourXmlObj->xpath("include");
+            if ($vtourIncludeArr[0]["url"] == "skin/vtourskin.xml"){    // <include url="skin/vtourskin.xml"/>
+                $vtourIncludeArr[0]["url"] = "skin/vtourskin_new.xml";
+            }
+            file_put_contents($xmlPreFile, $tourXmlObj->asXML());
+
+            return '200';
+        }
+    }
+
+
+    // 发布操作
+    public function produce(Request $request)
+    {
+        $panoId = $request->panoId;
+        $xmlNewFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_new.xml";
+        $xmlProFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_pro.xml";
+        //1. 发布 复制一份 tour_new.xml为tour_pro.xml
+        $vtourXmlStr = file_get_contents($xmlNewFile);
+        $res = file_put_contents($xmlProFile, $vtourXmlStr);
+        //2. 更改VR 状态为已上线
+        DB::update("update panos set status= '1' where pano_id=?", [$panoId]);
+
+        return '200';
+
+
     }
 
     //预览后copy xml
@@ -30,12 +118,14 @@ class VrController extends Controller
     {
         $panoId = $request->panoId;
         $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
+        $xmlEditFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_edit.xml";
         $xmlNewFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_new.xml";
         $skinXmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\skin\\vtourskin.xml";
         $skinXmlNewFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\skin\\vtourskin_new.xml";
 
-        //1. copy tour.xml 文件为tour_new.xml
-        $vtourXmlStr = file_get_contents($xmlFile);
+        //1. copy tour_edit.xml 文件为tour_new.xml
+        //$vtourXmlStr = file_get_contents($xmlFile);
+        $vtourXmlStr = file_get_contents($xmlEditFile);
         $res = file_put_contents($xmlNewFile, $vtourXmlStr);
         //2. copy vtourskin.xml 文件为vtourskin_new.xml
         $vtourSkinXmlStr = file_get_contents($skinXmlFile);
@@ -95,10 +185,16 @@ class VrController extends Controller
     {
         $pano_id = $request->pano_id;
         $xmlFile = storage_path("panos") . "\\" . $pano_id . "\\vtour\\tour.xml";
+        $xmlEditFile = storage_path("panos") . "\\" . $pano_id . "\\vtour\\tour_edit.xml";
         $skinXmlFile = storage_path("panos") . "\\" . $pano_id . "\\vtour\\skin\\vtourskin.xml";
+        //1. copy tour.xml 文件为tour_edit.xml
+        $vtourXmlStr = file_get_contents($xmlFile);
+        $res = file_put_contents($xmlEditFile, $vtourXmlStr);
+
         //1. 拿到当前场景scene id下的缩略图和title
         $vtourDocXml = new \DOMDocument();
-        $vtourDocXml->load($xmlFile);
+        //$vtourDocXml->load($xmlFile);
+        $vtourDocXml->load($xmlEditFile);
         $actionStr = $vtourDocXml->getElementsByTagName("action")->item(0)->nodeValue;
         /* if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );loadscene(get(startscene), null, MERGE);
             if(startactions !== null, startactions() );
@@ -107,7 +203,8 @@ class VrController extends Controller
         $start = $start - 3;
         $targetId = substr($actionStr, $start, 1);   //获取到0
         // a. 根据拿到的场景index 获取场景的title 和缩略图
-        $vtourXmlStr = file_get_contents($xmlFile);
+        //$vtourXmlStr = file_get_contents($xmlFile);
+        $vtourXmlStr = file_get_contents($xmlEditFile);
         $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
         $vtourSceneArr = $vtourXmlObj->xpath('scene');
         $goalScene = $vtourSceneArr[$targetId];
@@ -137,7 +234,8 @@ class VrController extends Controller
         file_put_contents($skinXmlFile, $tourSkinXmlObj->asXML());
 
         //3. 修改tour.xml配置显示经纪人等设置信息
-        $tourXmlStr = file_get_contents($xmlFile);
+        //$tourXmlStr = file_get_contents($xmlFile);
+        $tourXmlStr = file_get_contents($xmlEditFile);
         $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
         if ( $tourXmlObj->skin_settings['thumbs_opened'] == "false"){   // 开启 skin_settings['thumbs_opened']
             $tourXmlObj->skin_settings['thumbs_opened'] = "true";
@@ -158,9 +256,13 @@ class VrController extends Controller
         if ($tourXmlObj->skin_settings['littleplanetintro'] == "true"){  //关闭 小行星
             $tourXmlObj->skin_settings['littleplanetintro'] = "false";
         }
-        file_put_contents($xmlFile, $tourXmlObj->asXML());
+        //file_put_contents($xmlFile, $tourXmlObj->asXML());
+        file_put_contents($xmlEditFile, $tourXmlObj->asXML());
 
         //4. 返回视图热点数据
+
+        DB::delete("delete from hotspots where pano_id=?", [$pano_id]);
+
         $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and visible=?', [$pano_id, "true"]);
         $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and visible=?', [$pano_id, "true"]);
         return view("admin.vr.detail", ["panoId" => $pano_id, "panoData" => $panoData, "thumbName" => $thumbName, "sceneTitle" => $sceneTitle, "count" => $panoSum[0]->sum]);
@@ -179,20 +281,25 @@ class VrController extends Controller
         if ($sceneIndex != null) {
             //操作xml
             $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
+            $xmlEditFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_edit.xml";
             $vtourDocXml = new \DOMDocument();
-            $vtourDocXml->load($xmlFile);
+            //$vtourDocXml->load($xmlFile);
+            $vtourDocXml->load($xmlEditFile);
             $actionDom = $vtourDocXml->getElementsByTagName("action");
             $nodeVal = "if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[" . $sceneIndex . "].name); );loadscene(get(startscene), null, MERGE);if(startactions !== null, startactions() );";
             $actionDom->item(0)->nodeValue = $nodeVal;
-            $vtourDocXml->save($xmlFile);
+            //$vtourDocXml->save($xmlFile);
+            $vtourDocXml->save($xmlEditFile);
             //设置场景视角
-            $vtourXmlStr = file_get_contents($xmlFile);
+            //$vtourXmlStr = file_get_contents($xmlFile);
+            $vtourXmlStr = file_get_contents($xmlEditFile);
             $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
             $vtourSceneArr = $vtourXmlObj->xpath('scene');
             $views = $vtourSceneArr[$sceneIndex]->xpath("view");
             $views[0]['hlookat'] = $hlookat;
             $views[0]['vlookat'] = $vlookat;
-            file_put_contents($xmlFile, $vtourXmlObj->asXML());
+            //file_put_contents($xmlFile, $vtourXmlObj->asXML());
+            file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
 
             $ress = ['h' => $hlookat, 'v' => $vlookat, 'title' => $sceneTitle];
 
@@ -211,7 +318,9 @@ class VrController extends Controller
 
 
         $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
-        $vtourXmlStr = file_get_contents($xmlFile);
+        $xmlEditFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_edit.xml";
+        //$vtourXmlStr = file_get_contents($xmlFile);
+        $vtourXmlStr = file_get_contents($xmlEditFile);
         $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
         $vtourSceneArr = $vtourXmlObj->xpath('scene');
         $hotspots = $vtourSceneArr[$sceneIndex]->xpath("hotspot");
@@ -231,7 +340,8 @@ class VrController extends Controller
         $views = $vtourSceneArr[$sceneIndex]->xpath("view");
         $views[0]['hlookat'] = $hlookat;
         $views[0]['vlookat'] = $vlookat;
-        file_put_contents($xmlFile, $vtourXmlObj->asXML());
+        //file_put_contents($xmlFile, $vtourXmlObj->asXML());
+        file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
         $ress = ['h' => $hlookat, 'v' => $vlookat, 'status' => $status];
         return $ress;
 
@@ -274,7 +384,9 @@ class VrController extends Controller
 
         //没有则xml添加热点
         $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
-        $vtourXmlStr = file_get_contents($xmlFile);
+        $xmlEditFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_edit.xml";
+        //$vtourXmlStr = file_get_contents($xmlFile);
+        $vtourXmlStr = file_get_contents($xmlEditFile);
         $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
         $currScene = $vtourXmlObj->scene[$sceneIndex];
         $currHotSpot = $currScene->addChild('hotspot');
@@ -285,7 +397,8 @@ class VrController extends Controller
         $currHotSpot->addAttribute("atv", $atv);
         $currHotSpot->addAttribute("zoom", "true");
         $currHotSpot->addAttribute("linkedscene", $linkedscene);
-        file_put_contents($xmlFile, $vtourXmlObj->asXML());
+        //file_put_contents($xmlFile, $vtourXmlObj->asXML());
+        file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
 
         //无刷新动态更新热点管理列表
         $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and visible=?', [$panoId, "true"]);
@@ -294,7 +407,8 @@ class VrController extends Controller
 
         $ress['panoData'] = $panoData;
         $ress['count'] = $panoSum[0]->sum;
-        $ress['xmlPath'] = $xmlFile;
+        //$ress['xmlPath'] = $xmlFile;
+        $ress['xmlPath'] = $xmlEditFile;
         $ress['sceneEname'] = $sceneEname;
         return $ress;
     }
@@ -325,7 +439,9 @@ class VrController extends Controller
         if ($res) {
             //xml 追加新的热点标签
             $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
-            $vtourXmlStr = file_get_contents($xmlFile);
+            $xmlEditFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_edit.xml";
+            //$vtourXmlStr = file_get_contents($xmlFile);
+            $vtourXmlStr = file_get_contents($xmlEditFile);
             $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
             $sceneIndex = intval($sceneIndex);
             $currScene = $vtourXmlObj->scene[$sceneIndex];
@@ -336,7 +452,8 @@ class VrController extends Controller
             $currHotSpot->addAttribute("ath", $ath);
             $currHotSpot->addAttribute("atv", $atv);
             $currHotSpot->addAttribute("zoom", "true");
-            file_put_contents($xmlFile, $vtourXmlObj->asXML());
+            //file_put_contents($xmlFile, $vtourXmlObj->asXML());
+            file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
 
             //无刷新动态更新热点管理列表
             $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and visible=?', [$panoId, "true"]);
@@ -344,7 +461,8 @@ class VrController extends Controller
 
             $ress['panoData'] = $panoData;
             $ress['count'] = $panoSum[0]->sum;
-            $ress['xmlPath'] = $xmlFile;
+            //$ress['xmlPath'] = $xmlFile;
+            $ress['xmlPath'] = $xmlEditFile;
             $ress['sceneEname'] = $sceneEname;
             return $ress;
         }
@@ -383,7 +501,9 @@ class VrController extends Controller
 
             if ($result) {     // 向xml中去旧添新
                 $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
-                $vtourXmlStr = file_get_contents($xmlFile);
+                $xmlEditFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_edit.xml";
+                //$vtourXmlStr = file_get_contents($xmlFile);
+                $vtourXmlStr = file_get_contents($xmlEditFile);
                 $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
 
                 //删除旧的热点标签
@@ -412,7 +532,8 @@ class VrController extends Controller
                 $currHotSpot->addAttribute("atv", $atv);
                 $currHotSpot->addAttribute("zoom", "true");
                 $currHotSpot->addAttribute("linkedscene", $sceneName);
-                file_put_contents($xmlFile, $vtourXmlObj->asXML());
+                //file_put_contents($xmlFile, $vtourXmlObj->asXML());
+                file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
             }
 
         }
@@ -424,7 +545,8 @@ class VrController extends Controller
 
         $ress['panoData'] = $panoData;
         $ress['count'] = $panoSum[0]->sum;
-        $ress['xmlPath'] = $xmlFile;
+        //$ress['xmlPath'] = $xmlFile;
+        $ress['xmlPath'] = $xmlEditFile;
         $ress['sceneEname'] = $sceneCurrName;
         return $ress;
 
@@ -460,7 +582,9 @@ class VrController extends Controller
             //插库成功后 向xml中去旧添新
             if ($result) {
                 $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
-                $vtourXmlStr = file_get_contents($xmlFile);
+                $xmlEditFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_edit.xml";
+                //$vtourXmlStr = file_get_contents($xmlFile);
+                $vtourXmlStr = file_get_contents($xmlEditFile);
                 $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
 
                 //删除旧的热点标签
@@ -489,7 +613,8 @@ class VrController extends Controller
                 $currHotSpot->addAttribute("ath", $ath);
                 $currHotSpot->addAttribute("atv", $atv);
                 $currHotSpot->addAttribute("zoom", "true");
-                file_put_contents($xmlFile, $vtourXmlObj->asXML());
+                //file_put_contents($xmlFile, $vtourXmlObj->asXML());
+                file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
             }
         }
         //无刷新动态更新热点管理列表
@@ -498,7 +623,8 @@ class VrController extends Controller
 
         $ress['panoData'] = $panoData;
         $ress['count'] = $panoSum[0]->sum;
-        $ress['xmlPath'] = $xmlFile;
+        //$ress['xmlPath'] = $xmlFile;
+        $ress['xmlPath'] = $xmlEditFile;
         $ress['sceneEname'] = $sceneName;
         return $ress;
     }
@@ -512,7 +638,9 @@ class VrController extends Controller
         $sceneName = $request->get("sceneName");
 
         $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
-        $vtourXmlStr = file_get_contents($xmlFile);
+        $xmlEditFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_edit.xml";
+        //$vtourXmlStr = file_get_contents($xmlFile);
+        $vtourXmlStr = file_get_contents($xmlEditFile);
         $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
         $vtourSceneArr = $vtourXmlObj->xpath('scene');
         $hotspots = $vtourSceneArr[$sceneIndex]->xpath("hotspot");
@@ -522,7 +650,8 @@ class VrController extends Controller
             }
         }
         DB::update("update hotspots set visible= 'true' where hotsName=?", [$hostName]);
-        file_put_contents($xmlFile, $vtourXmlObj->asXML());
+        //file_put_contents($xmlFile, $vtourXmlObj->asXML());
+        file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
         return $sceneName;
     }
 
@@ -533,18 +662,6 @@ class VrController extends Controller
         $panoId = $request->get("panoId");
         $hostName = $request->get("hostName");
         $sceneName = $request->get("sceneName");
-
-        /*$xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
-        $vtourXmlStr = file_get_contents($xmlFile);
-        $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
-        $vtourSceneArr = $vtourXmlObj->xpath('scene');
-        $hotspots = $vtourSceneArr[$sceneIndex]->xpath("hotspot");
-        foreach ($hotspots as $hsVal) {
-            if ($hsVal["name"] == $hostName) {
-                $hsVal['visible'] = "false";
-            }
-        }
-        file_put_contents($xmlFile, $vtourXmlObj->asXML());*/
 
         //sql返回该热点的坐标值
         $panoData = DB::select('select pano_id,hotsName,ath,atv,type,linkedscene from hotspots where pano_id=? and hotsName=?', [$panoId, $hostName]);
@@ -585,7 +702,9 @@ class VrController extends Controller
         //删除成功后 向xml 删除xml里的热点标签
         if ($res) {
             $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
-            $vtourXmlStr = file_get_contents($xmlFile);
+            $xmlEditFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_edit.xml";
+            //$vtourXmlStr = file_get_contents($xmlFile);
+            $vtourXmlStr = file_get_contents($xmlEditFile);
             $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
             $vtourSceneArr = $vtourXmlObj->xpath('scene');
             $hotspots = $vtourSceneArr[$sceneIndex]->xpath("hotspot");
@@ -601,14 +720,16 @@ class VrController extends Controller
                     $hsVal['visible'] = "";
                 }
             }
-            file_put_contents($xmlFile, $vtourXmlObj->asXML());
+            //file_put_contents($xmlFile, $vtourXmlObj->asXML());
+            file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
         }
 
         $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and visible=?', [$panoId, "true"]);
         $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and visible=?', [$panoId, "true"]);
         $ress['panoData'] = $panoData;
         $ress['count'] = $panoSum[0]->sum;
-        $ress['xmlPath'] = $xmlFile;
+        //$ress['xmlPath'] = $xmlFile;
+        $ress['xmlPath'] = $xmlEditFile;
         $ress['sceneEname'] = $sceneName;
         return $ress;
     }
@@ -626,7 +747,6 @@ class VrController extends Controller
             $panoData = DB::select('select pano_id,sceneName,hotsName,type,linkedscene from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId, $title, "true"]);
             $panoSum = DB::select('select count(1) as sum from hotspots where pano_id=? and sceneName=? and visible=?', [$panoId, $title, "true"]);
         }
-
         $ress['panoData'] = $panoData;
         $ress['count'] = $panoSum[0]->sum;
         return $ress;

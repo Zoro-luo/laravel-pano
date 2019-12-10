@@ -5,7 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>vr-详情页</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{asset('public/static/hotsport')}}/css/p.min.css">
+
+    <style>
+        .layui-laydate .laydate-btns-confirm-disabled > .laydate-btns-confirm {
+            color: lightgray;
+            cursor: not-allowed;
+        }
+
+        .layui-laydate .laydate-btns-confirm-disabled > .laydate-btns-confirm:hover {
+            color: lightgray;
+        }
+    </style>
+
 </head>
 <body>
 {{--<div class="header"></div>--}}
@@ -18,7 +31,8 @@
                     <div class="separator item-center">:</div>
                     <div class="flex-right display_flex">
                         <div class="my-select my-select1" @click-list="addLabel">
-                            <div class="my-select-btn"><span class="btn-text">全部</span><i class="iconfont iconUtubiao-13"></i></div>
+                            <div class="my-select-btn"><span class="btn-text">全部</span><i
+                                        class="iconfont iconUtubiao-13"></i></div>
                             <ul class="my-select-list">
                                 <li class="on">全部</li>
                                 <li>武汉</li>
@@ -32,7 +46,8 @@
                     <div class="separator item-center">:</div>
                     <div class="flex-right display_flex">
                         <div class="my-select my-select1">
-                            <div class="my-select-btn"><span class="btn-text">全部</span><i class="iconfont iconUtubiao-13"></i></div>
+                            <div class="my-select-btn"><span class="btn-text">全部</span><i
+                                        class="iconfont iconUtubiao-13"></i></div>
                             <ul class="my-select-list">
                                 <li class="on">全部</li>
                                 <li>已上线</li>
@@ -52,7 +67,9 @@
                     <div class="flex-left item-center">创建时间</div>
                     <div class="separator item-center">:</div>
                     <div class="flex-right display_flex">
-                        <div class="my-timer"><input type="text" id="createtTime" class="my-select-btn" placeholder="开始时间-结束时间"><i class="iconfont iconUtubiao-3"></i></div>
+                        <div class="my-timer"><input type="text" id="createtTime" class="my-select-btn"
+                                                     placeholder="开始时间-结束时间"><i class="iconfont iconUtubiao-3"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="flex-list">
@@ -62,72 +79,107 @@
         </div>
         <div class="list-box selects-table-marign">
             <div class="my-table my-table-10 table-big">
+
+                @if($count > 0 )
                 <div class="ele-scroll table-header">
                     <div class="list-top">
                         <span class="selected-text">筛选查询</span>
-                        <span class="search-text">共查询到<span class="text">63</span>条客源数据</span>
+                        <span class="search-text">共查询到<span class="text">{{$count}}</span>条客源数据</span>
                     </div>
                     <div class="table-item table-title">
-                        <div class="table-text table-text1"><div>序号</div></div>
-                        <div class="table-text table-text2"><div>模型ID</div></div>
-                        <div class="table-text table-text3"><div>楼盘名称</div></div>
-                        <div class="table-text table-text4"><div>房源名称</div></div>
-                        <div class="table-text table-text5"><div>房源ID</div></div>
-                        <div class="table-text table-text6"><div>业务部门</div></div>
-                        <div class="table-text table-text7"><div>上传人</div></div>
-                        <div class="table-text table-text8"><div>上传时间</div></div>
-                        <div class="table-text table-text9"><div>功能状态</div></div>
-                        <div class="table-text table-text10"><div>操作</div></div>
-                    </div>
-                </div>
+                            <div class="table-text table-text1">
+                                <div>序号</div>
+                            </div>
+                            <div class="table-text table-text2">
+                                <div>模型ID</div>
+                            </div>
+                            <div class="table-text table-text3">
+                                <div>楼盘名称</div>
+                            </div>
+                            <div class="table-text table-text4">
+                                <div>房源名称</div>
+                            </div>
+                            <div class="table-text table-text5">
+                                <div>房源ID</div>
+                            </div>
+                            <div class="table-text table-text6">
+                                <div>业务部门</div>
+                            </div>
+                            <div class="table-text table-text7">
+                                <div>上传人</div>
+                            </div>
+                            <div class="table-text table-text8">
+                                <div>上传时间</div>
+                            </div>
+                            <div class="table-text table-text9">
+                                <div>功能状态</div>
+                            </div>
+                            <div class="table-text table-text10">
+                                <div>操作</div>
+                            </div>
+                        </div>
+                 </div>
+                    @foreach($panos as $pano)
+                        <div class="table-item">
+                            <div class="table-text table-text1">
+                                <div>{{$pano->id}}</div>
+                            </div>
+                            <div class="table-text table-text2">
+                                <div>VR{{$pano->pano_id}}</div>
+                            </div>
+                            <div class="table-text table-text3">
+                                <div>{{$pano->house_name}}</div>
+                            </div>
+                            <div class="table-text table-text4">
+                                <div>{{$pano->house_name}}-{{$pano->house_type}} 随时看房</div>
+                            </div>
+                            <div class="table-text table-text5">
+                                <div>{{$pano->pano_id}}</div>
+                            </div>
+                            <div class="table-text table-text6">
+                                <div>百瑞景一店</div>
+                            </div>
+                            <div class="table-text table-text7">
+                                <div>刘德马</div>
+                            </div>
+                            <div class="table-text table-text8">
+                                <div>{{$pano->updated_at}}</div>
+                            </div>
+                            <div class="table-text table-text9">
+                                <div class="">{{$pano->status == "1" ? "已上线" : "未上线"}}</div>
+                            </div>
+                            <div class="table-text table-text10">
+                                <a class="text-btn" href="{{url('vr/edit/'.$pano->pano_id)}}"
+                                   target="_blank">编辑模型</a><span class="vertical-line">|</span>
 
-                @foreach($panos as $pano)
-                <div class="table-item">
-                    <div class="table-text table-text1"><div>{{$pano->id}}</div></div>
-                    <div class="table-text table-text2"><div>VR{{$pano->pano_id}}</div></div>
-                    <div class="table-text table-text3"><div>{{$pano->house_name}}</div></div>
-                    <div class="table-text table-text4"><div>{{$pano->house_name}}-{{$pano->house_type}} 随时看房</div></div>
-                    <div class="table-text table-text5"><div>{{$pano->pano_id}}</div></div>
-                    <div class="table-text table-text6"><div>百瑞景一店</div></div>
-                    <div class="table-text table-text7"><div>刘德马</div></div>
-                    <div class="table-text table-text8"><div>{{$pano->updated_at}}</div></div>
-                    <div class="table-text table-text9"><div class="">已上线</div></div>
-                    <div class="table-text table-text10">
-                        <a class="text-btn" href="{{url('vr/edit/'.$pano->pano_id)}}" target="_blank">编辑模型</a><span class="vertical-line">|</span>
-                        <div class="text-btn">预览</div><span class="vertical-line">|</span>
-                        <div class="text-btn error-btn">下线</div>
+                                @if($pano->status == "2")
+                                <div class="text-btn" onclick="listPreview({{$pano->pano_id}})" >预览</div>
+                                @else
+                                <a class="text-btn" href="{{url('vr/online/'.$pano->pano_id)}}" target="_blank">预览</a>
+                                @endif
+                                <span class="vertical-line">|</span>
+
+
+                                @if($pano->status == "2")
+                                    <div class="text-btn  error-btn" onclick="turnup({{$pano->pano_id}})" >上线</div>
+                                @else
+                                    <div class="text-btn error-btn" onclick="turndown({{$pano->pano_id}})">下线</div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="container-single">
+                        <div class="one1">
+                            <img src="{{asset('public/static/hotsport')}}/css/img/empty_bj.png" alt="" class="img-404">
+                            <p class="text caption1">很抱歉，暂时没有数据</p>
+                        </div>
                     </div>
-                </div>
-                @endforeach
+                @endif
+
 
             </div>
             {{ $panos->links('vendor.pagination.vr') }}
-            {{--<div class="turn-pageing">
-                <div class="turn-page-content">
-                    <div class="page">
-                        <a href="javascript:;" class="prev">上一页</a>
-                        <a href="javascript:;">1</a>
-                        <a href="javascript:;">2</a>
-                        <a href="javascript:;" class="on">3</a>
-                        <a href="javascript:;">...</a>
-                        <a href="javascript:;">100</a>
-                        <a href="javascript:;" class="next">下一页</a>
-                    </div>
-                    <div class="caption1 ">到第</div><div class="my-input page-num"><input type="text" class="inputs"></div><div class="caption1 ">页</div>
-                    <div class="my-btn">确定</div>
-                    <div class="text">共有100条</div>
-                    <div class="my-select my-select1 btn-30 bottom">
-                        <div class="my-select-btn"><span class="btn-text">20条</span><i class="iconfont iconUtubiao-13"></i></div>
-                        <ul class="my-select-list">
-                            <li>5条</li>
-                            <li>10条</li>
-                            <li>20条</li>
-                            <li>30条</li>
-                            <li>50条</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>--}}
         </div>
     </div>
 </div>
@@ -138,9 +190,75 @@
 <script src="{{asset('public/static/hotsport')}}/js/laydate/laydate.js"></script>
 <!-- <script src="js/echarts.simple.min.js"></script> -->
 <script>
-    $(function(){
-        myFun.layer.layerDoubleDateTime("#createtTime", {max: +new Date()});
+    //点击预览另打开预览窗口页
+    function listPreview(paonId){
+        var panoId = paonId;
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            url: "{{url('vr/seer')}}",
+            type: "POST",
+            data: {"panoId": paonId},
+            success: function (e) {
+                if (e == '200'){
+                    window.open("{{url('vr/look')}}" + "/" + panoId);
+                }
+            }
+        })
+    }
+
+    //上线
+    function turnup(paonId){
+        var panoId = paonId;
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            url: "{{url('vr/turnup')}}",
+            type: "POST",
+            data: {"panoId": paonId},
+            success: function (e) {
+                console.log(e);
+
+            }
+        })
+    }
+
+    //下线
+    function turndown(paonId){
+        var panoId = paonId;
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            url: "{{url('vr/turndown')}}",
+            type: "POST",
+            data: {"panoId": paonId},
+            success: function (e) {
+                console.log(e);
+            }
+        })
+    }
+
+    $(function () {
+        /*myFun.layer.layerDoubleDateTime("#createtTime", {max: `new Date().getFullYear()-new Date().getMonth()-new Date().getDate() 23:59:59`}, function(value, date, endDate) {
+            let selectedDate = new Date(endDate.year, endDate.month - 1, endDate.date, endDate.hours, endDate.minutes, endDate.seconds),
+                now = new Date();
+            console.log(selectedDate > now);
+            if(selectedDate > now) {
+                var _this = this;
+                this.hint("不在有效日期或时间范围内!");
+                $(".laydate-footer-btns .laydate-btns-confirm").css("pointer-events", "none");
+                $(".laydate-footer-btns").addClass("laydate-btns-confirm-disabled");
+                $(".laydate-btns-confirm-disabled").find(".laydate-btns-confirm").on("click", function(e) {
+                    e.stopPropagation();
+                    _this.hint("不在有效日期或时间范围内!");
+                    return false;
+                });
+            } else {
+                $(".laydate-footer-btns .laydate-btns-confirm").css("pointer-events", "auto");
+                $(".laydate-footer-btns").removeClass("laydate-btns-confirm-disabled");
+            }
+        });*/
+
+        myFun.layer.layerdata2("#createtTime", {max: +new Date()});
     });
+
     function addLabel(event, parent_li, parent_child) {
         var target = event.target,
             value = target.textContent || target.innerText;

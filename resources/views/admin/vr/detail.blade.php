@@ -40,7 +40,7 @@
                     <script>
                         var krpano = null;
                         var sign = null;
-                        var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
+                        var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour_edit.xml";
                         embedpano({
                             swf: "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.swf",
                             id: "krpanoSWFObject",
@@ -127,23 +127,33 @@
                                 <div class="table-text table-text4">操作</div>
                             </div>
                             <div class="table-content">
-                                @foreach($panoData as $pano)
-                                    <div class="table-item">
-                                        <div class="table-text table-text1"><p>{{$pano->sceneName}}</p></div>
-                                        @if($pano->type=="hotspot")
-                                            <div class="table-text table-text2"><p>场景跳转</p></div>
-                                        @else
-                                            <div class="table-text table-text2"><p>文本标签</p></div>
-                                        @endif
-                                        <div class="table-text table-text3"><p>{{$pano->linkedscene}}</p></div>
-                                        <div class="table-text table-text4">
-                                            <i onclick="editHotspots('{{ $pano->hotsName}}');"
-                                               class="iconfont iconbianji1"></i>
-                                            <i onclick="delHotspots('{{ $pano->hotsName}}');"
-                                               class="iconfont iconshanchu2"></i>
+                                @if($panoData)
+                                    @foreach($panoData as $pano)
+                                        <div class="table-item">
+                                            <div class="table-text table-text1"><p>{{$pano->sceneName}}</p></div>
+                                            @if($pano->type=="hotspot")
+                                                <div class="table-text table-text2"><p>场景跳转</p></div>
+                                            @else
+                                                <div class="table-text table-text2"><p>文本标签</p></div>
+                                            @endif
+                                            <div class="table-text table-text3"><p>{{$pano->linkedscene}}</p></div>
+                                            <div class="table-text table-text4">
+                                                <i onclick="editHotspots('{{ $pano->hotsName}}');"
+                                                   class="iconfont iconbianji1"></i>
+                                                <i onclick="delHotspots('{{ $pano->hotsName}}');"
+                                                   class="iconfont iconshanchu2"></i>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="container-single">
+                                        <div class="one1">
+                                            <img src="{{asset('public/static/hotsport')}}/css/img/empty_bj.png" alt=""
+                                                 class="img-404">
+                                            <p class="text caption1">很抱歉，暂时没有数据</p>
                                         </div>
                                     </div>
-                                @endforeach
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -151,7 +161,7 @@
                 {{--<a class="my-btn my-btn-gray preview" target="_blank" href="{{url('vr/view/'.$panoId)}}">预览</a>--}}
                 <a class="my-btn my-btn-gray preview" onclick="preview()" href="javascript:;">预览</a>
 
-                <div class="my-btn my-btn-green issue-btn" id="issueBtn">确认发布</div>
+                <div class="my-btn my-btn-green issue-btn" onclick="produce()" id="issueBtn">确认发布</div>
             </div>
         </div>
     </div>
@@ -217,6 +227,8 @@
 <script src="{{asset('public/static/hotsport')}}/js/common.js"></script>
 <script src="{{asset('public/static/hotsport')}}/js/zxc_common.js"></script>
 <script>
+
+
     //预览copy xml
     function preview() {
         var panoId = "{{$panoId}}";
@@ -231,6 +243,29 @@
                 }
             }
         })
+    }
+
+    //确认发布
+    function produce() {
+        var panoId = "{{$panoId}}";
+        opensHint("发布", "您确定要发布吗？", "jc", function (layero, index) {
+            var _this = this;
+            layero.find(".my-btn-green").click(function () {  //点击确认
+                $.ajax({
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    url: "{{url('vr/produce')}}",
+                    type: "POST",
+                    data: {"panoId": panoId},
+                    success: function (e) {
+                        if (e == "200") {
+                            window.open("{{url('vr/online')}}" + "/" + panoId);
+                        }
+                    }
+                })
+                _this.close(index);
+            })
+        });
+
     }
 
     //添加热点
@@ -335,7 +370,7 @@
                                     $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
 
                                     krpano.set("plugin[get(linename)].visible", "false");
-                                    krpano.call("loadpano(tour.xml, NULL, MERGE, BLEND(0.1));");
+                                    krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
                                     krpano.call("loadscene(" + e.sceneEname + ", NULL, MERGE, BLEND(0.1));");
                                 }
                             });
@@ -391,7 +426,7 @@
                                     }
                                     $(".redpoint-count").text("").text(e.count);
                                     $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
-                                    krpano.call("loadpano(tour.xml, NULL, MERGE, BLEND(0.1));");
+                                    krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
                                     krpano.call("loadscene(" + e.sceneEname + ", NULL, MERGE, BLEND(0.1));");
                                 }
                             })
@@ -491,7 +526,7 @@
                                             }
                                             $(".redpoint-count").text("").text(e.count);
                                             $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
-                                            krpano.call("loadpano(tour.xml, NULL, MERGE, BLEND(0.1));");
+                                            krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
                                             krpano.call("loadscene(" + e.sceneEname + ", NULL, MERGE, BLEND(0.1));");
                                         }
                                     })
@@ -574,7 +609,7 @@
                                             $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
 
                                             krpano.set("plugin[get(linename)].visible", "false");
-                                            krpano.call("loadpano(tour.xml, NULL, MERGE, BLEND(0.1));");
+                                            krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
                                             krpano.call("loadscene(" + e.sceneEname + ", NULL, MERGE, BLEND(0.1));");
                                         }
                                     });
@@ -623,7 +658,6 @@
                                     "sceneName": sceneName
                                 },
                                 success: function (e) {
-                                    console.log(e);
                                     var hotspotStr = '';
                                     for (var j = 0; j < e.count; j++) {
                                         var hsTemplate = `<div class="table-item">
@@ -641,7 +675,7 @@
                                     $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
 
                                     krpano.set("plugin[get(linename)].visible", "false");
-                                    krpano.call("loadpano(tour.xml, NULL, MERGE, BLEND(0.1));");
+                                    krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
                                     krpano.call("loadscene(" + e.sceneEname + ", NULL, MERGE, BLEND(0.1));");
                                 }
                             })
@@ -656,7 +690,8 @@
     function showHotsport(hason) {
         hason ? $(".txt-box").text("展示") : $(".txt-box").text("隐藏");
         if (krpano) {
-            var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
+            //var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
+            var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour_edit.xml";
             var panoId = "{{$panoId}}";
             var sceneName = krpano.get("xml.scene");
             var sceneIndex = krpano.get("scene[get(xml.scene)].index");
@@ -683,7 +718,8 @@
     //设置为封面
     function setScene() {
         if (krpano) {
-            var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
+            //var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
+            var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour_edit.xml";
             var panoId = "{{$panoId}}";
             var sceneName = krpano.get("xml.scene");
             var sceneIndex = krpano.get("scene[get(xml.scene)].index");
@@ -706,7 +742,8 @@
                     // console.log(e);
                     $(".isScene").html(e.title);
                     krpano.call("lookat(" + e.h + "," + e.v + ",120)");
-                    krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
+                    //krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
+                    krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
                     krpano.call("loadscene(" + sceneName + ", NULL, MERGE, BLEND(0.1));");
                 }
             })
@@ -714,6 +751,19 @@
     }
 
     $(function () {
+        /*if (window.performance.navigation.type == 1) {  //页面被刷新
+            console.log("页面被刷新")
+            opensHint("发布", "您确定要重置刷新吗？", "jc", function (layero, index) {
+                var _this = this;
+                layero.find(".my-btn-green").click(function () {  //点击确认
+                    _this.close(index)
+                })
+            });
+
+        } else {                                        //首次被加载
+            console.log("首次被加载")
+        }*/
+
         // 发布按钮
         // $("#issueBtn").click(function () {
         //     // myFun.layer.opens("#confirmIssue","","small", function() {})
@@ -730,13 +780,6 @@
         //     });
         // });
 
-        // function test() {
-        //     if (window.performance.navigation.type == 1) {
-        //         console.log("页面被刷新")
-        //     } else {
-        //         console.log("首次被加载")
-        //     }
-        // }
 
     });
 
@@ -748,24 +791,33 @@
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             type: "POST",
             url: "{{url('vr/showlabel')}}",
-            data: {
-                'title': title,
-                'panoId': panoId,
-            },
+            data: {'title': title, 'panoId': panoId,},
             success: function (e) {
                 var hotspotStr = '';
-                for (var j = 0; j < e.count; j++) {
-                    var hsTemplate = `<div class="table-item">
-                        <div class="table-text table-text1"><p>${e.panoData[j]['sceneName']}</p></div>
-                        <div class="table-text table-text2"><p>${e.panoData[j]['type'] == "point" ? "文本标签" : "场景跳转"}</p></div>
-                        <div class="table-text table-text3"><p>${e.panoData[j]['linkedscene']}</p></div>
-                        <div class="table-text table-text4">
-                             <i onclick="editHotspots('${e.panoData[j]['hotsName']}');" class="iconfont iconbianji1"></i>
-                             <i onclick="delHotspots('${e.panoData[j]['hotsName']}');" class="iconfont iconshanchu2"></i>
-                        </div>
-                        </div>`;
-                    hotspotStr += hsTemplate;
+                var hotsName = '';
+                if (e.count > 0) {
+                    for (var j = 0; j < e.count; j++) {
+                        var hsTemplate = `<div class="table-item">
+                            <div class="table-text table-text1"><p>${e.panoData[j]['sceneName']}</p></div>
+                            <div class="table-text table-text2"><p>${e.panoData[j]['type'] == "point" ? "文本标签" : "场景跳转"}</p></div>
+                            <div class="table-text table-text3"><p>${e.panoData[j]['linkedscene']}</p></div>
+                            <div class="table-text table-text4">
+                                 <i onclick="editHotspots('${e.panoData[j]['hotsName']}');" class="iconfont iconbianji1"></i>
+                                 <i onclick="delHotspots('${e.panoData[j]['hotsName']}');" class="iconfont iconshanchu2"></i>
+                            </div>
+                            </div>`;
+                        hotspotStr += hsTemplate;
+                        hotsName = e.panoData[j]['hotsName']
+                    }
+                } else {
+                    hotspotStr += `<div class="container-single"><div class="one1">
+                           <img src="{{asset('public/static/hotsport')}}/css/img/empty_bj.png" alt="" class="img-404">
+                           <p class="text caption1">很抱歉，暂时没有数据</p></div></div>`;
                 }
+                var temStr = hotsName.split("_");
+                var scene_name = temStr[0] + "_" + temStr[1];
+                krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
+                krpano.call("loadscene(" + scene_name + ", NULL, MERGE, BLEND(0.1));");
                 $(".redpoint-count").text("").text(e.count);
                 $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
             }

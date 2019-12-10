@@ -111,7 +111,7 @@ var myFun = {
             //绑定修改密码
             $('.updated').on('click',function(){
                 myFun.layer.opens('#change-password','修改密码','small');
-                
+
                 $('.change-password .my-btn-yes').on('click',function(){
                     myFun.layer.msg('您的密码已修改成功！')
                 })
@@ -151,7 +151,7 @@ var myFun = {
                 if(!myFun.utils.IsNotEmpty(staffInput.val())){
                     staffInput.parent('.my-input').addClass('error');
                     blurChange(self, '必填项不能为空');
-                }else{    
+                }else{
                     staffInput.parent('.my-input').removeClass('error');
                 }
             }
@@ -183,7 +183,7 @@ var myFun = {
     bindBtnsName:function(input){
         if(!input){ throw ('参数错误'); return ;}
         // 判断是否为双日期时间控件
-        if($('.layui-laydate').find('.laydate-footer-btns1').length > 0 && 
+        if($('.layui-laydate').find('.laydate-footer-btns1').length > 0 &&
             $('.layui-laydate').find('.laydate-btns-time').length > 0) {
                 $('.layui-laydate').find('.laydate-footer-btns1').addClass('exist-btn-time');
         }
@@ -192,8 +192,8 @@ var myFun = {
         var startDate = {}, endDate = {};
         myBtns.on('click',function(e){
             e = e || window.event;
-            var timer = myFun.judgeTimer(myFun.getDataset(e.target).type,that.format,that.range), 
-                startTimer = (new Date(timer.split('-')[0])), 
+            var timer = myFun.judgeTimer(myFun.getDataset(e.target).type,that.format,that.range),
+                startTimer = (new Date(timer.split('-')[0])),
                 endTimer = (new Date(timer.split('-')[1]));
             // console.log(myFun.getDataset (e.target).type);
             input.value = timer;
@@ -214,7 +214,7 @@ var myFun = {
                 minutes: endTimer.getMinutes(),
                 second: endTimer.getSeconds()
             }
-            
+
             that.done(timer, startDate, endDate);
             $('.layui-laydate').remove();
         })
@@ -282,7 +282,7 @@ var myFun = {
     },
     //my-options组件js方法
     /*
-        textClick 部门点击事件 ， 
+        textClick 部门点击事件 ，
         affirm转移部门点击的确认时间，
         searchClick 点击搜索结果选项  ,
         onDarg是否开启拖拽,默认开启,
@@ -304,7 +304,7 @@ var myFun = {
             +    '<div class="btn-group">'
             +         '<div class="my-btn my-btn-cancel">取消</div>'
             +          '<div class="my-btn my-btn-green my-btn-result">确定</div>'
-            +       '</div>'  
+            +       '</div>'
             +    '</div>'
             + '</template>'
             +'</script>');
@@ -327,7 +327,7 @@ var myFun = {
                 $(target).find('.option-title').on('click','.btns-icon',jieliu(function(){
                     var th  = $(this).parent();
                     if(th.siblings('.option-content').find(".div-item").length === 0) return;
-        
+
                     var a = th.siblings('.option-content');
                     a.css('display') == 'none'?th.addClass('on'):th.removeClass('on');
                     a.stop(true,true).slideToggle(250,function(){
@@ -367,7 +367,7 @@ var myFun = {
                 var $li = document.getElementsByClassName('div-item')
                 ,$select = document.getElementsByClassName('my-options')
                 ,th = this;
-        
+
                 for(var i= 0,length = $li.length;i<length;i++){
                     //为每个li添加ondragstart事件
                     $li[i].ondragstart = function(e) {
@@ -385,7 +385,7 @@ var myFun = {
                     $select[i].ondragover = function(e){
                     //阻止默认行为
                         e.preventDefault();
-                    } 
+                    }
                 }
             },
             //获取挡圈
@@ -402,10 +402,10 @@ var myFun = {
                 $('.div-item').attr("draggable",false);//删除元素可拖动性
                 //不能再本部门移动
                 if($currentTarget.children('.option-content').is($targetEle.parent()[0])) return ;
-               
+
                 //获取数据 obj.targetEle需要移动的部门，currentTarget需要移动到的部门
                 var html = e.dataTransfer.getData('text/plain');
-                
+
                 var test1 = $currentTarget;
                 var test2 = $targetEle;
                 console.log(test2)
@@ -448,7 +448,7 @@ var myFun = {
                             _li.innerHTML = html.substring(4);        //字符串截取
                             // console.log(currentTarget)
                             $targetEle.remove();  //删除原本元素
-                            
+
                             if($currentTarget.children(".option-content").find(".div-item").length !== 0)
                                 $currentTarget.children(".option-content").children(":last").after(_li);
                             else {
@@ -456,7 +456,7 @@ var myFun = {
                             }
                             // _li.ondrop = obj.bingDrop;
                             //添加ondragstart
-                            
+
                             $(_li).on('mousedown',function(e){
                                 e.stopPropagation();
                                 $(this).attr("draggable","true");
@@ -480,14 +480,14 @@ var myFun = {
                         }
                     })
                     // $(target).on('click','.my-btn-cancel',function(){
-                        
+
                     // })
                 })
             },
             //设置拖拽部门的时候能移动滚动条
             ready:function(){
                 var myOptions = $(target1).find('.my-options:first'), //第一个my-options
-                    myOptionsHeight = myOptions.parent().height(),  
+                    myOptionsHeight = myOptions.parent().height(),
                     ONETOP = myOptionsHeight / 5,// 每次移动的距离值
                     myOptionsTop = getH(myOptions[0]),// 距离顶部的距离值
                     myOptionsBox = myOptions.parent();
@@ -553,7 +553,7 @@ var myFun = {
                     }
                 }else obj.search1(ele,DepartCode,parent);
                 // console.log(obj.searchData);
-                
+
             },
             //搜索功能
             search1:function(ele,DepartCode,parent){
@@ -666,7 +666,7 @@ var myFun = {
                         return false;
                     }
                     $(this).siblings('.my-input-list').attr("style","").show(0);
-                    
+
                     //判断是否是字符串，是的话进行字符串查找
                     if((/^[a-zA-Z]*$/.test($(this).val()))){
                         self.searchStr(sectionData,$(this).val(),sectionData)
@@ -801,7 +801,7 @@ var myFun = {
     },
     //表单滚动加载
     // 1.绑定表格元素 2.请求函数 3.开始执行的页数 4.是否调用函数就执行一次接口
-    scrollLoad:function(target,request,startPage,firstExe){        
+    scrollLoad:function(target,request,startPage,firstExe){
         if($(target).length <= 0 ) return;
         target = $(target).hasClass('scroll-box')?$(target):$(target).children('.scroll-box');
         target.attr("data-index", Math.ceil(Math.random() * 10));
@@ -820,7 +820,7 @@ var myFun = {
         self.pageNum = startPage || 0;
         self.getLoadTop = function(){
             // console.log(target.find('.table-item:last-child')[0].offsetTop);
-            self.loadTop = target.css("overflow") != "overflow-y" 
+            self.loadTop = target.css("overflow") != "overflow-y"
                             ? target.find('.table-item:last-child')[0].offsetTop - 13
                             : target.find('.table-item:last-child')[0].offsetTop;
         }
@@ -870,7 +870,7 @@ var myFun = {
                     $(target).hasClass('ele-scroll-fixed') ? $(target).removeClass('ele-scroll-fixed') : '';
                 }, false); //第一个参数为滚动到触发的函数，第二个是没有滚动到触发函数，第三个高度比较的时候是否加上页面宽度
             })
-           
+
         }
         // 判断方法
         //第四个参数是按顶部计算（吸顶）false ,true为滚动加载，以最底部计算
@@ -879,7 +879,7 @@ var myFun = {
             // fn1 = jieliu(fn1),
             // fn2 = jieliu(fn2);
 
-            
+
             if (!flag) eleHei = flag ? getH(ele) - $(window).height() : getH(ele);
             $(window).scroll(jieliu(function (e) {
                 if (flag) eleHei = flag ? getH(ele) - $(window).height() : getH(ele);
@@ -893,7 +893,7 @@ var myFun = {
         self.init();
         return self;
     },
-    // 
+    //
     errorBespread: function(element) {
         var element = $(".container-single") || element, clientTop = 0;
         element.each(function(index, elem) {
@@ -1125,7 +1125,7 @@ var myFun = {
                     self.searchOn(self.data,currIndex,false);//设置on值
                     $(target).find('.div-item[index="'+currIndex+'"]').removeClass('on').children('.my-checks').removeClass('on');//删除选中样式
                     self.currentData = self.currentData.filter(function(index){return index.index != currIndex;});//处理当前data的数据
-                    
+
                     var texts = self.currentData.map(function(k){return k.text;});//获取选中的部门
                     $(target).attr('title',texts.join('、'))  //设置元素移入显示全部内容 设置title属性
                     curr.remove();
@@ -1230,7 +1230,7 @@ var myFun = {
         staff:function(target,Data,clickFun,optionFlag,keyup,onfold){
             var self = this;
             if(optionFlag == undefined) optionFlag = true;
-            
+
             self.data = Data;   //保存Date的值
             // self.currentData = [];//保存当前选择的
             self.searchData = [];//保存搜索的
@@ -1349,7 +1349,7 @@ var myFun = {
                 .on('blur',null,function(){
                     // console.log(self.targetData)
                     // 2019年8月9日14:19:54 改动
-                    // var that = this; 
+                    // var that = this;
                     // setTimeout(function(){
                     //     if(self.targetData.length !== 0 && self.onSearch == '') $(that).val(self.targetData[0].DepartName)
                     // },150)
@@ -1537,7 +1537,7 @@ var myFun = {
                 $('.my-input-list').stop().slideUp(100);
                 $('.my-search-list').stop().slideUp(100);
             }
-            
+
             //初始页面
             self.useData = function(){
                 var self = this;
@@ -1545,7 +1545,7 @@ var myFun = {
                     var html2 = self.setContentData(self.data);
                 $(target).find('.my-search-list').html(html2);
             }
-            
+
             self.setContentData = function(Data){//flag  true:打开搜索部门   false:打开搜索结果
                 // 添加搜索结果样式
                 if($('#Tmpl-area1-search').length === 0){
@@ -1779,7 +1779,7 @@ var myFun = {
             self.addData = function(index){
                 self.mapData(self.data,index,self.data[0],true)
                 onRepetition && self.currentData.push({text:self.targetData[0].DepartName,parent: self.targetData[1].DepartName,DepartCode:self.targetData[0].DepartCode,index:self.targetData[0].index})
-                console.log(self.currentData)                
+                console.log(self.currentData)
                 self.getEleOn(index,true);
             }
             //展开
@@ -1810,10 +1810,10 @@ var myFun = {
     layer:{
         /**
          * 生成表格表格 (*为必填项)
-         * @param {object} { 
+         * @param {object} {
          *  {String} *target:指定原始table容器的选择器；
          *  {Array} *data: 赋值数据。既适用于只展示一页数据，也非常适用于对一段已知数据进行多页展示；
-         *  {Array} *cols: 设置表头。值是一个二维数组。参数有 
+         *  {Array} *cols: 设置表头。值是一个二维数组。参数有
          *                 {String} field: 设定字段名。字段名的设定非常重要，且是表格数据的唯一标识；
          *                 {String} title: 设定标题名称。
          *                 {Number/String} width: 设定列宽，若不填写，则自动分配；若填写，则支持值为：数字、百分比。
@@ -1838,7 +1838,7 @@ var myFun = {
          * }
          * @param {function} callback   回调函数，可接受到table对象与当前生成表格对象
          */
-        table: function({target= "", data= [], cols= [], minWidth= 86, height= "-", maxHeight= 0, limit= 10, 
+        table: function({target= "", data= [], cols= [], minWidth= 86, height= "-", maxHeight= 0, limit= 10,
                         limits= [5,10,20,30,50,90], skin="line", size= "",allUnresize = false} = {}, callback) {
             const UniqueId = myFun.utils.createUniqueId(1).toString();
             if(allUnresize) cols.filter((item) => item.unresize = allUnresize);
@@ -1846,7 +1846,7 @@ var myFun = {
                 if(!item.title) return;
                 if(item.title.length > 4) item.minWidth = (myFun.utils.IsHanZi(item.title) ? (item.title.length * 14) : (item.title.length * 8)) + 30; // (字数 * 字的长度) + 内边距
             });
-            layui.use("table", function() { 
+            layui.use("table", function() {
                 _tableIns = layui.table.render({
                     id: "table"+UniqueId,
                     elem: document.querySelector(target),
@@ -1900,7 +1900,7 @@ var myFun = {
                 anim: -1,
                 isOutAnim: false,
                 content: '<div class="swiper '+ type +'"><div class="swiper-container">'
-                +'<div class="swiper-wrapper">' 
+                +'<div class="swiper-wrapper">'
                     //    +' <div class="swiper-slide"><img src="./images/1.png"/></div>'
                     //    +' <div class="swiper-slide"><img src="./images/pool.jpg"/></div>'
                     //    +' <div class="swiper-slide"><img src="./images/2.png"/></div>'
@@ -1930,7 +1930,7 @@ var myFun = {
                         nextButton: '.swiper-button-next',
                         prevButton: '.swiper-button-prev',
                         initialSlide: $(imgTarget).parents(parent).find(children).index(imgTarget)
-                    }); 
+                    });
                     //旋转按钮
                     e.find('.js-button-rotate').click(function(){
 
@@ -1948,7 +1948,7 @@ var myFun = {
                             translateleft = arr2.split("transform:")[1];
                             translateright = arr1[1].split(";")[0];
                         }
-                        
+
                         activeSwiper.css({
                             "transform": translateleft  + "rotate("+rotate+"deg)" + translateright
                         })
@@ -1975,7 +1975,7 @@ var myFun = {
                         var arr1 = activeImg.split("deg)") || "";
                         var rotate = parseInt(arr1[0].split('rotate(')[1] || 0);
                         var arr2 = activeImg.match(/scale\(([^)]*)/);
-                        
+
                         if(arr2 && arr2[1] === zoom+""){
                             scc = "scale(0.8)";
                         }
@@ -2024,14 +2024,14 @@ var myFun = {
                                     zFun.componentFun[key](layero);
                                 }
                             }
-                        }   
+                        }
                     } catch (error) {
                         console.log("zFun未找到！");
                     }
                     // myFun.componentFun.checks('.layer-window');
                     // myFun.componentFun.select('.layer-window');
                     if($('#layerdata').length !== 0) myFun.layer.layerdata1('#layerdata');
-                    
+
                     $('.layer-window').on('click','.my-btn-cancel',function(){
                         layer.close(index)
                     })
@@ -2041,7 +2041,7 @@ var myFun = {
                     obj.success();
                 },
                 btn2:function(index, layero){
-                    
+
                 },
                 end:function(){
                     // console.log("end");
@@ -2096,8 +2096,8 @@ var myFun = {
 						iframeDom = layer.getChildFrame('body', index); // 获取到iframe的DOM
                         layer.iframeAuto(index);
                         iframeDom.find('.audit-apply-container').addClass('scrollbar');
-						iframeDom.find('.btn-group').length === 0 ? 
-                            (iframeDom.find('.audit-apply').addClass('is-padding'),iframeDom.find('.audit-apply-container').css('max-height', '90vh')) : 
+						iframeDom.find('.btn-group').length === 0 ?
+                            (iframeDom.find('.audit-apply').addClass('is-padding'),iframeDom.find('.audit-apply-container').css('max-height', '90vh')) :
                             iframeDom.find('.audit-apply-container').css('max-height', '86vh');
 						if(layero.height() >= (document.documentElement.clientHeight * 0.8)) {
 							layero.find('iframe').css('max-height', '80vh');
@@ -2120,12 +2120,12 @@ var myFun = {
                                     zFun.componentFun[key](layero);
                                 }
                             }
-                        }   
+                        }
                     } catch (error) {
                         console.log("zFun未找到！");
                     }
                     if($('#layerdata').length !== 0) myFun.layer.layerdata1('#layerdata');
-                    
+
 					$(iframeDom || layero).on("click", ".my-btn-green", function() {
 					    // loadingIndex = myFun.layer.loading();
 					});
@@ -2139,7 +2139,7 @@ var myFun = {
                     // obj.success();
                 },
                 btn2:function(index, layero){
-                    
+
                 },
                 end:function(){
                     // console.log("end");
@@ -2177,15 +2177,16 @@ var myFun = {
          * 双日期控件（年、月、日）
          * @param {String} target：类、ID、标签选择器
          */
-        layerdata2:function(target){
+        layerdata2:function(target,option){
             //跟进时间
             var ins1 = laydate.render({
                 elem: target //指定元素
                 ,range: true //或 range: '~' 来自定义分割字符
-                ,format: 'yyyy/MM/dd' 
+                ,format: 'yyyy/MM/dd'
                 ,isInitValue: true
-                ,value: $(target).val()
+                ,value: $(target).val(),
                 // ,theme: '#0078FF'
+                option
                 ,btnsName:[
                     {name:'今天',type:'now'},
                     {name:'近3天',type:'near2'},
@@ -2274,7 +2275,7 @@ var myFun = {
          * 双日期时间控件（年、月、日、时、分、秒）
          * @param {String} target：类、ID、标签选择器
          */
-        layerDoubleDateTime:function(target,option){
+        layerDoubleDateTime:function(target,option,afterChangeHandler){
             //跟进时间
             var ins1 = laydate.render({
                 elem: target, //指定元素
@@ -2296,7 +2297,7 @@ var myFun = {
                     dataValidatorDebounce(this.elem[0]); // 日期非空验证点击事件
                 },
                 change: function(value, date, endDate) {
-                    console.log(value, date, endDate);
+                    afterChangeHandler && eval(afterChangeHandler).call(ins1, value, date, endDate);
                 },
                 done: function(value, date, endDate){
                     // let firstDate = value.split('-')[0], lastDate = value.split('-')[1];
@@ -2366,14 +2367,14 @@ var myFun = {
                                     zFun.componentFun[key](layero);
                                    }
                             }
-                        }   
+                        }
                     } catch (error) {
                         console.log("zFun未找到！");
                     }
                     // myFun.componentFun.checks('.layer-window');
                     // myFun.componentFun.select('.layer-window');
                     if($('#layerdata').length !== 0) myFun.layer.layerdata1('#layerdata');
-                    
+
                     $('.layer-window').on('click','.my-btn-cancel',function(){
                         layer.close(index)
                     })
@@ -2433,7 +2434,7 @@ var myFun = {
                 e = e || window.event;
                 e.stopPropagation();
                 var self = $(this);
-                (!self.parent().hasClass('my-options-area') && document.body.clientHeight - getH(self[0]) - 200 < 0) ? 
+                (!self.parent().hasClass('my-options-area') && document.body.clientHeight - getH(self[0]) - 200 < 0) ?
                     self.parent('.my-select').addClass('bottom') : self.parent('.my-select').removeClass('bottom')
                 // console.log(self[0].getBoundingClientRect().top)
                 $('.my-input-list').stop().hide();
@@ -2463,7 +2464,7 @@ var myFun = {
                 // console.log(target)
                 if(target.className.indexOf('my-select-list') != -1){return false;}
                 if(target.classList.contains('found')) return;
-                
+
                 if($(this).parent().removeClass('on').find('.btn-text').length>0){
                     $(this).parent().removeClass('on').find('.btn-text').addClass("active").text(target.textContent)
                 }else{
@@ -2640,7 +2641,7 @@ var myFun = {
                     : ( bottom = 'auto', top = $(this).position().top + 32);
                 $child.show().css({'top': top, 'bottom': bottom});
             });
-            
+
             $(target).on('mouseover', '.my-select-list-child', function() {
                 index = $(this).parent().find('.my-select-list-child').index(this);
                 $(this).siblings(".my-select-list-parent ").find('li').eq(index).addClass('on').siblings().removeClass('on');
@@ -2698,7 +2699,7 @@ var myFun = {
             $(target).find('.navbar1').on('click','.nav-item1',function(){
                 var nav_item = ''
                   , nav_tab = ''
-                  , success = ''; 
+                  , success = '';
                 $(this).parent().children('.nav-item1').removeClass('on');
                 nav_item = $(this).addClass('on');
                 nav_tab = $(this).parent().siblings('.nav-tab').hide().eq($(this).index()).show();
@@ -2741,7 +2742,7 @@ var myFun = {
                 //     this.value = this.value.substring(0,this.value.indexOf(".")+3);
                 // }
                 // if(this.value.match(/\./g)) {
-                //     if(this.value.match(/\./g).length >= 2) { 
+                //     if(this.value.match(/\./g).length >= 2) {
                 //         this.value = this.value.replace(/\.$/,"");
                 //     }
                 //     if(!/\d/.test(this.value) && this.value.match(/\./g).length == 1) {
@@ -2766,13 +2767,13 @@ var myFun = {
             })
             // 只能输入数字(不包括小数)
             $(target).on('input', '.pnumber', function(e) {
-                this.value == '' 
-                    ? this.value = 0 
+                this.value == ''
+                    ? this.value = 0
                     : '';
-                this.getAttribute('min') 
+                this.getAttribute('min')
                     ? (parseInt(this.value) < parseInt(this.getAttribute('min'))
                     ? this.value = 0 : '' ) : '';
-                this.getAttribute('max') 
+                this.getAttribute('max')
                     ? (parseInt(this.value) > parseInt(this.getAttribute('max'))
                     ? this.value = 100 : '' ) : '';
                 this.value = this.value.replace(/\D/, '');
@@ -2787,15 +2788,15 @@ var myFun = {
                         if(!myFun.utils.IsNotEmpty(self.value)){
                             $(self).parent('.my-input').addClass('error');
                             blurChange(self, '必填项不能为空');
-                        }else{    
+                        }else{
                             $(self).parent('.my-input').removeClass('error');
                         }
-                    }, 200)  
+                    }, 200)
                 } else {
                     if(!myFun.utils.IsNotEmpty(this.value)){
                         $(this).parent('.my-input').addClass('error');
                         blurChange(this, '必填项不能为空');
-                    }else{    
+                    }else{
                         $(this).parent('.my-input').removeClass('error');
                     }
                 }
@@ -2809,16 +2810,16 @@ var myFun = {
                         if(!myFun.utils.IsNotEmpty(self.value)){
                             $(self).parents(".my-select-btn").addClass('error');
                             blurChange(self, '必填项不能为空');
-                        }else{    
+                        }else{
                             $(self).parents(".my-select-btn").removeClass('error');
                         }
-                    }, 200)  
+                    }, 200)
                 } else {
                     if(!myFun.utils.IsNotEmpty(this.value)){
                         $(this).parents(".my-select-btn").addClass('error');
                         blu
                         rChange(this, '必填项不能为空');
-                    }else{    
+                    }else{
                         $(this).parents(".my-select-btn").removeClass('error');
                     }
                 }
@@ -2832,7 +2833,7 @@ var myFun = {
                 if(!myFun.utils.IsNotEmpty(this.value)){
                     $(this).parent().addClass('error');
                     blurChange(this, '必填项不能为空');
-                }else{    
+                }else{
                     $(this).parent().removeClass('error');
                 }
             })
@@ -3057,7 +3058,7 @@ var myFun = {
     },
     // 表格头部固定
     // tableScrollFixed:function(){
-       
+
     //     var childV = ".ele-scroll";
     //     var fixedV = ".";
     //     var addClassName = "table-fixed-top";
@@ -3067,7 +3068,7 @@ var myFun = {
     //     if(!($(childV).length > 0 && $(fixedV).length > 0) ){
     //         return false
     //     }
-        
+
     //     tableLeft = $(childV).offset().left;
     //     tableRight = $(window).width() - $(childV).offset().left - $(childV).width();
 
@@ -3078,12 +3079,12 @@ var myFun = {
     //         var tableHeight = $(childV).height();
     //         var winScroll = $(window).scrollTop();
     //         var topNavH = $(".header-content").height();
-            
+
     //         if(winScroll >= tableTop - topNavH ){
     //             $(fixedV).css({
     //                 "padding-top":tableHeight
     //             })
-    //             //头部固定 
+    //             //头部固定
     //             $(childV).addClass(addClassName).css({
     //                 "left":tableLeft,
     //                 "right":tableRight
@@ -3170,7 +3171,7 @@ function jieliu(method,delay){
 }
 /**
  * 节流函数，返回函数连续调用是，func执行频率限定为次/wait
- * 
+ *
  * @param {function} func       函数
  * @param {number}   wait       表示时间窗口的间隔
  * @param {object}   options    如果想忽略开始函数的调用，传入{leading: false}。
@@ -3322,20 +3323,20 @@ Tdrag.prototype = {
         if(!self._start) return false;
         self._move = true;
         // if(self.cloneEle == null) return false;
-        // else 
+        // else
         // if(self.oneAgin) {
             // $(ev.target).parent().after(self.cloneEle);
             // self.oneAgin = false;
         // }
         // self.cloneEle
         ev = ev || window.event;
-        var target = ev.currentTarget; 
+        var target = ev.currentTarget;
         // console.log(ev.clientX,ev.clientY)
         var clientX = ev.clientX - getW(obj)
         var clientY = ev.clientY - getH(obj)
         var l = clientX - self.mouseX;
         var t = clientY + ev.currentTarget.parentElement.scrollTop - ev.currentTarget.offsetParent.offsetTop - self.mouseY;
-        
+
         // var t = $(ev.target).parent().position().top;
         // console.log($(target).parent('.my-Tdrag'))
         if(!(clientX>0 && clientX<$(target).parent('.my-Tdrag').width()) || !(clientY>0 && clientY<$(target).parent('.my-Tdrag').height()+100) ){
@@ -3355,7 +3356,7 @@ Tdrag.prototype = {
         ev = ev || window.event;
         var l = ev.clientX - getW(obj);
         var t = ev.clientY + ev.currentTarget.parentElement.scrollTop - getH(obj) - ev.currentTarget.offsetParent.offsetTop;
-        
+
         var target = ev.currentTarget
             ,chilren = $(target).parent().children();
             // console.log(chilren)
@@ -3461,7 +3462,7 @@ Tdrag.prototype = {
             if(self.tops[i].index>myIndex){ self.tops[i].index--;}
             if(self.tops[i].top>myTop){ self.tops[i].top-=30;}
         }
-        
+
         // console.log(self.tops)
         // console.log(myIndex)
         self.refresh(true);
@@ -3477,10 +3478,10 @@ function getH(ele, padding) {
     var h = 0;
     while (ele) {
         h += ele.offsetTop;
-        padding ? 
+        padding ?
             h += parseInt(ele.currentStyle ? ele.currentStyle["paddingBottom"] : getComputedStyle(ele, false)["paddingBottom"])
             : '';
-        ele = ele.offsetParent; //  parentElement 
+        ele = ele.offsetParent; //  parentElement
     }
     return h;
 }

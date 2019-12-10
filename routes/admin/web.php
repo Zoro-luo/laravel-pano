@@ -28,11 +28,18 @@ Route::group(['middleware' => ['auth']], function () {
 /**
  * VR 1.0
  */
-Route::get('vr/list', 'Admin\\VrController@index');                         //vr列表
+Route::get('vr/list', 'Admin\\VrController@index');                             //vr列表
+Route::post('vr/seer', 'Admin\\VrController@listPreview');                      //vr 列表页预览动作
+Route::get('vr/look/{pano_id}', 'Admin\\VrController@lookto');                  //vr 列表页预览页
+Route::post('vr/turnup', 'Admin\\VrController@turnup');                      //vr 列表页上线
+Route::post('vr/turndown', 'Admin\\VrController@turndown');                     //vr 列表页下线
+
 Route::get('vr/edit/{pano_id}', 'Admin\\VrController@update');              //热点编辑页
 Route::get('vr/view/{pano_id}', 'Admin\\VrController@preview');             //预览模型
 
-Route::post('vr/preview', 'Admin\\VrController@copyUrl');             //预览模型
+Route::post('vr/preview', 'Admin\\VrController@copyUrl');                   //预览模型
+Route::post('vr/produce', 'Admin\\VrController@produce');                   //发布操作
+Route::get('vr/online/{pano_id}', 'Admin\\VrController@online');            //线上视图
 
 Route::post('vr/showlabel', 'Admin\\VrController@showLabel');               //ajax 热点管理场景下拉
 Route::post('vr/setcover', 'Admin\\VrController@setcover');                 //设置为封面

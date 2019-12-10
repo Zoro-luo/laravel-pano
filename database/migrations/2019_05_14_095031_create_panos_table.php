@@ -24,6 +24,7 @@ class CreatePanosTable extends Migration
             $table->string('house_area')->comment('面积');
             $table->string('panoUrl')->nullable()->comment('场景路径');
             $table->longText("remark")->comment("备注");
+            $table->string("status")->default("2")->comment("状态 1=>发布 2=>未发布");
 
             $table->timestamps();
         });
