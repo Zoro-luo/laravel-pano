@@ -39,30 +39,21 @@ class VrController extends Controller
         return view("admin.vr.online", ["panoId" => $panoId]);
     }
 
-    //列表页上线
+    //列表页上下线操作
     public function turnup(Request $request)
     {
         $panoId = $request->panoId;
-        $affected = DB::update("update panos set status= '1' where pano_id=?", [$panoId]);
+        $panoData = DB::select('select status from panos where pano_id=?', [$panoId]);
+        if ($panoData[0]->status == "2") {   //未发布
+            $affected = DB::update("update panos set status= '1' where pano_id=?", [$panoId]);
+        } elseif ($panoData[0]->status == "1"){
+            $affected = DB::update("update panos set status= '2' where pano_id=?", [$panoId]);
+        }
         if ($affected){
-            $panos = DB::table("panos")->paginate(2);
-            $count = $panos->total();
-            $ress["panos"] = $panos;
-            $ress["count"] = $count;
-            return $ress;
+            $panoData = DB::select('select * from panos where pano_id=?', [$panoId]);
+            return $panoData;
         }
     }
-
-    //列表页下线
-    public function turndown(Request $request)
-    {
-        $panoId = $request->panoId;
-        $affected = DB::update("update panos set status= '2' where pano_id=?", [$panoId]);
-        if ($affected){
-            return '200';
-        }
-    }
-
 
     //列表页预览
     public function listPreview(Request $request)
@@ -74,8 +65,10 @@ class VrController extends Controller
         $skinXmlNewFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\skin\\vtourskin_new.xml";
 
         //1. copy vtourskin.xml 文件为vtourskin_new.xml
-        $vtourSkinXmlStr = file_get_contents($skinXmlFile);
-        file_put_contents($skinXmlNewFile, $vtourSkinXmlStr);
+        if (!file_exists($skinXmlNewFile)){
+            $vtourSkinXmlStr = file_get_contents($skinXmlFile);
+            file_put_contents($skinXmlNewFile, $vtourSkinXmlStr);
+        }
 
         //2. copy tour.xml 文件为tour_pre.xml
         $vtourXmlStr = file_get_contents($xmlFile);
@@ -90,8 +83,12 @@ class VrController extends Controller
                 $vtourIncludeArr[0]["url"] = "skin/vtourskin_new.xml";
             }
             file_put_contents($xmlPreFile, $tourXmlObj->asXML());
-
-            return '200';
+        }
+        $panoData = DB::select('select status from panos where pano_id=?', [$panoId]);
+        if ($panoData[0]->status == "1"){   //已上线
+            return "online";
+        }else{
+            return "outline";
         }
     }
 

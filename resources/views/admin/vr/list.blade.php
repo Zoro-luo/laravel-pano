@@ -81,12 +81,12 @@
             <div class="my-table my-table-10 table-big">
 
                 @if($count > 0 )
-                <div class="ele-scroll table-header">
-                    <div class="list-top">
-                        <span class="selected-text">筛选查询</span>
-                        <span class="search-text">共查询到<span class="text">{{$count}}</span>条客源数据</span>
-                    </div>
-                    <div class="table-item table-title">
+                    <div class="ele-scroll table-header">
+                        <div class="list-top">
+                            <span class="selected-text">筛选查询</span>
+                            <span class="search-text">共查询到<span class="text">{{$count}}</span>条客源数据</span>
+                        </div>
+                        <div class="table-item table-title">
                             <div class="table-text table-text1">
                                 <div>序号</div>
                             </div>
@@ -118,9 +118,9 @@
                                 <div>操作</div>
                             </div>
                         </div>
-                 </div>
+                    </div>
                     @foreach($panos as $pano)
-                        <div class="table-item">
+                        <div class="table-item index-{{$pano->pano_id}}">
                             <div class="table-text table-text1">
                                 <div>{{$pano->id}}</div>
                             </div>
@@ -151,20 +151,10 @@
                             <div class="table-text table-text10">
                                 <a class="text-btn" href="{{url('vr/edit/'.$pano->pano_id)}}"
                                    target="_blank">编辑模型</a><span class="vertical-line">|</span>
-
-                                @if($pano->status == "2")
-                                <div class="text-btn" onclick="listPreview({{$pano->pano_id}})" >预览</div>
-                                @else
-                                <a class="text-btn" href="{{url('vr/online/'.$pano->pano_id)}}" target="_blank">预览</a>
-                                @endif
+                                <div class="text-btn" onclick="listPreview({{$pano->pano_id}})">预览</div>
                                 <span class="vertical-line">|</span>
-
-
-                                @if($pano->status == "2")
-                                    <div class="text-btn  error-btn" onclick="turnup({{$pano->pano_id}})" >上线</div>
-                                @else
-                                    <div class="text-btn error-btn" onclick="turndown({{$pano->pano_id}})">下线</div>
-                                @endif
+                                <div class="text-btn  error-btn"
+                                     onclick="turnup({{$pano->pano_id}})">{{$pano->status == "2" ? "上线" : "下线"}}</div>
                             </div>
                         </div>
                     @endforeach
@@ -191,7 +181,7 @@
 <!-- <script src="js/echarts.simple.min.js"></script> -->
 <script>
     //点击预览另打开预览窗口页
-    function listPreview(paonId){
+    function listPreview(paonId) {
         var panoId = paonId;
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -199,15 +189,17 @@
             type: "POST",
             data: {"panoId": paonId},
             success: function (e) {
-                if (e == '200'){
+                if (e == "online") {
+                    window.open("{{url('vr/online')}}" + "/" + panoId);
+                } else if (e == "outline") {
                     window.open("{{url('vr/look')}}" + "/" + panoId);
                 }
             }
         })
     }
 
-    //上线
-    function turnup(paonId){
+    //上下线操作
+    function turnup(paonId) {
         var panoId = paonId;
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -215,22 +207,22 @@
             type: "POST",
             data: {"panoId": paonId},
             success: function (e) {
-                console.log(e);
+                var panoStr = `<div class="table-item index-${e[0]['pano_id']}">
+                            <div class="table-text table-text1"><div>${e[0]['id']}</div></div>
+                            <div class="table-text table-text2"><div>VR${e[0]['pano_id']}</div></div>
+                            <div class="table-text table-text3"><div>${e[0]['house_name']}</div></div>
+                            <div class="table-text table-text4"><div>${e[0]['house_name']}-${e[0]['house_type']}随时看房</div></div>
+                            <div class="table-text table-text5"><div>${e[0]['pano_id']}</div></div>
+                            <div class="table-text table-text6"><div>百瑞景一店</div></div>
+                            <div class="table-text table-text7"><div>刘德马</div></div>
+                            <div class="table-text table-text8"><div>${e[0]['updated_at']}</div></div>
+                            <div class="table-text table-text9"><div class="">${e[0]['status'] == "1" ? "已上线" : "未上线"}</div></div>
+                            <div class="table-text table-text10"><a class="text-btn" href="{{url('vr/edit/'.$pano->pano_id)}}" target="_blank">编辑模型</a>
+                            <span class="vertical-line">|</span><div class="text-btn" onclick="listPreview('${e[0]['pano_id']}')" >预览</div>
+                                <span class="vertical-line">|</span><div class="text-btn  error-btn" onclick="turnup('${e[0]['pano_id']}')" >${e[0]['status'] == "2" ? "上线" : "下线"}</div>
+                            </div></div>`;
 
-            }
-        })
-    }
-
-    //下线
-    function turndown(paonId){
-        var panoId = paonId;
-        $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            url: "{{url('vr/turndown')}}",
-            type: "POST",
-            data: {"panoId": paonId},
-            success: function (e) {
-                console.log(e);
+                $(".index-"+e[0]['pano_id']+"").html("").replaceWith(panoStr);
             }
         })
     }
