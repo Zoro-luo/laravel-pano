@@ -213,7 +213,7 @@
     </div>
 </template>
 <!-- 温馨提示 -->
-<template id="cozyHint">
+<template id="cozyHint" class="vr-hint">
     <div class="cozy-hint">
         <div class="text"></div>
         <div class="btn-group">
@@ -751,6 +751,27 @@
     }
 
     $(function () {
+        //刷新弹窗重置编辑
+        document.addEventListener("keydown", function (e) {
+            if(e.keyCode==116) {
+                e.preventDefault();
+                opensHint("刷新", "刷新页面会丢失当前编辑内容，您确定要刷新吗？", "jc", function (layero, index) {
+                    var _this = this;
+                    layero.find(".my-btn-green").click(function () {  //点击确认
+                        location.reload();
+                        _this.close(index);
+                    })
+                });
+            }
+        }, false);
+
+        // 重置按钮
+        // $("#issueBtn").click(function() {
+        //     opensHint("重置", "您确定要刷新重置编辑吗？","jc",function() {
+        //         console.log(this);
+        //     });
+        // });
+
         /*if (window.performance.navigation.type == 1) {  //页面被刷新
             console.log("页面被刷新")
             opensHint("发布", "您确定要重置刷新吗？", "jc", function (layero, index) {
