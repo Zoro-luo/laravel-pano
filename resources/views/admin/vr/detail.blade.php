@@ -690,7 +690,6 @@
     function showHotsport(hason) {
         hason ? $(".txt-box").text("展示") : $(".txt-box").text("隐藏");
         if (krpano) {
-            //var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
             var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour_edit.xml";
             var panoId = "{{$panoId}}";
             var sceneName = krpano.get("xml.scene");
@@ -706,7 +705,8 @@
                 data: {"sceneIndex": sceneIndex, "panoId": panoId, "hlookat": hlookat, "vlookat": vlookat},
                 success: function (e) {
                     $(".txt-box").html(e.status);
-                    krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
+                    //krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
+                    krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
                     krpano.call("loadscene(" + sceneName + ", NULL, MERGE, BLEND(0.1));");
                     //krpano.call("lookat(" + e.h + "," + e.v + ",120)");
                     //
@@ -718,7 +718,6 @@
     //设置为封面
     function setScene() {
         if (krpano) {
-            //var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
             var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour_edit.xml";
             var panoId = "{{$panoId}}";
             var sceneName = krpano.get("xml.scene");

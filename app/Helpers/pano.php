@@ -791,6 +791,9 @@ function addSetting($xmlFile = null)
     $gyroOff->setAttribute("height","13");
     $gyroOff->setAttribute("devices","all");
     $gyroOff->setAttribute("url","%SWFPATH%/plugins/textfield.swf");
+    $gyroOff->setAttribute("onclick","if(layer[gyro_on].visible,
+               set(skin_settings.gyro,false);set(layer[gyro_on].visible,false);set(layer[gyro_off].visible,true),
+               set(skin_settings.gyro,true);set(layer[gyro_off].visible,false);set(layer[gyro_on].visible,true););");
     // gyro_on
     $gyroOn = $vtourDocXml->createElement("layer");
     $gyroOn->setAttribute("name","gyro_on");
@@ -803,6 +806,9 @@ function addSetting($xmlFile = null)
     $gyroOn->setAttribute("height","13");
     $gyroOn->setAttribute("devices","all");
     $gyroOn->setAttribute("url","%SWFPATH%/plugins/textfield.swf");
+    $gyroOn->setAttribute("onclick","if(layer[gyro_on].visible,
+               set(skin_settings.gyro,false);set(layer[gyro_on].visible,false);set(layer[gyro_off].visible,true),
+               set(skin_settings.gyro,true);set(layer[gyro_off].visible,false);set(layer[gyro_on].visible,true););");
     $gyroFillSpace->appendChild($gyroOff);
     $gyroFillSpace->appendChild($gyroOn);
 
@@ -845,6 +851,9 @@ function addSetting($xmlFile = null)
     $rotateOff->setAttribute("height","13");
     $rotateOff->setAttribute("devices","all");
     $rotateOff->setAttribute("url","%SWFPATH%/plugins/textfield.swf");
+    $rotateOff->setAttribute("onclick","if(layer[rotate_on].visible,set(autorotate.enabled,false);
+               set(layer[rotate_on].visible,false);set(layer[rotate_off].visible,true),set(autorotate.enabled,true);
+                set(layer[rotate_off].visible,false);set(layer[rotate_on].visible,true););");
     // rotate_on
     $rotateOn = $vtourDocXml->createElement("layer");
     $rotateOn->setAttribute("name","rotate_on");
@@ -857,6 +866,9 @@ function addSetting($xmlFile = null)
     $rotateOn->setAttribute("height","13");
     $rotateOn->setAttribute("devices","all");
     $rotateOn->setAttribute("url","%SWFPATH%/plugins/textfield.swf");
+    $rotateOn->setAttribute("onclick","if(layer[rotate_on].visible,set(autorotate.enabled,false);
+               set(layer[rotate_on].visible,false);set(layer[rotate_off].visible,true),set(autorotate.enabled,true);
+                set(layer[rotate_off].visible,false);set(layer[rotate_on].visible,true););");
     $rotateFillSpace->appendChild($rotateOff);
     $rotateFillSpace->appendChild($rotateOn);
 

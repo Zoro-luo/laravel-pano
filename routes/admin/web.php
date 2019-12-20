@@ -48,7 +48,6 @@ Route::post('vr/esspot', 'Admin\\VrController@editSaveHotspot');            //aj
 Route::post('vr/savepoint', 'Admin\\VrController@savePoint');               //ajax  添加文本标签
 Route::post('vr/espoint', 'Admin\\VrController@editSavePoint');             //ajax  编辑后的添加文本标签热点
 Route::post('vr/editspot', 'Admin\\VrController@editHotspot');              //ajax  编辑热点坐标
-Route::post('vr/checkerr', 'Admin\\VrController@checkRedErr');              //ajax  点编辑弹出热点后点红X的操作
 Route::post('vr/delspot', 'Admin\\VrController@delHotspot');                //ajax  点击删除的弹窗操作
 Route::post('vr/delhs', 'Admin\\VrController@delHs');                       //ajax  删除弹窗的确认操作
 

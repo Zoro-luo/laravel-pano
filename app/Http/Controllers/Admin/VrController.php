@@ -394,6 +394,7 @@ class VrController extends Controller
         $currHotSpot->addAttribute("atv", $atv);
         $currHotSpot->addAttribute("zoom", "true");
         $currHotSpot->addAttribute("linkedscene", $linkedscene);
+        $currHotSpot->addAttribute("visible", "true");
         //file_put_contents($xmlFile, $vtourXmlObj->asXML());
         file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
 
@@ -449,6 +450,7 @@ class VrController extends Controller
             $currHotSpot->addAttribute("ath", $ath);
             $currHotSpot->addAttribute("atv", $atv);
             $currHotSpot->addAttribute("zoom", "true");
+            $currHotSpot->addAttribute("visible", "true");
             //file_put_contents($xmlFile, $vtourXmlObj->asXML());
             file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
 
@@ -529,6 +531,7 @@ class VrController extends Controller
                 $currHotSpot->addAttribute("atv", $atv);
                 $currHotSpot->addAttribute("zoom", "true");
                 $currHotSpot->addAttribute("linkedscene", $sceneName);
+                $currHotSpot->addAttribute("visible", "true");
                 //file_put_contents($xmlFile, $vtourXmlObj->asXML());
                 file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
             }
@@ -610,6 +613,7 @@ class VrController extends Controller
                 $currHotSpot->addAttribute("ath", $ath);
                 $currHotSpot->addAttribute("atv", $atv);
                 $currHotSpot->addAttribute("zoom", "true");
+                $currHotSpot->addAttribute("visible", "true");
                 //file_put_contents($xmlFile, $vtourXmlObj->asXML());
                 file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
             }
@@ -624,32 +628,6 @@ class VrController extends Controller
         $ress['xmlPath'] = $xmlEditFile;
         $ress['sceneEname'] = $sceneName;
         return $ress;
-    }
-
-    //编辑弹出热点后点红X的操作
-    public function checkRedErr(Request $request)
-    {
-        $sceneIndex = $request->get("sceneIndex");
-        $panoId = $request->get("panoId");
-        $hostName = $request->get("hostName");
-        $sceneName = $request->get("sceneName");
-
-        $xmlFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
-        $xmlEditFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour_edit.xml";
-        //$vtourXmlStr = file_get_contents($xmlFile);
-        $vtourXmlStr = file_get_contents($xmlEditFile);
-        $vtourXmlObj = new \SimpleXMLElement($vtourXmlStr);
-        $vtourSceneArr = $vtourXmlObj->xpath('scene');
-        $hotspots = $vtourSceneArr[$sceneIndex]->xpath("hotspot");
-        foreach ($hotspots as $hsVal) {
-            if ($hsVal["name"] == $hostName) {
-                $hsVal['visible'] = "true";
-            }
-        }
-        DB::update("update hotspots set visible= 'true' where hotsName=?", [$hostName]);
-        //file_put_contents($xmlFile, $vtourXmlObj->asXML());
-        file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
-        return $sceneName;
     }
 
     //点击编辑按钮操作
