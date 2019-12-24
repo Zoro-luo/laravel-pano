@@ -395,25 +395,26 @@
                             var flag = zFun.utils.validationAll();
                             if (flag) _this.close(index);
                             var tagTitle = $(".input-point").val();
-                            $.ajax({
-                                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                                type: "POST",
-                                url: "{{url('vr/savepoint')}}",
-                                data: {
-                                    'hostName': hs_name,
-                                    'h': hh_p,
-                                    'v': vv_p,
-                                    'sceneName': sceneChname,
-                                    'sceneEname': sceneName,
-                                    'panoId': panoId,
-                                    'sceneIndex': sceneIndex,
-                                    'linkedscene': tagTitle,
-                                },
-                                success: function (e) {
-                                    if (flag) _this.close(index);
-                                    var hotspotStr = '';
-                                    for (var j = 0; j < e.count; j++) {
-                                        var hsTemplate = `<div class="table-item">
+                            if (tagTitle){
+                                $.ajax({
+                                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                    type: "POST",
+                                    url: "{{url('vr/savepoint')}}",
+                                    data: {
+                                        'hostName': hs_name,
+                                        'h': hh_p,
+                                        'v': vv_p,
+                                        'sceneName': sceneChname,
+                                        'sceneEname': sceneName,
+                                        'panoId': panoId,
+                                        'sceneIndex': sceneIndex,
+                                        'linkedscene': tagTitle,
+                                    },
+                                    success: function (e) {
+                                        if (flag) _this.close(index);
+                                        var hotspotStr = '';
+                                        for (var j = 0; j < e.count; j++) {
+                                            var hsTemplate = `<div class="table-item">
                                             <div class="table-text table-text1"><p>${e.panoData[j]['sceneName']}</p></div>
                                             <div class="table-text table-text2"><p>${e.panoData[j]['type'] == "point" ? "文本标签" : "场景跳转"}</p></div>
                                             <div class="table-text table-text3"><p>${e.panoData[j]['linkedscene']}</p></div>
@@ -422,14 +423,16 @@
                                                 <i onclick="delHotspots('${e.panoData[j]['hotsName']}');" class="iconfont iconshanchu2"></i>
                                             </div>
                                         </div>`
-                                        hotspotStr += hsTemplate;
+                                            hotspotStr += hsTemplate;
+                                        }
+                                        $(".redpoint-count").text("").text(e.count);
+                                        $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
+                                        krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
+                                        krpano.call("loadscene(" + e.sceneEname + ", NULL, MERGE, BLEND(0.1));");
                                     }
-                                    $(".redpoint-count").text("").text(e.count);
-                                    $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
-                                    krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
-                                    krpano.call("loadscene(" + e.sceneEname + ", NULL, MERGE, BLEND(0.1));");
-                                }
-                            })
+                                })
+                            }
+
                         })
                     });
                 }.bind(null, hs_name));
@@ -494,26 +497,27 @@
                                     var flag = zFun.utils.validationAll();
                                     if (flag) _this.close(index);
                                     var inputTitle = $(".input-point").val();
-                                    $.ajax({
-                                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                                        type: "POST",
-                                        url: "{{url('vr/espoint')}}",
-                                        data: {
-                                            'hsNewName': hsNewName,
-                                            'hsOldName': hsOldName,
-                                            'h': hh_p,
-                                            'v': vv_p,
-                                            'sceneTitle': scene_title,
-                                            'sceneName': scene_name,
-                                            'panoId': panoId,
-                                            'sceneIndex': scene_index,
-                                            'linkedTitle': inputTitle,
-                                        },
-                                        success: function (e) {
+                                    if (inputTitle){
+                                        $.ajax({
+                                            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                            type: "POST",
+                                            url: "{{url('vr/espoint')}}",
+                                            data: {
+                                                'hsNewName': hsNewName,
+                                                'hsOldName': hsOldName,
+                                                'h': hh_p,
+                                                'v': vv_p,
+                                                'sceneTitle': scene_title,
+                                                'sceneName': scene_name,
+                                                'panoId': panoId,
+                                                'sceneIndex': scene_index,
+                                                'linkedTitle': inputTitle,
+                                            },
+                                            success: function (e) {
 
-                                            var hotspotStr = '';
-                                            for (var j = 0; j < e.count; j++) {
-                                                var hsTemplate = `<div class="table-item">
+                                                var hotspotStr = '';
+                                                for (var j = 0; j < e.count; j++) {
+                                                    var hsTemplate = `<div class="table-item">
                                                <div class="table-text table-text1"><p>${e.panoData[j]['sceneName']}</p></div>
                                                <div class="table-text table-text2"><p>${e.panoData[j]['type'] == "point" ? "文本标签" : "场景跳转"}</p></div>
                                                <div class="table-text table-text3"><p>${e.panoData[j]['linkedscene']}</p></div>
@@ -522,16 +526,16 @@
                                                        <i onclick="delHotspots('${e.panoData[j]['hotsName']}');" class="iconfont iconshanchu2"></i>
                                                    </div>
                                                 </div>`
-                                                hotspotStr += hsTemplate;
+                                                    hotspotStr += hsTemplate;
+                                                }
+                                                $(".redpoint-count").text("").text(e.count);
+                                                $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
+                                                krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
+                                                krpano.call("loadscene(" + e.sceneEname + ", NULL, MERGE, BLEND(0.1));");
                                             }
-                                            $(".redpoint-count").text("").text(e.count);
-                                            $(".hot-manage .my-table").find(".table-content").html("").append(hotspotStr);
-                                            krpano.call("loadpano(tour_edit.xml, NULL, MERGE, BLEND(0.1));");
-                                            krpano.call("loadscene(" + e.sceneEname + ", NULL, MERGE, BLEND(0.1));");
-                                        }
-                                    })
+                                        })
+                                    }
                                 })
-
                             });
 
                         }.bind(null, hsNewName))
@@ -833,6 +837,8 @@
                     hotspotStr += `<div class="container-single"><div class="one1">
                            <img src="{{asset('public/static/hotsport')}}/css/img/empty_bj.png" alt="" class="img-404">
                            <p class="text caption1">很抱歉，暂时没有数据</p></div></div>`;
+
+                    return false;
                 }
                 var temStr = hotsName.split("_");
                 var scene_name = temStr[0] + "_" + temStr[1];
