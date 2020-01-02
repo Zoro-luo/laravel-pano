@@ -10,19 +10,20 @@
     <meta name="keywords" content="your keywords" />
     <meta name="description" content="your description" />
     <link rel="stylesheet" type="text/css" href="{{asset('public/static/pano')}}/css/p.vr.css" />
+    <link rel="stylesheet" type="text/css" href="{{asset('public/static/pano')}}/css/pc.min.css" media="screen and (min-width:1025px)">
 </head>
 
 <body>
 <section class="main vr-index">
     <div class="info-container" >
         <div class="house-info-wrapper" style="display: block">
-            <ul class="select-container">
+            <ul class="select-container clearfix">
                 <li class="select-item active" data-class="select-1">房源信息</li>
                 <li class="select-item" data-class="select-2">地图信息</li>
             </ul>
             <ul class="contents-container">
                 <li class="content-item select-1">
-                    <ul class="text-list">
+                    <ul class="text-list clearfix">
                         <li class="text-item">
                             <span class="title">售价</span>
 

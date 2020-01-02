@@ -10,6 +10,7 @@
     <meta name="keywords" content="your keywords" />
     <meta name="description" content="your description" />
     <link rel="stylesheet" type="text/css" href="{{asset('public/static/pano')}}/css/p.vr.css" />
+    <link rel="stylesheet" type="text/css" href="{{asset('public/static/pano')}}/css/pc.min.css" media="screen and (min-width:1025px)">
 </head>
 
 <body>
