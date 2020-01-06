@@ -156,8 +156,7 @@ function handleHsAnimate($xmlFile){
     $add_all_the_time_tooltip_error = $vtourDocXml->createElement("action");
     $add_all_the_time_tooltip_error->setAttribute("name","add_all_the_time_tooltip_error");
     $add_all_the_time_tooltip_error->nodeValue = "txtadd(linename, 'toolstip_', get(name));addplugin(get(linename));
-    txtadd(plugin[get(linename)].parent, 'hotspot[',get(name),']');set(plugin[get(linename)].keep,true);
-    set(plugin[get(linename)].url,'%SWFPATH%/../../../static/images/error_max.png');set(plugin[get(linename)].align,leftttop);
+    txtadd(plugin[get(linename)].parent, 'hotspot[',get(name),']');set(plugin[get(linename)].url,'%SWFPATH%/../../../static/images/error_max.png');set(plugin[get(linename)].align,leftttop);
     set(plugin[get(linename)].x,106);set(plugin[get(linename)].y,-14);set(plugin[get(linename)].scale,0.8);
     set(plugin[get(linename)].visible,true);";
 
