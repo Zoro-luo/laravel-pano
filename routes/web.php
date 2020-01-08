@@ -63,6 +63,14 @@ Route::get('/krpano/fr/{panoId}', function($panoId){
     return view('krpano.fr',['houseInfo'=>$houseInfo]);
 });
 
+
+//设置弹窗
+/*Route::get('/krpano/set/{panoId}', function($panoId){
+    //$houseInfo = Cache::get("houseInfo"."_".$panoId,"NULL");
+    return view('krpano.set');
+});*/
+
+
 //经纪人信息
 Route::get('/krpano/vr/{panoId}', function ($panoId){
     $agentInfo = Cache::get("agentInfo"."_".$panoId,"NULL");

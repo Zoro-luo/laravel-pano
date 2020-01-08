@@ -133,13 +133,13 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     // 添加 back_phone_pc 层
     $backPhonePc  = $fatherControlBarPc->addChild("layer");
     $backPhonePc->addAttribute("name","back_phone_pc");
-    $backPhonePc->addAttribute("url","../../../../static/images/back-phone-pc.png");
+    $backPhonePc->addAttribute("url","../../../../static/images/back_bar.png");
     $backPhonePc->addAttribute("align","lefttop");
     $backPhonePc->addAttribute("zorder","14");
     $backPhonePc->addAttribute("x","20");
-    $backPhonePc->addAttribute("y","-50");
+    $backPhonePc->addAttribute("y","-18");
     $backPhonePc->addAttribute("keep","true");
-    $backPhonePc->addAttribute("scale","0.9");
+    $backPhonePc->addAttribute("scale","0.4");
 
     //图片圆角 user_icon_pc_radius 层
     $userIconPcRadius = $backPhonePc->addChild("layer");
@@ -149,11 +149,11 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $userIconPcRadius->addAttribute("visible","true");
     $userIconPcRadius->addAttribute("zorder","20");
     $userIconPcRadius->addAttribute("keep","true");
-    $userIconPcRadius->addAttribute("width","50");
-    $userIconPcRadius->addAttribute("height","50");
+    $userIconPcRadius->addAttribute("width","45");
+    $userIconPcRadius->addAttribute("height","45");
     $userIconPcRadius->addAttribute("bgroundedge","360");
     $userIconPcRadius->addAttribute("align","leftcenter");
-    $userIconPcRadius->addAttribute("x","35");
+    $userIconPcRadius->addAttribute("x","25");
     $userIconPcRadius->addAttribute("bgalpha","0");
 
     // 内嵌 user_icon_pc 层
@@ -187,16 +187,16 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $phoneValuePc->addAttribute("url","%SWFPATH%/plugins/textfield.swf");
     $phoneValuePc->addAttribute("html",$agentPhone?$agentPhone:"NULL");
     $phoneValuePc->addAttribute("css","color:#FFFFFF;font-family:Arial;font-size:18px;font-weight:bold;");
-    $phoneValuePc->addAttribute("x","140");
+    $phoneValuePc->addAttribute("x","110");
     // 添加 sweep_code_pc
     $sweepCodePc = $backPhonePc->addChild("layer");
     $sweepCodePc->addAttribute("name","sweep_code_pc");
     $sweepCodePc->addAttribute("url","../../../../static/images/sweep-code.png");
     $sweepCodePc->addAttribute("align","leftcenter");
     $sweepCodePc->addAttribute("zorder","14");
-    $sweepCodePc->addAttribute("scale","0.9");
+    $sweepCodePc->addAttribute("scale","0.8");
     $sweepCodePc->addAttribute("keep","true");
-    $sweepCodePc->addAttribute("x","300");
+    $sweepCodePc->addAttribute("x","275");
     $sweepCodePc->addAttribute("onover","if(layer[bohao_saoma].visible,remove_iframe(bohao_saoma);
                                    set(layer[bohao_saoma].visible,false),call_iframe(bohao_saoma,/pano/krpano/code/".$panoId."););");
     $sweepCodePc->addAttribute("onout","if(layer[bohao_saoma].visible,remove_iframe(bohao_saoma);
@@ -797,7 +797,7 @@ function addSetting($xmlFile = null)
     // gyro_on
     $gyroOn = $vtourDocXml->createElement("layer");
     $gyroOn->setAttribute("name","gyro_on");
-    $gyroOn->setAttribute("backgroundcolor","0x006CDA00");
+    $gyroOn->setAttribute("backgroundcolor","0x0002C203");
     $gyroOn->setAttribute("roundedge","50");
     $gyroOn->setAttribute("visible","true");
     $gyroOn->setAttribute("align","rightcenter");
@@ -857,7 +857,7 @@ function addSetting($xmlFile = null)
     // rotate_on
     $rotateOn = $vtourDocXml->createElement("layer");
     $rotateOn->setAttribute("name","rotate_on");
-    $rotateOn->setAttribute("backgroundcolor","0x006CDA00");
+    $rotateOn->setAttribute("backgroundcolor","0x0002C203");
     $rotateOn->setAttribute("roundedge","50");
     $rotateOn->setAttribute("visible","true");
     $rotateOn->setAttribute("align","rightcenter");
@@ -1055,7 +1055,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $layerButton->setAttribute("enabled", "true");
     $layerButton->setAttribute("align", "topcenter");
     $layerButton->setAttribute("y", "15");
-    $layerButton->setAttribute("width", "220");
+    $layerButton->setAttribute("width", "18%");
     $layerButton->setAttribute("height", "32");
     $layerButton->setAttribute("css", "text-align:center;color:#FFFFFF;font-family:Arial;font-weight:bold;font-size:14px;");
     $layerButton->setAttribute("zorder", "15");
@@ -1190,7 +1190,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     //top_shade_layer_pc
     $topShadeLayerPc = $vtourDocXml->createElement("layer");
     $topShadeLayerPc->setAttribute("name","top_shade_layer_pc");
-    $topShadeLayerPc->setAttribute("width","18%");
+    $topShadeLayerPc->setAttribute("width","25%");
     $topShadeLayerPc->setAttribute("zorder","12");
     $topShadeLayerPc->setAttribute("align","topcenter");
     $topShadeLayerPc->setAttribute("visible","true");
