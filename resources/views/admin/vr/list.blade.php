@@ -149,8 +149,15 @@
                                 <div class="">{{$pano->status == "1" ? "已上线" : "未上线"}}</div>
                             </div>
                             <div class="table-text table-text10">
+
+                                @if($count > 0)
                                 <a class="text-btn" href="{{url('vr/edit/'.$pano->pano_id)}}"
-                                   target="_blank">编辑模型</a><span class="vertical-line">|</span>
+                                   target="_blank">编辑模型</a>
+                                @else
+                                <a class="text-btn" target="_blank>编辑模型</a>
+                                @endif
+
+                                <span class="vertical-line">|</span>
                                 <div class="text-btn" onclick="listPreview({{$pano->pano_id}})">预览</div>
                                 <span class="vertical-line">|</span>
                                 <div class="text-btn  error-btn"
