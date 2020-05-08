@@ -267,7 +267,16 @@
     };
 
     $(".trip-page").click(function () {
-        var page = $(".inputs-page").val();
+        var page = $(".inputs-page").val();     //跳转到多少页
+        var count = "{{$count}}";               //总条数
+        var perPage = "{{$perPage}}";           //每页显示多少条
+
+        if (page > Math.ceil(count/perPage)){
+            page = Math.ceil(count/perPage);
+        }
+        if (page <= 0){
+            page = 1;
+        }
         window.location.href = "/pano/vr/list?page=" + page;
     })
 </script>

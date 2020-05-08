@@ -13,9 +13,10 @@ class VrController extends Controller
     //vr 列表页
     public function index()
     {
-        $panos = DB::table("panos")->paginate(2);
+        $perPage = 2;
+        $panos = DB::table("panos")->paginate($perPage);
         $count = $panos->total();
-        return view('admin.vr.list', ['panos' => $panos,'count'=>$count]);
+        return view('admin.vr.list', ['panos' => $panos,'count'=>$count,'perPage'=>$perPage]);
     }
 
     //编辑页的预览视图
