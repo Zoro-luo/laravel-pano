@@ -62,6 +62,8 @@ class UploadController extends Controller
             $houseArea = $request->get("house_area");   //面积
             $houseRemark = $request->get("remark");     //备注
 
+            $houseCustom = $request->get("custom");     //自定义名
+
             $fileNames = $request->file("filename");
 
             $panoimgPath = str_replace('\\', '/', storage_path() . '/panos/');
@@ -94,6 +96,13 @@ class UploadController extends Controller
                 clearDir($path);                    //删除目录以及子目录文件
             }
 
+            //自定义全景字段合并
+            foreach ($fileNames as $k1=>$v1){
+                if ($k1 == "'custom'"){
+                    $fileNames[$houseCustom] =  $fileNames["'custom'"];
+                    unset($fileNames["'custom'"]);
+                }
+            }
 
             //批量插入数据库
             $zh_name = array();
@@ -103,6 +112,8 @@ class UploadController extends Controller
 
                     if (array_key_exists($key,ApiErrDesc::PANO_ARR_REPLACE)){
                         $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key];
+                    }else{
+                        $zh_name[] = $houseCustom;
                     }
 
                     $imgName = $min_v->getClientOriginalName();
@@ -148,7 +159,6 @@ class UploadController extends Controller
                     }
                 }
             }
-
         }else{
             $r['code'] = ApiErrDesc::NO_METHOD_POST[0];
             $r['msg'] = ApiErrDesc::NO_METHOD_POST[1];
@@ -188,6 +198,7 @@ class UploadController extends Controller
             $res['url'] = '';
             return json_encode($res);
         }
+
         $keepNameArr = array_combine($imgNameArr, $zh_name);
 
         //全景图存放路径

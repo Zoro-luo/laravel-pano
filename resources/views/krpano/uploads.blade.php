@@ -18,11 +18,9 @@
                                 <label for="parlour" class="parlour">客厅</label>
                                 <input type="file"  name="filename['parlour'][]"/>
                                 <input type="file"  name="filename['parlour'][]"/>
-                                <input type="file"  name="filename['parlour'][]"/>
                             </div>
                             <div class="form-group">
                                 <label for="bedroom" class="bedroom">卧室</label>
-                                <input type="file"  name="filename['bedroom'][]"/>
                                 <input type="file"  name="filename['bedroom'][]"/>
                                 <input type="file"  name="filename['bedroom'][]"/>
                                 <input type="file"  name="filename['bedroom'][]"/>
@@ -36,10 +34,14 @@
                                 <input type="file"   name="filename['cookroom'][]"/>
                             </div>
                             <div class="form-group">
-                                <label for="exterior" class="exterior">外景房</label>
-                                <input type="file"   name="filename['exterior'][]"/>
-                                <input type="file"   name="filename['exterior'][]"/>
-                                <input type="file"   name="filename['exterior'][]"/>
+                                <label for="exterior" class="exterior">
+
+                                    <input type="text" name="custom" placeholder="自定义" width="30">
+
+                                </label>
+                                <input type="file"   name="filename['custom'][]"/>
+                                <input type="file"   name="filename['custom'][]"/>
+                                <input type="file"   name="filename['custom'][]"/>
                             </div>
 
                             <input type="hidden" name="pano_id" value="22" />

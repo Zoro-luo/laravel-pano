@@ -41,7 +41,7 @@ class ApiErrDesc
         "bedroom" => "卧室",
         "cookroom" => "厨房",
         "toilet" => "卫生间",
-        "exterior" => "外景房",
+        //"exterior" => "外景房",
     ];
 
     public function seachArrVal()
