@@ -154,7 +154,7 @@
                                 <a class="text-btn" href="{{url('vr/edit/'.$pano->pano_id)}}"
                                    target="_blank">编辑模型</a>
                                 @else
-                                <a class="text-btn" target="_blank>编辑模型</a>
+                                <a class="text-btn" target="_blank">编辑模型</a>
                                 @endif
 
                                 <span class="vertical-line">|</span>
