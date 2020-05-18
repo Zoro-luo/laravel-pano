@@ -68,6 +68,24 @@ function keepArrKey($arr1, $arr2, $key = '')
 }
 
 
+/**
+ * 索引数组key替换成大写字母
+ * @param $arr
+ * @param $temp
+ * @return array|false
+ */
+function numAbc($arr,$temp){
+    //$temp = array("A","B","C","D","E","G","H","I");
+    $diff = count($temp)-count($arr);
+    if ($diff >= 0){
+        $newTemp = array_slice($temp,0,count($arr));
+        $newArr = array_combine($newTemp,$arr);
+        return $newArr;
+    }
+
+}
+
+
 
 
 

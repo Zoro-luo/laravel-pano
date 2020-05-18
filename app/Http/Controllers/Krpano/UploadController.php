@@ -29,7 +29,7 @@ class UploadController extends Controller
 
             //$panoId = $request->get('pano_id');   //demo : 15477
             $userId = $request->get('user_id');
-            $panoId = '29571';
+            $panoId = '2100';
             //$panoId = '2100';
             $frContent = file_get_contents("http://120.76.210.152:8077/api/Esf/ApiEsf720VRModel?id=".$panoId);
             $frApiData = json_decode($frContent);
@@ -62,7 +62,7 @@ class UploadController extends Controller
             $houseArea = $request->get("house_area");   //面积
             $houseRemark = $request->get("remark");     //备注
 
-            $houseCustom = $request->get("custom");     //自定义名
+            //$houseCustom = $request->get("custom");     //自定义名
 
             $fileNames = $request->file("filename");
 
@@ -97,24 +97,37 @@ class UploadController extends Controller
             }
 
             //自定义全景字段合并
-            foreach ($fileNames as $k1=>$v1){
+            /*foreach ($fileNames as $k1=>$v1){
                 if ($k1 == "'custom'"){
                     $fileNames[$houseCustom] =  $fileNames["'custom'"];
                     unset($fileNames["'custom'"]);
                 }
-            }
+            }*/
 
             //批量插入数据库
             $zh_name = array();
             foreach ($fileNames as $key => $val) {
-                foreach ($val as $min_k => $min_v) {
-                    $key = trim($key,"'");
 
+                //索引数组key替换成大写字母
+                $temp = array("A","B","C","D","E","G","H","I","J","K");
+                $newVal = numAbc($val,$temp);
+
+                foreach ($newVal as $min_k => $min_v) {
+                    $key = trim($key,"'");
                     if (array_key_exists($key,ApiErrDesc::PANO_ARR_REPLACE)){
+
+                        if (count($newVal)==1){   //场景单图片不拼接大写字母
+                            $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key];
+                        }else{
+                            $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key].$min_k;
+                        }
+                    }
+
+                    /*if (array_key_exists($key,ApiErrDesc::PANO_ARR_REPLACE)){
                         $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key];
                     }else{
                         $zh_name[] = $houseCustom;
-                    }
+                    }*/
 
                     $imgName = $min_v->getClientOriginalName();
                     $imgSize = $min_v->getClientSize();

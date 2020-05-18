@@ -25,24 +25,36 @@
                                 <input type="file"  name="filename['bedroom'][]"/>
                                 <input type="file"  name="filename['bedroom'][]"/>
                             </div>
-                            <div class="form-group">
-                                <label for="toilet" class="toilet">卫生间</label>
-                                <input type="file" id="toilet1" name="filename['toilet'][]"/>
-                            </div>
+
                             <div class="form-group">
                                 <label for="cookroom" class="cookroom">厨房</label>
                                 <input type="file"   name="filename['cookroom'][]"/>
                             </div>
+
                             <div class="form-group">
+                                <label for="refectory" class="refectory">餐厅</label>
+                                <input type="file"   name="filename['refectory'][]"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="toilet" class="toilet">卫生间</label>
+                                <input type="file" id="toilet" name="filename['toilet'][]"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="balcony" class="balcony">阳台</label>
+                                <input type="file" id="balcony" name="filename['toilet'][]"/>
+                            </div>
+
+
+                            {{--<div class="form-group">
                                 <label for="exterior" class="exterior">
-
                                     <input type="text" name="custom" placeholder="自定义" width="30">
-
                                 </label>
                                 <input type="file"   name="filename['custom'][]"/>
                                 <input type="file"   name="filename['custom'][]"/>
                                 <input type="file"   name="filename['custom'][]"/>
-                            </div>
+                            </div>--}}
 
                             <input type="hidden" name="pano_id" value="22" />
                             <input type="hidden" name="user_id" value="33" />

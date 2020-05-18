@@ -40,7 +40,9 @@ class ApiErrDesc
         "parlour" => "客厅",
         "bedroom" => "卧室",
         "cookroom" => "厨房",
+        "refectory" => "餐厅",
         "toilet" => "卫生间",
+        "balcony" => "阳台",
         //"exterior" => "外景房",
     ];
 
