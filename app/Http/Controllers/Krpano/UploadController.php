@@ -18,42 +18,98 @@ class UploadController extends Controller
         return view('krpano.uploads');
     }
 
+    public function getPanoUri(Request $request)
+    {
+        $panoId = $request->houseId;
+        $userId = $request->agentId;
+
+        $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $panoId);
+        $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $userId . "&sourceType=2&cityID=1");
+
+        $houseData = json_decode($houseApi);
+        $agentData = json_decode($agentApi);
+
+        if ($houseData->Code == 2000 && $houseData->Data) {
+            $panoId = $houseData->Data->ID;
+        }
+
+        //经纪人信息
+        if ($agentData->Code == 2000 && $agentData->Data) {
+            $agentImgUrl = $agentData->Data->ImageUrl;
+            $userId = $agentData->Data->ID;
+        }
+
+        $tourSkinXml = storage_path("panos") . "\\" . $panoId . "\\vtour\\skin\\vtourskin.xml";
+        $tourSkinXmlStr = file_get_contents($tourSkinXml);
+        $vtourSkinXmlObj = new \SimpleXMLElement($tourSkinXmlStr);
+
+        $user_icon_pc = $vtourSkinXmlObj->layer[2]->layer[0]->layer[0]->layer[3]->layer[2]->layer[0]->layer[0];
+        $skin_user = $vtourSkinXmlObj->layer[2]->layer[0]->layer[0]->layer[4]->layer[1]->layer[0];
+
+        //当前浏览人的头像
+        $skin_user["url"] = $agentImgUrl;
+        $user_icon_pc["url"] = $agentImgUrl;
+        file_put_contents($tourSkinXml, $vtourSkinXmlObj->asXML());
+        return view("krpano.new", ["panoId" => $panoId, "userId" => $userId]);
+    }
+
     public function panos(Request $request)
     {
         $this->http_host = config("app.url");
         $this->base_name = config("app.name");
 
-        //$panoId = $request->get('pano_id');
-
         if ($request->isMethod("POST")) {
 
-            //$panoId = $request->get('pano_id');   //demo : 15477
-            $userId = $request->get('user_id');
-            $panoId = '2100';
-            //$panoId = '2100';
-            $frContent = file_get_contents("http://120.76.210.152:8077/api/Esf/ApiEsf720VRModel?id=".$panoId);
-            $frApiData = json_decode($frContent);
 
-            //$userId = $frApiData->Data->AgentInfo->ID;
+            $panoId = $request->get("pano_id");        //房源ID
+            $userId = $request->get("user_id");        //经纪人ID
 
-            //房源信息和经纪人信息存入缓存
-            if ($frApiData->Code ==200){
-                Cache::forever("houseInfo"."_".$panoId,$frApiData->Data->EsfInfo);
-                Cache::forever("agentInfo"."_".$panoId,$frApiData->Data->AgentInfo);
+            //临时默认值
+            //$panoId = "1912111727175A792253BBA34D0A8A47";
+            //$userId = "17122815560039EE2E6DAB1A47ABAD62";
+
+            $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $panoId);
+            $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $userId . "&sourceType=2&cityID=1");
+
+            $houseData = json_decode($houseApi);
+            $agentData = json_decode($agentApi);
+
+            //id 变更成自增长ID
+            $panoId = $houseData->Data->ID;
+            $userId = $agentData->Data->ID;
+
+            //房源信息
+            if ($houseData->Code == 2000 && $houseData->Data) {
+                Cache::forever("houseInfo" . "_" . $panoId, $houseData->Data);
+                $title = $houseData->Data->Title;
             }
 
-            if ($frApiData->Code==200 && $frApiData->Data->EsfInfo) {
-                $title = $frApiData->Data->EsfInfo->Title;
-            }else{
-                $title = "";
-            }
+            //经纪人信息
+            if ($agentData->Code == 2000 && $agentData->Data) {
+                Cache::forever("agentInfo" . "_" . $panoId, $agentData->Data);
 
-            if($frApiData->Code==200 && $frApiData->Data->AgentInfo){
-                $agentImgUrl = $frApiData->Data->AgentInfo->ImageUrl;
-                $agentPhone = $frApiData->Data->AgentInfo->Mobile;
-            }else{
+                $agentId = $agentData->Data->AgentID;   //int  房源id
+                // 扫码拨号 agentid 从上面接口获取
+                //$chatCode =  file_get_contents("http://jjwechatapi.jjw.com/api/SmallProgram/GetHouseAgentImg?houseid=0&agentid=".$agentId."&phonePosition=73");
+                $chatCode = "http://jjwechatapi.jjw.com/api/SmallProgram/GetHouseAgentImg?houseid=0&agentid=" . $agentId . "&phonePosition=73";
+                Cache::forever("chatCode" . "_" . $panoId, $chatCode);
+
+                $agentImgUrl = $agentData->Data->ImageUrl;
+                $agentPhone = $agentData->Data->Mobile;
+            } else {  //如果经纪人数据为空 则获取400电话
+                //拿到房源ID 下的城市ID用来获取该客服400电话
+
+                $cityId = $houseData->Data->CityID;
                 $agentImgUrl = "";
-                $agentPhone = "";
+
+                $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
+                $kfData = json_decode($kf)->Data;
+                foreach ($kfData as $kfVal) {
+                    if ($cityId == $kfVal->CityID) {
+                        $CustomerService400 = $kfVal->CustomerService400;    //400电话
+                    }
+                }
+                $agentPhone = $CustomerService400;
             }
 
             $houseName = $request->get("house_name");   //楼盘名称
@@ -109,17 +165,15 @@ class UploadController extends Controller
             foreach ($fileNames as $key => $val) {
 
                 //索引数组key替换成大写字母
-                $temp = array("A","B","C","D","E","G","H","I","J","K");
-                $newVal = numAbc($val,$temp);
-
+                $temp = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K");
+                $newVal = numAbc($val, $temp);
                 foreach ($newVal as $min_k => $min_v) {
-                    $key = trim($key,"'");
-                    if (array_key_exists($key,ApiErrDesc::PANO_ARR_REPLACE)){
-
-                        if (count($newVal)==1){   //场景单图片不拼接大写字母
+                    $key = trim($key, "'");
+                    if (array_key_exists($key, ApiErrDesc::PANO_ARR_REPLACE)) {
+                        if (count($newVal) == 1) {   //场景单图片不拼接大写字母
                             $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key];
-                        }else{
-                            $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key].$min_k;
+                        } else {
+                            $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key] . $min_k;
                         }
                     }
 
@@ -128,7 +182,6 @@ class UploadController extends Controller
                     }else{
                         $zh_name[] = $houseCustom;
                     }*/
-
                     $imgName = $min_v->getClientOriginalName();
                     $imgSize = $min_v->getClientSize();
                     $imgCreated_at = date('Y-m-d H:i:s', $min_v->getaTime());
@@ -152,6 +205,7 @@ class UploadController extends Controller
                         $r['pano_id'] = $panoId;
                         $r['title'] = $title;
                         $r['agentImgUrl'] = $agentImgUrl;
+                        //$r['chatCode'] = $chatCode;
                         $r['agentPhone'] = $agentPhone;
                         $r['house_name'] = $houseName;
                         $r['house_type'] = $houseType;
@@ -172,7 +226,7 @@ class UploadController extends Controller
                     }
                 }
             }
-        }else{
+        } else {
             $r['code'] = ApiErrDesc::NO_METHOD_POST[0];
             $r['msg'] = ApiErrDesc::NO_METHOD_POST[1];
             $r['iamges'][] = [];
@@ -184,7 +238,8 @@ class UploadController extends Controller
      * 多全景图生成漫游
      * @return string
      */
-    public function panosExec(Request $request){
+    public function panosExec(Request $request)
+    {
         //调用上传全景图的API
         $getFilesData = $this->panos($request);
         $getFilesData = json_decode($getFilesData);
@@ -240,12 +295,12 @@ class UploadController extends Controller
                 $res['msg'] = ApiErrDesc::ERR_KRPANO_ENV[1];
                 $res['url'] = '';
             } else {
-                changVtourskinXml($imgRealDir . 'vtour/skin/vtourskin.xml',$panoId,$agentImgUrl,$agentPhone);
-                changTourXml($imgRealDir . 'vtour/tour.xml', $zh_name,$title,$panoId);
+                changVtourskinXml($imgRealDir . 'vtour/skin/vtourskin.xml', $panoId, $agentImgUrl, $agentPhone);
+                changTourXml($imgRealDir . 'vtour/tour.xml', $zh_name, $title, $panoId);
 
                 foreach ($keepNameArr as $k_thumb => $v_mbName) {
                     //$thumb_path = $this->http_host . '/' . $this->base_name . '/storage/panos/' . $panoId . '/thumb/' . $k_thumb;
-                    $thumb_path = $this->http_host . '/' .'storage/panos/' . $panoId . '/thumb/' . $k_thumb;
+                    $thumb_path = $this->http_host . '/' . 'storage/panos/' . $panoId . '/thumb/' . $k_thumb;
                     DB::update("update imgs set thumb='" . $thumb_path . "',mb_name='" . $v_mbName . "' where name=?", [$k_thumb]);
                 }
 
@@ -264,6 +319,4 @@ class UploadController extends Controller
         }
         return $res;
     }
-
-
 }

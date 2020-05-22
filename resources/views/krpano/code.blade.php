@@ -23,7 +23,7 @@
             }
         </style>
 
-        <script type="text/javascript">
+       {{-- <script type="text/javascript">
             jQuery(function(){
                 jQuery('#qrcode').qrcode({
                     render: "canvas",
@@ -32,17 +32,13 @@
                     text: "{{ $agentInfo=="NULL" ? "NULL" : $agentInfo->Mobile }}"
                 });
             })
-        </script>
-
+        </script>--}}
     </head>
     <body>
         <div class="back_img">
-            <p>{{ $agentInfo=="NULL" ? "NULL" : $agentInfo->Mobile }}</p>
+            <img src="{{$chatCode}}" width="140px" height="140px">
             <div id="qrcode"></div>
             <p>微信扫码拨号</p>
         </div>
-
     </body>
-
-
 </html>

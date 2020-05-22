@@ -43,7 +43,7 @@
 
                             <div class="form-group">
                                 <label for="balcony" class="balcony">阳台</label>
-                                <input type="file" id="balcony" name="filename['toilet'][]"/>
+                                <input type="file" id="balcony" name="filename['balcony'][]"/>
                             </div>
 
 
@@ -56,8 +56,8 @@
                                 <input type="file"   name="filename['custom'][]"/>
                             </div>--}}
 
-                            <input type="hidden" name="pano_id" value="22" />
-                            <input type="hidden" name="user_id" value="33" />
+                            <input type="hidden" name="pano_id" value="" />
+                            <input type="hidden" name="user_id" value="" />
                             <input type="hidden" name="house_name" value="国际百纳" />
                             <input type="hidden" name="house_used" value="住宅" />
                             <input type="hidden" name="house_type" value="3室2厅" />

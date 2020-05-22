@@ -16,6 +16,7 @@
 <body>
 <section class="main vr-index">
     <!-- 内容展示 -->
+
     <div class="info-container" >
         <div class="info-wrapper" style="display: block">
             <div class="infos">
@@ -28,7 +29,7 @@
                     <div class="details-container">
                         <div class="d-top">
                             <h3 class="name">{{$agentInfo == "NULL" ? "NULL" : $agentInfo->AgentName}}</h3>
-                            <span class="company">{{$agentInfo == "NULL" ? "NULL" : $agentInfo->BrandMark}}</span>
+                            <span class="company">{{$agentInfo == "NULL" ? "NULL" : $agentInfo->BrandName}}</span>
                         </div>
                         <div class="d-bottom">
                             <p class="text">
@@ -40,11 +41,11 @@
                 <ul class="info-middle clearfix">
                     <li class="m-item">
                         <span class="title">成交</span>
-                        <h3 class="data">{{$agentInfo == "NULL" ? "NULL" : $agentInfo->EsfDealNum}}</h3>
+                        <h3 class="data">{{$agentInfo == "NULL" ? "NULL" : $agentInfo->TransactionCount}}</h3>
                     </li>
                     <li class="m-item">
                         <span class="title">带看</span>
-                        <h3 class="data">{{$agentInfo == "NULL" ? "NULL" : $agentInfo->EsfSeeNum}}</h3>
+                        <h3 class="data">{{$agentInfo == "NULL" ? "NULL" : $agentInfo->AgentEvaluateNum}}</h3>
                     </li>
                     <li class="m-item">
                         <span class="title">粉丝</span>

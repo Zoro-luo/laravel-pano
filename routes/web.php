@@ -64,6 +64,10 @@ Route::get('/krpano/fr/{panoId}', function($panoId){
 });
 
 
+Route::get('/vr/uri/{houseId}/{agentId}', 'Krpano\\UploadController@getPanoUri');
+
+
+
 //设置弹窗
 /*Route::get('/krpano/set/{panoId}', function($panoId){
     //$houseInfo = Cache::get("houseInfo"."_".$panoId,"NULL");
@@ -79,8 +83,8 @@ Route::get('/krpano/vr/{panoId}', function ($panoId){
 
 //扫码拨号
 Route::get('krpano/code/{panoId}', function ($panoId){
-    $agentInfo = Cache::get("agentInfo"."_".$panoId,"NULL");
-    return view('krpano.code',['agentInfo'=>$agentInfo]);
+    $chatCode = Cache::get("chatCode"."_".$panoId,"NULL");
+    return view('krpano.code',['chatCode'=>$chatCode]);
 });
 
 //扫码分享
