@@ -229,6 +229,15 @@
 <script>
 
 
+    function tips(text="", option = {time: 2000, area: `${text.length * 15}px`, offset: "200px"}) {
+        console.log(option.area);
+        layer.msg(text, option);
+    }
+
+    tips("不开心")
+
+        // layer.msg('提示:预设景点添加',{time:2000});
+
     //预览copy xml
     function preview() {
         var panoId = "{{$panoId}}";

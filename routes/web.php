@@ -66,6 +66,7 @@ Route::get('/krpano/fr/{panoId}', function($panoId){
 
 Route::get('/vr/uri/{houseId}/{agentId}', 'Krpano\\UploadController@getPanoUri');
 
+Route::get('/vr/check/{houseCode}', 'Krpano\\UploadController@checkRule');
 
 
 //设置弹窗

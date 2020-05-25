@@ -93,6 +93,11 @@
                             <div class="table-text table-text2">
                                 <div>模型ID</div>
                             </div>
+
+                            <div class="table-text table-text2">
+                                <div>VR房勘检查状态</div>
+                            </div>
+
                             <div class="table-text table-text3">
                                 <div>楼盘名称</div>
                             </div>
@@ -103,10 +108,10 @@
                                 <div>房源ID</div>
                             </div>
                             <div class="table-text table-text6">
-                                <div>业务部门</div>
+                                <div>所属部门</div>
                             </div>
                             <div class="table-text table-text7">
-                                <div>上传人</div>
+                                <div>发布人</div>
                             </div>
                             <div class="table-text table-text8">
                                 <div>上传时间</div>
@@ -127,6 +132,17 @@
                             <div class="table-text table-text2">
                                 <div>VR{{$pano->pano_id}}</div>
                             </div>
+
+                            <div class="table-text table-text2">
+                                <div>
+                                    @if($pano->check_at == "1" )
+                                        未检查
+                                     @elseif($pano->check_at == "2")
+                                        合规
+                                     @endif
+                                </div>
+                            </div>
+
                             <div class="table-text table-text3">
                                 <div>{{$pano->house_name}}</div>
                             </div>

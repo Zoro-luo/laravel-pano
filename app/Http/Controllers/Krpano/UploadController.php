@@ -53,6 +53,24 @@ class UploadController extends Controller
         return view("krpano.new", ["panoId" => $panoId, "userId" => $userId]);
     }
 
+
+    //VR房勘检查状态
+    public function checkRule(Request $request){
+        $houseCode = $request->houseCode;
+
+        $affected = DB::update("update panos set check_at= '2' where houseCode=?", [$houseCode]);
+        if ($affected){
+            $c['code'] = 200;
+            $c['check_at'] = 2;
+            $c['msg'] = "房堪检测合规";
+        }else{
+            $c['code'] = 200;
+            $c['check_at'] = 3;
+            $c['msg'] = "房堪检测不合规";
+        }
+        return $c;
+    }
+
     public function panos(Request $request)
     {
         $this->http_host = config("app.url");
@@ -61,15 +79,15 @@ class UploadController extends Controller
         if ($request->isMethod("POST")) {
 
 
-            $panoId = $request->get("pano_id");        //房源ID
-            $userId = $request->get("user_id");        //经纪人ID
+            //$panoId = $request->get("pano_id");        //房源ID
+            //$userId = $request->get("user_id");        //经纪人ID
 
             //临时默认值
-            //$panoId = "1912111727175A792253BBA34D0A8A47";
-            //$userId = "17122815560039EE2E6DAB1A47ABAD62";
+            $houseCode = "1912111727175A792253BBA34D0A8A47";
+            $agentCode = "17122815560039EE2E6DAB1A47ABAD62";
 
-            $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $panoId);
-            $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $userId . "&sourceType=2&cityID=1");
+            $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $houseCode);
+            $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $agentCode . "&sourceType=2&cityID=1");
 
             $houseData = json_decode($houseApi);
             $agentData = json_decode($agentApi);
@@ -136,6 +154,8 @@ class UploadController extends Controller
             $pano = new Pano;
             $pano->pano_id = $panoId;
             $pano->user_id = $userId;
+            $pano->houseCode = $houseCode;
+            $pano->agentCode = $agentCode;
             $pano->house_name = $houseName;
             $pano->house_used = $houseUsed;
             $pano->house_type = $houseType;
