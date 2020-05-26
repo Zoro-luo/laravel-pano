@@ -35,7 +35,8 @@ Route::group(['middleware' => ['auth.member']], function () {
 //////// 多图片表单上传
 Route::get('krpano/indexs', 'Krpano\\UploadController@indexs');                     //多图片 上传全景图表单
 Route::post('krpano/uploads', 'Krpano\\UploadController@panos');                     //多图片 上传全景api
-Route::post('krpano/panos', 'Krpano\\UploadController@panosExec');                  //多图片 切片漫游api
+Route::post('krpano/exec', 'Krpano\\UploadController@panosExec');                     //多图片 合成全景api
+//Route::post('krpano/panos', 'Krpano\\UploadController@panosExec');                  //多图片 切片漫游api
 
 /**
  * 前台登录注册

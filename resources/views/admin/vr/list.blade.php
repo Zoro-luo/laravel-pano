@@ -106,7 +106,7 @@
                                 <div>房源名称</div>
                             </div>
                             <div class="table-text table-text5">
-                                <div>房源ID</div>
+                                <div>房源编号</div>
                             </div>
                             <div class="table-text table-text6">
                                 <div>所属部门</div>

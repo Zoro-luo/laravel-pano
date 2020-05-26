@@ -37,6 +37,7 @@ class UploadController extends Controller
         if ($agentData->Code == 2000 && $agentData->Data) {
             $agentImgUrl = $agentData->Data->ImageUrl;
             $userId = $agentData->Data->ID;
+            Cache::forever("agentInfo" . "_" . $panoId, $agentData->Data);
         }
 
         $tourSkinXml = storage_path("panos") . "\\" . $panoId . "\\vtour\\skin\\vtourskin.xml";
@@ -55,15 +56,16 @@ class UploadController extends Controller
 
 
     //VR房勘检查状态
-    public function checkRule(Request $request){
+    public function checkRule(Request $request)
+    {
         $houseCode = $request->houseCode;
 
         $affected = DB::update("update panos set check_at= '2' where houseCode=?", [$houseCode]);
-        if ($affected){
+        if ($affected) {
             $c['code'] = 200;
             $c['check_at'] = 2;
             $c['msg'] = "房堪检测合规";
-        }else{
+        } else {
             $c['code'] = 200;
             $c['check_at'] = 3;
             $c['msg'] = "房堪检测不合规";
@@ -73,18 +75,16 @@ class UploadController extends Controller
 
     public function panos(Request $request)
     {
-        $this->http_host = config("app.url");
-        $this->base_name = config("app.name");
-
         if ($request->isMethod("POST")) {
-
-
-            $houseCode= $request->get("pano_id");        //房源ID
-            $agentCode = $request->get("user_id");        //经纪人ID
+            $houseCode = $request->get("pano_id");        //房源ID
+            $agentCode = $request->get("user_id");       //经纪人ID
 
             //临时默认值
             //$houseCode = "1912111727175A792253BBA34D0A8A47";
             //$agentCode = "17122815560039EE2E6DAB1A47ABAD62";
+
+            $vrStepID = $request->get("VrStepID");      //标记一组VR [GUID32位]
+            $houseNum = $request->get("houseNum");      //全景列表页显示房源ID
 
             $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $houseCode);
             $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $agentCode . "&sourceType=2&cityID=1");
@@ -92,18 +92,14 @@ class UploadController extends Controller
             $houseData = json_decode($houseApi);
             $agentData = json_decode($agentApi);
 
-
-            //id 变更成自增长ID
-            //$panoId = $houseData->Data->ID;
-            //$userId = $agentData->Data->ID;
-
             //房源信息
             if ($houseData->Code == 2000 && $houseData->Data) {
                 $panoId = $houseData->Data->ID;
-                Cache::forever("houseInfo" . "_" . $panoId, $houseData->Data);
                 $title = $houseData->Data->Title;
-            }else{
+                Cache::forever("houseInfo" . "_" . $panoId, $houseData->Data);
+            } else {
                 $panoId = time();
+                $title = "";
             }
 
             //经纪人信息
@@ -112,20 +108,24 @@ class UploadController extends Controller
 
                 $agentId = $agentData->Data->AgentID;   //int  房源id
                 // 扫码拨号 agentid 从上面接口获取
-                //$chatCode =  file_get_contents("http://jjwechatapi.jjw.com/api/SmallProgram/GetHouseAgentImg?houseid=0&agentid=".$agentId."&phonePosition=73");
                 $chatCode = "http://jjwechatapi.jjw.com/api/SmallProgram/GetHouseAgentImg?houseid=0&agentid=" . $agentId . "&phonePosition=73";
                 Cache::forever("chatCode" . "_" . $panoId, $chatCode);
 
                 $agentImgUrl = $agentData->Data->ImageUrl;
                 $agentPhone = $agentData->Data->Mobile;
-
                 $userId = $agentData->Data->ID;
+                $cityId = $houseData->Data->CityID;
+                $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
+                $kfData = json_decode($kf)->Data;
+                foreach ($kfData as $cityVal) {
+                    if ($cityId == $cityVal->CityID) {
+                        $cityName = $cityVal->CityName;
+                    }
+                }
             } else {  //如果经纪人数据为空 则获取400电话
                 //拿到房源ID 下的城市ID用来获取该客服400电话
-
                 $cityId = $houseData->Data->CityID;
                 $agentImgUrl = "";
-
                 $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
                 $kfData = json_decode($kf)->Data;
                 foreach ($kfData as $kfVal) {
@@ -142,13 +142,8 @@ class UploadController extends Controller
             $houseType = $request->get("house_type");   //户型
             $houseArea = $request->get("house_area");   //面积
             $houseRemark = $request->get("remark");     //备注
-
-            //$houseCustom = $request->get("custom");     //自定义名
-
             $fileNames = $request->file("filename");
-
             $panoimgPath = str_replace('\\', '/', storage_path() . '/panos/');
-
             if (!is_dir(storage_path('panos'))) {
                 mkdir(storage_path('panos'), 0777, true);
             }
@@ -163,6 +158,10 @@ class UploadController extends Controller
             $pano->user_id = $userId;
             $pano->houseCode = $houseCode;
             $pano->agentCode = $agentCode;
+
+            $pano->cityName = $cityName;
+            $pano->title = $title;
+
             $pano->house_name = $houseName;
             $pano->house_used = $houseUsed;
             $pano->house_type = $houseType;
@@ -190,7 +189,6 @@ class UploadController extends Controller
             //批量插入数据库
             $zh_name = array();
             foreach ($fileNames as $key => $val) {
-
                 //索引数组key替换成大写字母
                 $temp = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K");
                 $newVal = numAbc($val, $temp);
@@ -232,7 +230,6 @@ class UploadController extends Controller
                         $r['pano_id'] = $panoId;
                         $r['title'] = $title;
                         $r['agentImgUrl'] = $agentImgUrl;
-                        //$r['chatCode'] = $chatCode;
                         $r['agentPhone'] = $agentPhone;
                         $r['house_name'] = $houseName;
                         $r['house_type'] = $houseType;
@@ -258,6 +255,32 @@ class UploadController extends Controller
             $r['msg'] = ApiErrDesc::NO_METHOD_POST[1];
             $r['iamges'][] = [];
         }
+
+        if ($r["msg"] == "Success") {
+            $result = DB::select('select imgData from uploads where panoId=?', [$panoId]);
+            if ($result) {
+                $delRes = DB::delete('delete from uploads where panoId=' . $panoId);
+                if ($delRes){
+                    DB::table('uploads')->insert(array(
+                        'imgData' => json_encode($r),
+                        'panoId' => $panoId,
+                        'created_at' => $imgCreated_at,
+                        'updated_at' => $imgCreated_at
+                    ));
+                }
+            } else {
+                DB::table('uploads')->insert(array(
+                    'imgData' => json_encode($r),
+                    'panoId' => $panoId,
+                    'created_at' => $imgCreated_at,
+                    'updated_at' => $imgCreated_at
+                ));
+            }
+        } else {
+            $r['code'] = ApiErrDesc::UPLOAD_ERROR[0];
+            $r['msg'] = ApiErrDesc::UPLOAD_ERROR[1];
+            $r['iamges'][] = [];
+        }
         return json_encode($r);
     }
 
@@ -268,8 +291,18 @@ class UploadController extends Controller
     public function panosExec(Request $request)
     {
         //调用上传全景图的API
-        $getFilesData = $this->panos($request);
-        $getFilesData = json_decode($getFilesData);
+        /*$getFilesData = $this->panos($request);
+        $getFilesData = json_decode($getFilesData);*/
+
+        $this->http_host = config("app.url");
+        $this->base_name = config("app.name");
+
+
+        $panoId = $request->get("panoId");
+        $panoId = "486187";
+        $result = DB::select('select imgData from uploads where panoId=?', [$panoId]);
+        $imgData = $result[0]->imgData;
+        $getFilesData = json_decode($imgData);
 
         $title = $getFilesData->title;
         $agentImgUrl = $getFilesData->agentImgUrl;

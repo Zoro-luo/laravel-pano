@@ -11,11 +11,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">多图片上传全景图</div>
                     <div class="panel-body">
-                        <form class="form-horizontal" action="{{ url("krpano/panos") }}" method="post"
+                        <form class="form-horizontal" action="{{ url("krpano/exec") }}" method="post"
                               enctype="multipart/form-data">
                             {!! csrf_field() !!}
                             <div class="form-group">
-                                <label for="parlour" class="parlour">客厅</label>
+                                <label for="parlour" class="parlour">客厅1</label>
                                 <input type="file"  name="filename['parlour'][]"/>
                                 <input type="file"  name="filename['parlour'][]"/>
                             </div>

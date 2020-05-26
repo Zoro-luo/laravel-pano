@@ -18,6 +18,7 @@ class VerifyCsrfToken extends BaseVerifier
         'krpano/fr.blade.php',      //切片漫游api
         'krpano/indexs',
         'krpano/uploads',
-        'krpano/panos'
+        'krpano/panos',
+        'krpano/exec',
     ];
 }
