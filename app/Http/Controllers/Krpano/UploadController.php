@@ -79,12 +79,12 @@ class UploadController extends Controller
         if ($request->isMethod("POST")) {
 
 
-            //$panoId = $request->get("pano_id");        //房源ID
-            //$userId = $request->get("user_id");        //经纪人ID
+            $houseCode= $request->get("pano_id");        //房源ID
+            $agentCode = $request->get("user_id");        //经纪人ID
 
             //临时默认值
-            $houseCode = "1912111727175A792253BBA34D0A8A47";
-            $agentCode = "17122815560039EE2E6DAB1A47ABAD62";
+            //$houseCode = "1912111727175A792253BBA34D0A8A47";
+            //$agentCode = "17122815560039EE2E6DAB1A47ABAD62";
 
             $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $houseCode);
             $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $agentCode . "&sourceType=2&cityID=1");
@@ -92,14 +92,18 @@ class UploadController extends Controller
             $houseData = json_decode($houseApi);
             $agentData = json_decode($agentApi);
 
+
             //id 变更成自增长ID
-            $panoId = $houseData->Data->ID;
-            $userId = $agentData->Data->ID;
+            //$panoId = $houseData->Data->ID;
+            //$userId = $agentData->Data->ID;
 
             //房源信息
             if ($houseData->Code == 2000 && $houseData->Data) {
+                $panoId = $houseData->Data->ID;
                 Cache::forever("houseInfo" . "_" . $panoId, $houseData->Data);
                 $title = $houseData->Data->Title;
+            }else{
+                $panoId = time();
             }
 
             //经纪人信息
@@ -114,6 +118,8 @@ class UploadController extends Controller
 
                 $agentImgUrl = $agentData->Data->ImageUrl;
                 $agentPhone = $agentData->Data->Mobile;
+
+                $userId = $agentData->Data->ID;
             } else {  //如果经纪人数据为空 则获取400电话
                 //拿到房源ID 下的城市ID用来获取该客服400电话
 
@@ -128,6 +134,7 @@ class UploadController extends Controller
                     }
                 }
                 $agentPhone = $CustomerService400;
+                $userId = time();
             }
 
             $houseName = $request->get("house_name");   //楼盘名称

@@ -13,10 +13,18 @@ class VrController extends Controller
     //vr 列表页
     public function index()
     {
+        $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
+        $kfData = json_decode($kf)->Data;
+        foreach ($kfData as $kfVal){
+            $CityName[] = $kfVal->CityName;
+        }
+
         $perPage = 2;
         $panos = DB::table("panos")->paginate($perPage);
+
+
         $count = $panos->total();
-        return view('admin.vr.list', ['panos' => $panos,'count'=>$count,'perPage'=>$perPage]);
+        return view('admin.vr.list', ['panos' => $panos,'count'=>$count,'perPage'=>$perPage,'cityName'=>$CityName]);
     }
 
     //编辑页的预览视图

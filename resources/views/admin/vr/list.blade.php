@@ -35,8 +35,9 @@
                                         class="iconfont iconUtubiao-13"></i></div>
                             <ul class="my-select-list">
                                 <li class="on">全部</li>
-                                <li>武汉</li>
-                                <li>合肥</li>
+                              @foreach($cityName as $cityVal)
+                                <li>{{$cityVal}}</li>
+                              @endforeach
                             </ul>
                         </div>
                     </div>
@@ -147,7 +148,7 @@
                                 <div>{{$pano->house_name}}</div>
                             </div>
                             <div class="table-text table-text4">
-                                <div>{{$pano->house_name}}-{{$pano->house_type}} 随时看房</div>
+                                <div>{{$pano->title}}</div>
                             </div>
                             <div class="table-text table-text5">
                                 <div>{{$pano->pano_id}}</div>
