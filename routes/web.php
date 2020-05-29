@@ -59,7 +59,6 @@ Route::post('krpano/pano', 'Krpano\\PanoController@panoImgs');          //切片
 
 //房源信息
 Route::get('/krpano/fr/{panoId}', function($panoId){
-
     $houseInfo = Cache::get("houseInfo"."_".$panoId,"NULL");
     return view('krpano.fr',['houseInfo'=>$houseInfo]);
 });
@@ -67,7 +66,9 @@ Route::get('/krpano/fr/{panoId}', function($panoId){
 
 Route::get('/vr/uri/{houseId}/{agentId}', 'Krpano\\UploadController@getPanoUri');
 
-Route::get('/vr/check/{houseCode}', 'Krpano\\UploadController@checkRule');
+Route::get('/vr/check/{houseCode}/{check_at}', 'Krpano\\UploadController@checkRule');
+
+Route::post('/vr/make', 'Krpano\\UploadController@makeHouseApi');
 
 
 //设置弹窗

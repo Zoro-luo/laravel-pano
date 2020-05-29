@@ -59,19 +59,40 @@ class UploadController extends Controller
     public function checkRule(Request $request)
     {
         $houseCode = $request->houseCode;
+        $check_at = $request->check_at;
+            if ($check_at == 2) {
+                $affected = DB::update("update panos set check_at=  '" . $check_at . "' where houseCode=?", [$houseCode]);
+                $c['code'] = 2000;
+                $c['check_at'] = $check_at;
+                $c['msg'] = "房堪检测合规";
+            } else if ($check_at == 3){
+                $affected = DB::update("update panos set check_at=  '" . $check_at . "' where houseCode=?", [$houseCode]);
+                $c['code'] = 2000;
+                $c['check_at'] = $check_at;
+                $c['msg'] = "房堪检测不合规";
+            } else if ($check_at == 1) {
+                $affected = DB::update("update panos set check_at=  '" . $check_at . "' where houseCode=?", [$houseCode]);
+                $c['code'] = 2000;
+                $c['check_at'] = $check_at;
+                $c['msg'] = "房堪未检查";
+            } else {
+                $c['code'] = 2001;
+                $c['check_at'] = $check_at;
+                $c['msg'] = "传参错误";
+            }return json_encode($c);}
 
-        $affected = DB::update("update panos set check_at= '2' where houseCode=?", [$houseCode]);
-        if ($affected) {
-            $c['code'] = 200;
-            $c['check_at'] = 2;
-            $c['msg'] = "房堪检测合规";
-        } else {
-            $c['code'] = 200;
-            $c['check_at'] = 3;
-            $c['msg'] = "房堪检测不合规";
-        }
-        return $c;
+
+    public function makeHouseApi()
+    {
+        $vrStepID = "1912111727175A792253BBA34D0A8888";
+        $propertyCode = 123456;
+        $VrStatus = 3;
+        //$VrUrl = "http://localhost/pano/vr/uri/1912111727175A792253BBA34D0A8A47/17122815560039EE2E6DAB1A47ABAD62";
+        $VrUrl = "http://localhost/pano//storage/panos/37508/tour.html";
+
+        houseApi($vrStepID, $propertyCode, $VrStatus, $VrUrl);
     }
+
 
     public function panos(Request $request)
     {
@@ -83,8 +104,13 @@ class UploadController extends Controller
             //$houseCode = "1912111727175A792253BBA34D0A8A47";
             //$agentCode = "17122815560039EE2E6DAB1A47ABAD62";
 
-            $vrStepID = $request->get("VrStepID");      //标记一组VR [GUID32位]
+            $propertyCode = $request->get("propertyCode");
+            $vrStepId = $request->get("vrStepId");      //标记一组VR [GUID32位]
             $houseNum = $request->get("houseNum");      //全景列表页显示房源ID
+
+            $CityID = $request->get("CityID");              //当前登录人城市ID
+            $Creator = $request->get("Creator");            //当前登录人Code
+            $CreatorDC = $request->get("CreatorDC");        //当前登录人部门Code
 
             $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $houseCode);
             $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $agentCode . "&sourceType=2&cityID=1");
@@ -143,6 +169,7 @@ class UploadController extends Controller
             $houseArea = $request->get("house_area");   //面积
             $houseRemark = $request->get("remark");     //备注
             $fileNames = $request->file("filename");
+
             $panoimgPath = str_replace('\\', '/', storage_path() . '/panos/');
             if (!is_dir(storage_path('panos'))) {
                 mkdir(storage_path('panos'), 0777, true);
@@ -161,6 +188,7 @@ class UploadController extends Controller
 
             $pano->cityName = $cityName;
             $pano->title = $title;
+            $pano->houseNum = $houseNum;
 
             $pano->house_name = $houseName;
             $pano->house_used = $houseUsed;
@@ -201,12 +229,6 @@ class UploadController extends Controller
                             $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key] . $min_k;
                         }
                     }
-
-                    /*if (array_key_exists($key,ApiErrDesc::PANO_ARR_REPLACE)){
-                        $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key];
-                    }else{
-                        $zh_name[] = $houseCustom;
-                    }*/
                     $imgName = $min_v->getClientOriginalName();
                     $imgSize = $min_v->getClientSize();
                     $imgCreated_at = date('Y-m-d H:i:s', $min_v->getaTime());
@@ -228,6 +250,12 @@ class UploadController extends Controller
                         $r['msg'] = ApiErrDesc::UPLOAD_SUCCESS[1];
                         $r['user_id'] = $userId;
                         $r['pano_id'] = $panoId;
+                        $r['propertyCode'] = $propertyCode;
+                        $r['vrStepId'] = $vrStepId;
+
+                        $r['houseCode'] = $houseCode;
+                        $r['agentCode'] = $agentCode;
+
                         $r['title'] = $title;
                         $r['agentImgUrl'] = $agentImgUrl;
                         $r['agentPhone'] = $agentPhone;
@@ -260,7 +288,7 @@ class UploadController extends Controller
             $result = DB::select('select imgData from uploads where panoId=?', [$panoId]);
             if ($result) {
                 $delRes = DB::delete('delete from uploads where panoId=' . $panoId);
-                if ($delRes){
+                if ($delRes) {
                     DB::table('uploads')->insert(array(
                         'imgData' => json_encode($r),
                         'panoId' => $panoId,
@@ -290,21 +318,29 @@ class UploadController extends Controller
      */
     public function panosExec(Request $request)
     {
+        $this->http_host = config("app.url");
+        $this->base_name = config("app.name");
+
         //调用上传全景图的API
         /*$getFilesData = $this->panos($request);
         $getFilesData = json_decode($getFilesData);*/
 
-        $this->http_host = config("app.url");
-        $this->base_name = config("app.name");
-
-
         $panoId = $request->get("panoId");
-        $panoId = "486187";
+        $CityID = $request->get("CityID");
+        $Creator = $request->get("Creator");
+
         $result = DB::select('select imgData from uploads where panoId=?', [$panoId]);
         $imgData = $result[0]->imgData;
         $getFilesData = json_decode($imgData);
 
         $title = $getFilesData->title;
+        $propertyCode = $getFilesData->propertyCode;
+        $vrStepId = $getFilesData->vrStepId;
+
+        $houseCode = $getFilesData->houseCode;
+        $agentCode = $getFilesData->agentCode;
+
+
         $agentImgUrl = $getFilesData->agentImgUrl;
         $agentPhone = $getFilesData->agentPhone;
         $userId = $getFilesData->user_id;
@@ -367,8 +403,11 @@ class UploadController extends Controller
                 $res['code'] = ApiErrDesc::SUCCESS_KRPANO[0];
                 $res['msg'] = ApiErrDesc::SUCCESS_KRPANO[1];
                 $res['pano_id'] = $panoId;
-                //$res['url'] = $this->http_host . '/' . $this->base_name . '/storage/panos/' . $panoId . '/tour.html';
-                $res['url'] = $this->http_host . '/' . 'storage/panos/' . $panoId . '/tour.html';
+
+                //$res['url'] = $this->http_host . '/' . 'storage/panos/' . $panoId . '/tour.html';
+                //houseApi($vrStepId, $propertyCode, 3, $VrUrl);
+
+                $res['url'] = $this->http_host . $this->base_name . '/' . 'vr/uri/' . $houseCode . '/' . $agentCode;
                 $updated_at = date('Y-m-d H:i', time());
                 DB::update("update panos set panoUrl='" . $res['url'] . "',updated_at='" . $updated_at . "' where pano_id=? and user_id=?", [$panoId, $userId]);
             }

@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <script src="{{asset('public/static/pano/js')}}/tour.js"></script>
+    <script src="{{asset('public/static/hotsport')}}/js/jquery-1.8.3.min.js"></script>
 
     <style>
         @-ms-viewport {
@@ -55,8 +56,50 @@
         var krpano = null;
         var sign = null;
 
-        var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
-        embedpano({
+        ///var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
+        var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour_pro.xml";
+        console.log(xmlPath);
+
+        $(function () {
+            $.ajax({
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                url:xmlPath,
+                type:"HEAD",
+                success:function () {
+                    //console.log("存在");
+                    embedpano({
+                        swf: "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.swf",
+                        id: "krpanoSWFObject",
+                        xml: xmlPath,
+                        target: "pano",
+                        passQueryParameters: true,
+                        onready: krpano_onready_callback,
+                    });
+                    function krpano_onready_callback(krpano_interface) {
+                        krpano = krpano_interface;
+                    }
+                },
+                error:function () {
+                    //console.log("不存在");
+                    embedpano({
+                        swf: "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.swf",
+                        id: "krpanoSWFObject",
+                        xml: "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml",
+                        target: "pano",
+                        passQueryParameters: true,
+                        onready: krpano_onready_callback,
+                    });
+                    function krpano_onready_callback(krpano_interface) {
+                        krpano = krpano_interface;
+                    }
+                }
+            });
+        })
+
+
+
+
+        /*embedpano({
             swf: "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.swf",
             id: "krpanoSWFObject",
             xml: xmlPath,
@@ -66,7 +109,7 @@
         });
         function krpano_onready_callback(krpano_interface) {
             krpano = krpano_interface;
-        }
+        }*/
     </script>
 
 </div>
