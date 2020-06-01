@@ -104,13 +104,7 @@ class UploadController extends Controller
             //$houseCode = "1912111727175A792253BBA34D0A8A47";
             //$agentCode = "17122815560039EE2E6DAB1A47ABAD62";
 
-            $propertyCode = $request->get("propertyCode");
-            $vrStepId = $request->get("vrStepId");      //标记一组VR [GUID32位]
-            $houseNum = $request->get("houseNum");      //全景列表页显示房源ID
-
-            $CityID = $request->get("CityID");              //当前登录人城市ID
-            $Creator = $request->get("Creator");            //当前登录人Code
-            $CreatorDC = $request->get("CreatorDC");        //当前登录人部门Code
+            $houseNum = $request->get("houseNum");          //全景列表页显示房源ID
 
             $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $houseCode);
             $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $agentCode . "&sourceType=2&cityID=1");
@@ -250,8 +244,6 @@ class UploadController extends Controller
                         $r['msg'] = ApiErrDesc::UPLOAD_SUCCESS[1];
                         $r['user_id'] = $userId;
                         $r['pano_id'] = $panoId;
-                        $r['propertyCode'] = $propertyCode;
-                        $r['vrStepId'] = $vrStepId;
 
                         $r['houseCode'] = $houseCode;
                         $r['agentCode'] = $agentCode;
@@ -325,22 +317,21 @@ class UploadController extends Controller
         /*$getFilesData = $this->panos($request);
         $getFilesData = json_decode($getFilesData);*/
 
+        //接收参数
         $panoId = $request->get("panoId");
-        $CityID = $request->get("CityID");
-        $Creator = $request->get("Creator");
+        $propertyCode = $request->get("PropertyCode");  //房源CODE
+        $vrStepId = $request->get("vrStepId");          //标记一组VR [GUID32位]
+        $CityID = $request->get("CityID");              //当前登录人城市ID
+        $Creator = $request->get("Creator");            //当前登录人Code
+        $CreatorDC = $request->get("CreatorDC");        //当前登录人部门Code
 
         $result = DB::select('select imgData from uploads where panoId=?', [$panoId]);
         $imgData = $result[0]->imgData;
         $getFilesData = json_decode($imgData);
 
         $title = $getFilesData->title;
-        $propertyCode = $getFilesData->propertyCode;
-        $vrStepId = $getFilesData->vrStepId;
-
         $houseCode = $getFilesData->houseCode;
         $agentCode = $getFilesData->agentCode;
-
-
         $agentImgUrl = $getFilesData->agentImgUrl;
         $agentPhone = $getFilesData->agentPhone;
         $userId = $getFilesData->user_id;
@@ -405,11 +396,13 @@ class UploadController extends Controller
                 $res['pano_id'] = $panoId;
 
                 //$res['url'] = $this->http_host . '/' . 'storage/panos/' . $panoId . '/tour.html';
-                //houseApi($vrStepId, $propertyCode, 3, $VrUrl);
+
 
                 $res['url'] = $this->http_host . $this->base_name . '/' . 'vr/uri/' . $houseCode . '/' . $agentCode;
                 $updated_at = date('Y-m-d H:i', time());
                 DB::update("update panos set panoUrl='" . $res['url'] . "',updated_at='" . $updated_at . "' where pano_id=? and user_id=?", [$panoId, $userId]);
+                houseApi($propertyCode, $vrStepId, 3,$res['url'],$CityID,$Creator,$CreatorDC);
+
             }
         } else {
             $res['code'] = ApiErrDesc::ERR_KRPANO_PARAMS[0];
