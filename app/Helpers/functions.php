@@ -134,7 +134,7 @@ function houseApi($propertyCode,$vrStepID,$VrStatus,$VrUrl,$CityID,$Creator,$Cre
     //关闭URL请求
     curl_close($curl);
     //显示获得的数据
-    //print_r($data);
+    print_r($data);
 }
 
 

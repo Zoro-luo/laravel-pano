@@ -60,37 +60,42 @@ class UploadController extends Controller
     {
         $houseCode = $request->houseCode;
         $check_at = $request->check_at;
-            if ($check_at == 2) {
-                $affected = DB::update("update panos set check_at=  '" . $check_at . "' where houseCode=?", [$houseCode]);
-                $c['code'] = 2000;
-                $c['check_at'] = $check_at;
-                $c['msg'] = "房堪检测合规";
-            } else if ($check_at == 3){
-                $affected = DB::update("update panos set check_at=  '" . $check_at . "' where houseCode=?", [$houseCode]);
-                $c['code'] = 2000;
-                $c['check_at'] = $check_at;
-                $c['msg'] = "房堪检测不合规";
-            } else if ($check_at == 1) {
-                $affected = DB::update("update panos set check_at=  '" . $check_at . "' where houseCode=?", [$houseCode]);
-                $c['code'] = 2000;
-                $c['check_at'] = $check_at;
-                $c['msg'] = "房堪未检查";
-            } else {
-                $c['code'] = 2001;
-                $c['check_at'] = $check_at;
-                $c['msg'] = "传参错误";
-            }return json_encode($c);}
+        if ($check_at == 2) {
+            $affected = DB::update("update panos set check_at=  '" . $check_at . "' where houseCode=?", [$houseCode]);
+            $c['code'] = 2000;
+            $c['check_at'] = $check_at;
+            $c['msg'] = "房堪检测合规";
+        } else if ($check_at == 3) {
+            $affected = DB::update("update panos set check_at=  '" . $check_at . "' where houseCode=?", [$houseCode]);
+            $c['code'] = 2000;
+            $c['check_at'] = $check_at;
+            $c['msg'] = "房堪检测不合规";
+        } else if ($check_at == 1) {
+            $affected = DB::update("update panos set check_at=  '" . $check_at . "' where houseCode=?", [$houseCode]);
+            $c['code'] = 2000;
+            $c['check_at'] = $check_at;
+            $c['msg'] = "房堪未检查";
+        } else {
+            $c['code'] = 2001;
+            $c['check_at'] = $check_at;
+            $c['msg'] = "传参错误";
+        }
+        return json_encode($c);
+    }
 
 
+    //添加VR房堪创建日志流程接口
     public function makeHouseApi()
     {
-        $vrStepID = "1912111727175A792253BBA34D0A8888";
-        $propertyCode = 123456;
+        $propertyCode = "8837";
+        $vrStepId = "195F01914D114E2CA61CB7B72E853614";
         $VrStatus = 3;
-        //$VrUrl = "http://localhost/pano/vr/uri/1912111727175A792253BBA34D0A8A47/17122815560039EE2E6DAB1A47ABAD62";
-        $VrUrl = "http://localhost/pano//storage/panos/37508/tour.html";
+        $VrUrl = "http://localhost/pano/vr/uri/1912111727175A792253BBA34D0A8A47/17122815560039EE2E6DAB1A47ABAD62";
+        $CityID = 1;
+        $Creator = "101610";
+        $CreatorDC = "50504";
 
-        houseApi($vrStepID, $propertyCode, $VrStatus, $VrUrl);
+        houseApi($propertyCode, $vrStepId, $VrStatus, $VrUrl, $CityID, $Creator, $CreatorDC);
     }
 
 
@@ -104,8 +109,14 @@ class UploadController extends Controller
             //$houseCode = "1912111727175A792253BBA34D0A8A47";
             //$agentCode = "17122815560039EE2E6DAB1A47ABAD62";
 
-            $houseNum = $request->get("houseNum");          //全景列表页显示房源ID
+            //$houseCode = "7D647B84E8464C6CBA10B5B91F307D70";      //空值
+            //$agentCode = "1912261141110A3E18168E2C47779679";      //空值
 
+
+            $houseNum = $request->get("houseNum");          //全景列表页显示房源ID
+            $CityID = $request->get("CityID");
+
+            //$CityID = 1;
             $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $houseCode);
             $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $agentCode . "&sourceType=2&cityID=1");
 
@@ -134,23 +145,22 @@ class UploadController extends Controller
                 $agentImgUrl = $agentData->Data->ImageUrl;
                 $agentPhone = $agentData->Data->Mobile;
                 $userId = $agentData->Data->ID;
-                $cityId = $houseData->Data->CityID;
                 $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
                 $kfData = json_decode($kf)->Data;
                 foreach ($kfData as $cityVal) {
-                    if ($cityId == $cityVal->CityID) {
+                    if ($CityID == $cityVal->CityID) {
                         $cityName = $cityVal->CityName;
                     }
                 }
             } else {  //如果经纪人数据为空 则获取400电话
                 //拿到房源ID 下的城市ID用来获取该客服400电话
-                $cityId = $houseData->Data->CityID;
                 $agentImgUrl = "";
                 $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
                 $kfData = json_decode($kf)->Data;
                 foreach ($kfData as $kfVal) {
-                    if ($cityId == $kfVal->CityID) {
+                    if ($CityID == $kfVal->CityID) {
                         $CustomerService400 = $kfVal->CustomerService400;    //400电话
+                        $cityName = $kfVal->CityName;
                     }
                 }
                 $agentPhone = $CustomerService400;
@@ -407,6 +417,8 @@ class UploadController extends Controller
             $res['code'] = ApiErrDesc::ERR_KRPANO_PARAMS[0];
             $res['msg'] = ApiErrDesc::ERR_KRPANO_PARAMS[1];
             $res['url'] = '';
+
+            houseApi($propertyCode, $vrStepId, 4,$res['url'],$CityID,$Creator,$CreatorDC);
         }
         return $res;
     }
