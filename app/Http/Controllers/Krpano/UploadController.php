@@ -320,7 +320,7 @@ class UploadController extends Controller
         //接收参数
         $panoId = $request->get("panoId");
         $propertyCode = $request->get("PropertyCode");  //房源CODE
-        $vrStepId = $request->get("vrStepId");          //标记一组VR [GUID32位]
+        $vrStepId = $request->get("VrStepId");          //标记一组VR [GUID32位]
         $CityID = $request->get("CityID");              //当前登录人城市ID
         $Creator = $request->get("Creator");            //当前登录人Code
         $CreatorDC = $request->get("CreatorDC");        //当前登录人部门Code
@@ -396,7 +396,6 @@ class UploadController extends Controller
                 $res['pano_id'] = $panoId;
 
                 //$res['url'] = $this->http_host . '/' . 'storage/panos/' . $panoId . '/tour.html';
-
 
                 $res['url'] = $this->http_host . $this->base_name . '/' . 'vr/uri/' . $houseCode . '/' . $agentCode;
                 $updated_at = date('Y-m-d H:i', time());
