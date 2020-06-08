@@ -30,24 +30,25 @@
                     <div class="flex-left item-center">城市</div>
                     <div class="separator item-center">:</div>
                     <div class="flex-right display_flex">
-                        <div class="my-select my-select1" @click-list="addLabel">
-                            <div class="my-select-btn"><span class="btn-text">全部</span><i
+                        <div class="my-select my-select1" @click-list="getCity">
+                            <div class="my-select-btn"><span class="btn-text cityName">{{$panos->cityName}} </span><i
                                         class="iconfont iconUtubiao-13"></i></div>
                             <ul class="my-select-list">
-                                <li class="on">全部</li>
-                              @foreach($cityName as $cityVal)
-                                <li>{{$cityVal}}</li>
-                              @endforeach
+                                <li class="on" name="cityName">全部</li>
+                                @foreach($cityName as $k=>$v)
+                                    <li name="cityName" item="{{$k}}">{{$v}}</li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
                 </div>
+
                 <div class="flex-list">
                     <div class="flex-left item-center">功能状态</div>
                     <div class="separator item-center">:</div>
                     <div class="flex-right display_flex">
-                        <div class="my-select my-select1">
-                            <div class="my-select-btn"><span class="btn-text">全部</span><i
+                        <div class="my-select my-select1" @click-list="getStatus">
+                            <div class="my-select-btn"><span class="btn-text status">{{$panos->status}}</span><i
                                         class="iconfont iconUtubiao-13"></i></div>
                             <ul class="my-select-list">
                                 <li class="on">全部</li>
@@ -61,7 +62,8 @@
                     <div class="flex-left item-center">关键字</div>
                     <div class="separator item-center">:</div>
                     <div class="flex-right">
-                        <div class="my-input"><input type="text" class="inputs" placeholder="楼盘名称/房源名称/房源ID/创建人"></div>
+                        <div class="my-input"><input type="text" class="inputs keywords"
+                                                     placeholder="楼盘名称/房源名称/房源ID/创建人"></div>
                     </div>
                 </div>
                 <div class="flex-list">
@@ -138,9 +140,9 @@
                                 <div>
                                     @if($pano->check_at == "1" )
                                         未检查
-                                     @elseif($pano->check_at == "2")
+                                    @elseif($pano->check_at == "2")
                                         合规
-                                     @endif
+                                    @endif
                                 </div>
                             </div>
 
@@ -151,13 +153,13 @@
                                 <div>{{$pano->title}}</div>
                             </div>
                             <div class="table-text table-text5">
-                                <div>{{$pano->pano_id}}</div>
+                                <div>{{$pano->houseNum}}</div>
                             </div>
                             <div class="table-text table-text6">
-                                <div>百瑞景一店</div>
+                                <div>{{$pano->storeName}}</div>
                             </div>
                             <div class="table-text table-text7">
-                                <div>刘德马</div>
+                                <div>{{$pano->agentName}}</div>
                             </div>
                             <div class="table-text table-text8">
                                 <div>{{$pano->updated_at}}</div>
@@ -168,10 +170,10 @@
                             <div class="table-text table-text10">
 
                                 @if($count > 0)
-                                <a class="text-btn" href="{{url('vr/edit/'.$pano->pano_id)}}"
-                                   target="_blank">编辑模型</a>
+                                    <a class="text-btn" href="{{url('vr/edit/'.$pano->pano_id)}}"
+                                       target="_blank">编辑模型</a>
                                 @else
-                                <a class="text-btn" target="_blank">编辑模型</a>
+                                    <a class="text-btn" target="_blank">编辑模型</a>
                                 @endif
 
                                 <span class="vertical-line">|</span>
@@ -190,10 +192,9 @@
                         </div>
                     </div>
                 @endif
-
-
             </div>
-            {{ $panos->links('vendor.pagination.vr') }}
+            {!! $panos->appends(['cityName' => $panos->cityName,'status'=>$panos->status])->render('vendor.pagination.vr') !!}
+
         </div>
     </div>
 </div>
@@ -204,6 +205,50 @@
 <script src="{{asset('public/static/hotsport')}}/js/laydate/laydate.js"></script>
 <!-- <script src="js/echarts.simple.min.js"></script> -->
 <script>
+    var search = {
+        city: "",
+        status: "",
+    }
+
+    function getCity(event) {
+        search.city = $(event.target).text();
+        //console.log( $(event.target).text() )
+    }
+
+    function getStatus(event) {
+        search.status = $(event.target).text();
+        //console.log( $(event.target).text() )
+    }
+
+    //获取url参数
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return (false);
+    }
+
+
+    //编辑跳转页
+    function listUpdate(panoId) {
+        var panoId = paonId;
+        $.ajax({
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            url: "{{url('vr/edit')}}",
+            type: "POST",
+            data: {"panoId": paonId},
+            success: function (e) {
+                window.open("{{url('vr/online')}}" + "/" + panoId);
+            }
+        })
+
+    }
+
     //点击预览另打开预览窗口页
     function listPreview(paonId) {
         var panoId = paonId;
@@ -237,21 +282,52 @@
                             <div class="table-text table-text3"><div>${e[0]['house_name']}</div></div>
                             <div class="table-text table-text4"><div>${e[0]['house_name']}-${e[0]['house_type']}随时看房</div></div>
                             <div class="table-text table-text5"><div>${e[0]['pano_id']}</div></div>
-                            <div class="table-text table-text6"><div>百瑞景一店</div></div>
-                            <div class="table-text table-text7"><div>刘德马</div></div>
+                            <div class="table-text table-text6"><div>${e[0]['storeName']}</div></div>
+                            <div class="table-text table-text7"><div>${e[0]['agentName']}</div></div>
                             <div class="table-text table-text8"><div>${e[0]['updated_at']}</div></div>
                             <div class="table-text table-text9"><div class="">${e[0]['status'] == "1" ? "已上线" : "未上线"}</div></div>
-                            <div class="table-text table-text10"><a class="text-btn" href="{{url('vr/edit/'.$pano->pano_id)}}" target="_blank">编辑模型</a>
+                            <div class="table-text table-text10">
+                            <a class="text-btn" href="javascript:;" onclick="listUpdate('${e[0]['pano_id']}')" target="_blank">编辑模型</a>
                             <span class="vertical-line">|</span><div class="text-btn" onclick="listPreview('${e[0]['pano_id']}')" >预览</div>
                                 <span class="vertical-line">|</span><div class="text-btn  error-btn" onclick="turnup('${e[0]['pano_id']}')" >${e[0]['status'] == "2" ? "上线" : "下线"}</div>
                             </div></div>`;
 
-                $(".index-"+e[0]['pano_id']+"").html("").replaceWith(panoStr);
+                $(".index-" + e[0]['pano_id'] + "").html("").replaceWith(panoStr);
             }
         })
     }
 
     $(function () {
+        //搜索提交
+        $(".my-btn").click(function () {
+            var keywords = $(".keywords").val();
+            var createtTime = $("#createtTime").val();
+
+            var cityName_url = getQueryVariable("cityName");
+            var status_url = getQueryVariable("status");
+            if (cityName_url == false ){
+                cityName_url = search.city;
+            }
+            if (status_url == false ){
+                status_url = search.status;
+            }
+
+            $.ajax({
+             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+             url: "{{url('vr/list')}}",
+                type: "GET",
+                // data: {"cityName": cityName_url, "status": status_url},
+                data: {"cityName": search.city, "status": search.status},
+                success: function (e) {
+                    console.log(e);
+                    // window.location.href = "/pano/vr/list?cityName=" + cityName_url + "&status=" + status_url;
+                    window.location.href = "/pano/vr/list?cityName=" + search.city + "&status=" + search.status;
+                }
+            })
+        });
+
+
+        //  data: {"cityName": search.city,"status":status,"keywords":keywords,"createtTime":createtTime},
         /*myFun.layer.layerDoubleDateTime("#createtTime", {max: `new Date().getFullYear()-new Date().getMonth()-new Date().getDate() 23:59:59`}, function(value, date, endDate) {
             let selectedDate = new Date(endDate.year, endDate.month - 1, endDate.date, endDate.hours, endDate.minutes, endDate.seconds),
                 now = new Date();
@@ -288,10 +364,10 @@
         var count = "{{$count}}";               //总条数
         var perPage = "{{$perPage}}";           //每页显示多少条
 
-        if (page > Math.ceil(count/perPage)){
-            page = Math.ceil(count/perPage);
+        if (page > Math.ceil(count / perPage)) {
+            page = Math.ceil(count / perPage);
         }
-        if (page <= 0){
+        if (page <= 0) {
             page = 1;
         }
         window.location.href = "/pano/vr/list?page=" + page;

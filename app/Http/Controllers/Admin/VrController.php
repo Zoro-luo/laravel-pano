@@ -11,20 +11,47 @@ use Illuminate\Support\Facades\DB;
 class VrController extends Controller
 {
     //vr 列表页
-    public function index()
+    public function index(Request $request)
     {
         $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
         $kfData = json_decode($kf)->Data;
-        foreach ($kfData as $kfVal){
+        foreach ($kfData as $kfVal) {
             $CityName[] = $kfVal->CityName;
         }
 
-        $perPage = 2;
-        $panos = DB::table("panos")->paginate($perPage);
+        //dd($CityName);
+        $perPage = 5;
+        $cityName = $request->cityName;
+        $status = $request->status;
+        if ($status == "已上线"){
+            $status_at = 1;
+        }else{
+            $status_at = 2;
+        }
+        $keywords = $request->keywords;
+        $createtTime = $request->createtTime;
+        $where = new Pano();
+        if ($cityName){
+            if ($cityName == "全部"){
+                $where = $where;
+            }else{
+                $where = $where->where("cityName","=",$cityName);
+            }
+        }
+        if ($status){
+            if ($status == "全部"){
+                $where = $where;
+            }else{
+                $where = $where->where("status","=",$status_at);
+            }
+        }
+        $panos = $where->paginate($perPage);
 
-
+        $panos->cityName = $cityName;
+        $panos->status = $status;
+        //$panos = Pano::where('cityName','=','武汉')->paginate($perPage);
         $count = $panos->total();
-        return view('admin.vr.list', ['panos' => $panos,'count'=>$count,'perPage'=>$perPage,'cityName'=>$CityName]);
+        return view('admin.vr.list', ['panos' => $panos, 'count' => $count, 'perPage' => $perPage, 'cityName' => $CityName]);
     }
 
     //编辑页的预览视图
@@ -54,13 +81,13 @@ class VrController extends Controller
         $panoId = $request->panoId;
         $panoData = DB::select('select status from panos where pano_id=?', [$panoId]);
         if ($panoData[0]->status == "2") {   //下线
-           $affected = DB::update("update panos set status= '1' where pano_id=?", [$panoId]);
-           file_get_contents("http://120.76.210.152:8034/api/PanoRamaAPI/UpdateLine?SysCode=C025FAD876904306AAE5216982E2E8EC&state=1&time=".time());
-        }  elseif ($panoData[0]->status == "1"){   //上线
-           $affected = DB::update("update panos set status= '2' where pano_id=?", [$panoId]);
-           file_get_contents("http://120.76.210.152:8034/api/PanoRamaAPI/UpdateLine?SysCode=C025FAD876904306AAE5216982E2E8EC&state=0&time=".time());
+            $affected = DB::update("update panos set status= '1' where pano_id=?", [$panoId]);
+            file_get_contents("http://120.76.210.152:8034/api/PanoRamaAPI/UpdateLine?SysCode=C025FAD876904306AAE5216982E2E8EC&state=1&time=" . time());
+        } elseif ($panoData[0]->status == "1") {   //上线
+            $affected = DB::update("update panos set status= '2' where pano_id=?", [$panoId]);
+            file_get_contents("http://120.76.210.152:8034/api/PanoRamaAPI/UpdateLine?SysCode=C025FAD876904306AAE5216982E2E8EC&state=0&time=" . time());
         }
-        if ($affected){
+        if ($affected) {
             $panoData = DB::select('select * from panos where pano_id=?', [$panoId]);
             return $panoData;
         }
@@ -76,7 +103,7 @@ class VrController extends Controller
         $skinXmlNewFile = storage_path("panos") . "\\" . $panoId . "\\vtour\\skin\\vtourskin_new.xml";
 
         //1. copy vtourskin.xml 文件为vtourskin_new.xml
-        if (!file_exists($skinXmlNewFile)){
+        if (!file_exists($skinXmlNewFile)) {
             $vtourSkinXmlStr = file_get_contents($skinXmlFile);
             file_put_contents($skinXmlNewFile, $vtourSkinXmlStr);
         }
@@ -86,19 +113,19 @@ class VrController extends Controller
         $res = file_put_contents($xmlPreFile, $vtourXmlStr);
 
         //3. tour_pre.xml 的include 嵌入skin/vtourskin_new.xml 文件
-        if ($res){
+        if ($res) {
             $tourXmlStr = file_get_contents($xmlPreFile);
             $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
             $vtourIncludeArr = $tourXmlObj->xpath("include");
-            if ($vtourIncludeArr[0]["url"] == "skin/vtourskin.xml"){    // <include url="skin/vtourskin.xml"/>
+            if ($vtourIncludeArr[0]["url"] == "skin/vtourskin.xml") {    // <include url="skin/vtourskin.xml"/>
                 $vtourIncludeArr[0]["url"] = "skin/vtourskin_new.xml";
             }
             file_put_contents($xmlPreFile, $tourXmlObj->asXML());
         }
         $panoData = DB::select('select status from panos where pano_id=?', [$panoId]);
-        if ($panoData[0]->status == "1"){   //已上线
+        if ($panoData[0]->status == "1") {   //已上线
             return "online";
-        }else{
+        } else {
             return "outline";
         }
     }
@@ -143,11 +170,11 @@ class VrController extends Controller
         $vtourSkinLayerArr = $tourSkinXmlObj->xpath("layer");
         $skin_thumbs = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[2]
             ->xpath("layer")[0]->xpath("layer")[3];
-        if ($skin_thumbs["state"] == "opened"){             // skin_thumbs
+        if ($skin_thumbs["state"] == "opened") {             // skin_thumbs
             $skin_thumbs["state"] = "closed";
         }
         $father_control_bar_pc = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[3];
-        if ($father_control_bar_pc["visible"] == "false"){  //father_control_bar_pc
+        if ($father_control_bar_pc["visible"] == "false") {  //father_control_bar_pc
             $father_control_bar_pc["visible"] = "true";
         }
         file_put_contents($skinXmlNewFile, $tourSkinXmlObj->asXML());
@@ -156,26 +183,26 @@ class VrController extends Controller
         $tourXmlStr = file_get_contents($xmlNewFile);
         $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
         $vtourIncludeArr = $tourXmlObj->xpath("include");
-        if ($vtourIncludeArr[0]["url"] == "skin/vtourskin.xml"){    // <include url="skin/vtourskin.xml"/>
+        if ($vtourIncludeArr[0]["url"] == "skin/vtourskin.xml") {    // <include url="skin/vtourskin.xml"/>
             $vtourIncludeArr[0]["url"] = "skin/vtourskin_new.xml";
         }
         $vtourLayerArr = $tourXmlObj->xpath("layer");
-        if ($vtourLayerArr[9]["visible"] == "false"){       //显示 top_screen_pc
+        if ($vtourLayerArr[9]["visible"] == "false") {       //显示 top_screen_pc
             $vtourLayerArr[9]["visible"] = "true";
         }
-        if ($vtourLayerArr[10]["visible"] == "false"){      //显示 right_vr_pc
+        if ($vtourLayerArr[10]["visible"] == "false") {      //显示 right_vr_pc
             $vtourLayerArr[10]["visible"] = "true";
         }
-        if ($vtourLayerArr[12]["visible"] == "false"){      //显示 right_set_pc
+        if ($vtourLayerArr[12]["visible"] == "false") {      //显示 right_set_pc
             $vtourLayerArr[12]["visible"] = "true";
         }
-        if ($tourXmlObj->skin_settings['thumbs_opened'] == "true"){   //关闭 skin_settings['thumbs_opened']
+        if ($tourXmlObj->skin_settings['thumbs_opened'] == "true") {   //关闭 skin_settings['thumbs_opened']
             $tourXmlObj->skin_settings['thumbs_opened'] = "false";
         }
-        if ($tourXmlObj->autorotate['enabled'] == "false"){  //打开 自动旋转
+        if ($tourXmlObj->autorotate['enabled'] == "false") {  //打开 自动旋转
             $tourXmlObj->autorotate['enabled'] = "true";
         }
-        if ($tourXmlObj->skin_settings['littleplanetintro'] == "false"){  //打开 小行星
+        if ($tourXmlObj->skin_settings['littleplanetintro'] == "false") {  //打开 小行星
             $tourXmlObj->skin_settings['littleplanetintro'] = "true";
         }
         file_put_contents($xmlNewFile, $tourXmlObj->asXML());
@@ -230,11 +257,11 @@ class VrController extends Controller
         $vtourSkinLayerArr = $tourSkinXmlObj->xpath("layer");
         $skin_thumbs = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[2]
             ->xpath("layer")[0]->xpath("layer")[3];
-        if ($skin_thumbs["state"] == "closed"){             // skin_thumbs
+        if ($skin_thumbs["state"] == "closed") {             // skin_thumbs
             $skin_thumbs["state"] = "opened";
         }
         $father_control_bar_pc = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[3];
-        if ($father_control_bar_pc["visible"] == "true"){  //father_control_bar_pc
+        if ($father_control_bar_pc["visible"] == "true") {  //father_control_bar_pc
             $father_control_bar_pc["visible"] = "false";
         }
         file_put_contents($skinXmlFile, $tourSkinXmlObj->asXML());
@@ -243,23 +270,23 @@ class VrController extends Controller
         //$tourXmlStr = file_get_contents($xmlFile);
         $tourXmlStr = file_get_contents($xmlEditFile);
         $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
-        if ( $tourXmlObj->skin_settings['thumbs_opened'] == "false"){   // 开启 skin_settings['thumbs_opened']
+        if ($tourXmlObj->skin_settings['thumbs_opened'] == "false") {   // 开启 skin_settings['thumbs_opened']
             $tourXmlObj->skin_settings['thumbs_opened'] = "true";
         }
         $vtourLayerArr = $tourXmlObj->xpath("layer");
-        if ($vtourLayerArr[9]["visible"] == "true"){       // 隐藏 top_screen_pc
+        if ($vtourLayerArr[9]["visible"] == "true") {       // 隐藏 top_screen_pc
             $vtourLayerArr[9]["visible"] = "false";
         }
-        if ($vtourLayerArr[10]["visible"] == "true"){      // 隐藏 right_vr_pc
+        if ($vtourLayerArr[10]["visible"] == "true") {      // 隐藏 right_vr_pc
             $vtourLayerArr[10]["visible"] = "false";
         }
-        if ($vtourLayerArr[12]["visible"] == "true"){      // 隐藏 right_set_pc
+        if ($vtourLayerArr[12]["visible"] == "true") {      // 隐藏 right_set_pc
             $vtourLayerArr[12]["visible"] = "false";
         }
-        if ($tourXmlObj->autorotate['enabled'] == "true"){  //关闭 自动旋转
+        if ($tourXmlObj->autorotate['enabled'] == "true") {  //关闭 自动旋转
             $tourXmlObj->autorotate['enabled'] = "false";
         }
-        if ($tourXmlObj->skin_settings['littleplanetintro'] == "true"){  //关闭 小行星
+        if ($tourXmlObj->skin_settings['littleplanetintro'] == "true") {  //关闭 小行星
             $tourXmlObj->skin_settings['littleplanetintro'] = "false";
         }
         //file_put_contents($xmlFile, $tourXmlObj->asXML());
