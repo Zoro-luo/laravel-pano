@@ -24,6 +24,7 @@ class UploadController extends Controller
         $userId = $request->agentId;
         $CityID = $request->cityID;
         $CityID = 1;
+
         $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $panoId . "&flagType=1&CityID=" . $CityID);
         $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $userId . "&sourceType=2&cityID=" . $CityID);
 

@@ -82,7 +82,6 @@ Route::post('/vr/make', 'Krpano\\UploadController@makeHouseApi');
     return view('krpano.set');
 });*/
 
-
 //经纪人信息
 Route::get('/krpano/vr/{panoId}', function ($panoId){
     $agentInfo = Cache::get("agentInfo"."_".$panoId,"NULL");

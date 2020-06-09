@@ -212,7 +212,6 @@
 
     function getCity(event) {
         search.city = $(event.target).text();
-        //console.log( $(event.target).text() )
     }
 
     function getStatus(event) {

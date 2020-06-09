@@ -19,7 +19,6 @@ class VrController extends Controller
             $CityName[] = $kfVal->CityName;
         }
 
-        //dd($CityName);
         $perPage = 5;
         $cityName = $request->cityName;
         $status = $request->status;
