@@ -86,16 +86,10 @@ function numAbc($arr,$temp){
 }
 
 
-function houseApi($propertyCode,$vrStepID,$VrStatus,$VrUrl,$CityID,$Creator,$CreatorDC){
+function houseApi($propertyCode,$VrUrl){
 
-    //$vrStepID = "1912111727175A792253BBA34D0A8888";
-    //$propertyCode = 123456;
-    //$VrStatus = 3;
-    //$VrUrl = "http://localhost/pano/vr/uri/1912111727175A792253BBA34D0A8A47/17122815560039EE2E6DAB1A47ABAD62";
-    //$VrUrl = "http://localhost/pano//storage/panos/37508/tour.html";
-
-    //$url = "http://192.168.13.20:51314/SProperty/HouseApi/PropertyExploration/UpdatePropertyExplorationVrStep";
-    $url = "http://192.168.13.7:8099/HouseApi/PropertyExploration/UpdatePropertyExplorationVrStep";
+    //$url = "http://192.168.13.7:8099/HouseApi/PropertyExploration/UpdatePropertyExplorationVrStep";
+    $url = "http://192.168.1.79:51314/SProperty/HouseApi/PropertyExploration/VRPropertyExplorationCallback";
     //请求头
     //$headers[]  =  "Content-Type:application/x-www-form-urlencoded";
     $headers[]  =  "Content-Type:application/json";
@@ -120,12 +114,7 @@ function houseApi($propertyCode,$vrStepID,$VrStatus,$VrUrl,$CityID,$Creator,$Cre
     //curl_setopt($curl, CURLOPT_HEADER, 1);
     $post_data = array(
         'PropertyCode' => $propertyCode,
-        'VrStepID' => $vrStepID,
-        'VrStatus' =>$VrStatus,
         'VrUrl'=>$VrUrl,
-        'CityID'=>$CityID,
-        'Creator'=>$Creator,
-        'CreatorDC'=>$CreatorDC,
     );
     $post_data = json_encode($post_data);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
@@ -134,7 +123,7 @@ function houseApi($propertyCode,$vrStepID,$VrStatus,$VrUrl,$CityID,$Creator,$Cre
     //关闭URL请求
     curl_close($curl);
     //显示获得的数据
-    print_r($data);
+
 }
 
 
