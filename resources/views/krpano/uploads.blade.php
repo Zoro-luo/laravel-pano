@@ -13,6 +13,9 @@
                     <div class="panel-body">
                         <form class="form-horizontal" action="{{ url("krpano/exec") }}" method="post"
                               enctype="multipart/form-data">
+
+                            {{--<form class="form-horizontal" action="{{ url("vr/make") }}" method="post"
+                                  enctype="multipart/form-data">--}}
                             {!! csrf_field() !!}
                             <div class="form-group">
                                 <label for="parlour" class="parlour">客厅1</label>

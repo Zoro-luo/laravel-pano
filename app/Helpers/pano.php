@@ -4,7 +4,7 @@
  * 操作vtourskin.xml文件数据
  * @param $vtourXmlUrl
  */
-function changVtourskinXml($vtourXmlUrl,$panoId, $agentCode,$CityID,$agentImgUrl,$agentPhone)
+function changVtourskinXml($vtourXmlUrl,$panoId,$agentImgUrl,$agentPhone)
 {
 
     $vtourDocXml = new \DOMDocument();
@@ -174,7 +174,7 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     set(layer[iframelayer].visible,false);
     remove_iframe(iframelayer);
     set(layer[set_alert_table].visible,false);
-    call_iframe(iframelayer_new,/pano/krpano/vr/".$agentCode."/".$CityID."););");
+    call_iframe(iframelayer_new,/pano/krpano/vr/".$panoId."););");
 
     // 添加 phone_value_pc
     $phoneValuePc = $backPhonePc->addChild("layer");
@@ -328,7 +328,7 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
                                     set(layer[iframelayer].visible,false);
                                     remove_iframe(iframelayer);
                                     set(layer[set_alert_table].visible,false);
-                                    call_iframe(iframelayer_new,/pano/krpano/vr/".$agentCode."/".$CityID."););");
+                                    call_iframe(iframelayer_new,/pano/krpano/vr/".$panoId."););");
 
 
 
@@ -345,6 +345,7 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $skin_talk->addAttribute("bg","false");
     $skin_talk->addAttribute("x","20%");
     $skin_talk->addAttribute("y","15");
+    $skin_talk->addAttribute("visible","true");
     $skin_talk->addAttribute("scale","0.5");
 
 
@@ -451,6 +452,7 @@ function startpic($xmlFile = null)
     $loadingBackIcon->setAttribute("zorder","12");
     $loadingBackIcon->setAttribute("style","skin_base|skin_glow");
     $loadingBackIcon->setAttribute("keep","true");
+    $loadingBackIcon->setAttribute("visible","false");
     $loadingBackIcon->setAttribute("onclick","");
     //追加至loading_back_icon
     $layerLoadingBack->appendChild($loadingBackIcon);
@@ -1002,7 +1004,7 @@ function addVr($xmlFile = null)
  * 漫游场景中嵌入房源信息层
  * @param null $xmlFile
  */
-function addIframeFy($xmlFile = null, $content = '',$houseCode,$CityID)
+function addIframeFy($xmlFile = null, $content = '',$paonId)
 {
     $vtourDocXml = new \DOMDocument();
     $vtourDocXml->load($xmlFile);
@@ -1073,7 +1075,7 @@ function addIframeFy($xmlFile = null, $content = '',$houseCode,$CityID)
         set(layer[iframelayer_new].visible,false);
         remove_iframe(iframelayer_new);
         set(layer[icon].url, '../../static/images/up.png');
-        call_iframe(iframelayer,/pano/krpano/fr/".$houseCode."/".$CityID."););");
+        call_iframe(iframelayer,/pano/krpano/fr/".$paonId."););");
 
     //icon 上下标签图标
     $layerIcon = $vtourDocXml->createElement("layer");
@@ -1115,6 +1117,7 @@ function addIframeFy($xmlFile = null, $content = '',$houseCode,$CityID)
     $leftIcon->setAttribute("keep","true");
     $leftIcon->setAttribute("x","5%");
     $leftIcon->setAttribute("y","15");
+    $leftIcon->setAttribute("visible","false");
     $leftIcon->setAttribute("devices","touchdevice");
 
     //right_share
@@ -1128,6 +1131,7 @@ function addIframeFy($xmlFile = null, $content = '',$houseCode,$CityID)
     $rightShare->setAttribute("keep","true");
     $rightShare->setAttribute("x","22");
     $rightShare->setAttribute("y","20");
+    $rightShare->setAttribute("visible","false");
     $rightShare->setAttribute("devices","touchdevice");
     $rightShare->setAttribute("onclick","if(layer[share_alert_table].visible,set(layer[share_alert_table].visible,false),
                     set(layer[share_alert_table].visible,true);set(layer[set_alert_table].visible,false);)");
@@ -1372,7 +1376,7 @@ function addHotSpot($tourSceneArr)
  * @param null $mb_name
  * @return false|string
  */
-function changTourXml($xmlFile = null, $mb_name = null,$content,$houseCode,$CityID)
+function changTourXml($xmlFile = null, $mb_name = null,$content,$paonId)
 {
     //热点动态操作[后台]
     //makeSelectAction($xmlFile);
@@ -1390,7 +1394,7 @@ function changTourXml($xmlFile = null, $mb_name = null,$content,$houseCode,$City
     startpic($xmlFile);
 
     //漫游场景中嵌入房源信息层
-    addIframeFy($xmlFile, $content,$houseCode,$CityID);
+    addIframeFy($xmlFile, $content,$paonId);
 
     //修改tour.xml配置
     $tourXmlStr = file_get_contents($xmlFile);

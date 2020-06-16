@@ -58,38 +58,28 @@ Route::post('krpano/upload', 'Krpano\\PanoController@uploadImgs');      //上传
 Route::post('krpano/pano', 'Krpano\\PanoController@panoImgs');          //切片漫游api
 
 //房源信息
-Route::get('/krpano/fr/{houseCode}/{CityID}', function($houseCode,$CityID){
-
-    $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $houseCode . "&flagType=0&CityID=" . $CityID);
-    $houseData = json_decode($houseApi);
-    $houseInfo = $houseData->Data;
-
-    //$houseInfo = Cache::get("houseInfo"."_".$panoId,"NULL");
+Route::get('/krpano/fr/{panoId}', function($panoId){
+    $houseInfo = Cache::get("houseInfo"."_".$panoId,"");
     return view('krpano.fr',['houseInfo'=>$houseInfo]);
 });
 
 
-Route::get('/vr/uri/{houseId}/{agentId}/{cityID}', 'Krpano\\UploadController@getPanoUri');
-//Route::get('/vr/uri/{houseId}/{agentId}', 'Krpano\\UploadController@getPanoUri');
+//Route::get('/vr/uri/{gid}/hc={houseId}&ac={agentId}&cs={cityID}', 'Krpano\\UploadController@getPanoUri');
+Route::get('/vr/uri/{gid}', 'Krpano\\UploadController@getPanoUri');
 
 Route::get('/vr/check/{houseCode}/{check_at}', 'Krpano\\UploadController@checkRule');
 
 Route::post('/vr/make', 'Krpano\\UploadController@makeHouseApi');
 
 
-//设置弹窗
-/*Route::get('/krpano/set/{panoId}', function($panoId){
-    //$houseInfo = Cache::get("houseInfo"."_".$panoId,"NULL");
-    return view('krpano.set');
+//分享
+/*Route::get('/krpano/wechat/{panoId}', function($panoId){
+    return view('krpano.share');
 });*/
 
 //经纪人信息
-Route::get('/krpano/vr/{agentCode}/{CityID}', function ($agentCode,$CityID){
-    $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $agentCode . "&sourceType=2&cityID=" . $CityID);
-    $agentData = json_decode($agentApi);
-    $agentInfo = $agentData->Data;
-
-    //$agentInfo = Cache::get("agentInfo"."_".$panoId,"NULL");
+Route::get('/krpano/vr/{panoId}', function ($panoId){
+    $agentInfo = Cache::get("agentInfo"."_".$panoId,"NULL");
     return view('krpano.vr',['agentInfo'=>$agentInfo]);
 });
 

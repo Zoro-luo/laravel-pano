@@ -34,6 +34,7 @@
             color: #FFFFFF;
             background-color: #000000;
         }
+
         #pano {
             margin: 0;
         }
@@ -53,65 +54,132 @@
         </table>
     </noscript>
     <script>
+
+        var gid = "{{$gid}}";
+        var sourceType = getQueryVariable("st");
+        var flatType = getQueryVariable("ft");
+        var houseCode = "{{$houseCode}}";
+        var agentCode = "{{$agentCode}}";
+        var CityID = "{{$CityID}}";
+        var title = "{{$title}}";
+        var thumb = "{{$thumb}}";
+        var vrUri =  window.location.href;
+
+        var agentID = "{{$agentID}}";
+        var agentName = "{{$agentName}}";
+        var agentPhone = "{{$agentPhone}}";
+
+
+
+        if (sourceType == null) {
+            var u = navigator.userAgent;
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 || u.indexOf('Linux') > -1; //android终端
+            if (isAndroid) {
+                sourceType = 2;
+            }
+            var isIos = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if (isIos) {
+                sourceType = 3;
+            }
+        }
+
+        function LineConsult() {
+            document.location = "js://lineconsult?AgentSysCode="+agentCode+"&AgentName="+agentName+"&Mobile="+ agentPhone +"&AgentID="+agentID;
+            window.webkit.messageHandlers.lineconsult.postMessage({ 'AgentSysCode': agentCode, 'AgentName': agentName, 'Mobile':agentPhone, 'AgentID':agentID});
+        }
+
+        //test
+        function alal() {
+            alert("alalalalalalalalalalalalalalalalalal");
+        }
+
+
+
+        //分享标题
+        function shareTitle() {
+            return title;
+        }
+
+        //分享描述文本
+        function shareDescriptions() {
+            return "沙发上，地铁上，随时随地，VR实景看房.";
+        }
+
+        //分享标题图片
+        function shareTitleImage() {
+            return thumb;
+        }
+
+        //分享落地页
+        function shareUrl() {
+            return vrUri;
+        }
+
+        //获取url参数
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) {
+                    return pair[1];
+                }
+            }
+            return (false);
+        }
+
+
+        function f() {
+
+        }
+
         var krpano = null;
         var sign = null;
 
-        ///var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml";
-        var xmlPath = "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour_pro.xml";
-        console.log(xmlPath);
+        ///var xmlPath = "{{asset('storage/panos/').'/'.$gid }}/vtour/tour.xml";
+        var xmlPath = "{{asset('storage/panos/').'/'.$gid }}/vtour/tour_pro.xml";
 
         $(function () {
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                url:xmlPath,
-                type:"HEAD",
-                success:function () {
+                url: xmlPath,
+                type: "HEAD",
+                success: function () {
                     //console.log("存在");
                     embedpano({
-                        swf: "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.swf",
+                        swf: "{{asset('storage/panos/').'/'.$gid }}/vtour/tour.swf",
                         id: "krpanoSWFObject",
                         xml: xmlPath,
                         target: "pano",
                         passQueryParameters: true,
                         onready: krpano_onready_callback,
                     });
+
                     function krpano_onready_callback(krpano_interface) {
                         krpano = krpano_interface;
                     }
                 },
-                error:function () {
+                error: function () {
                     //console.log("不存在");
                     embedpano({
-                        swf: "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.swf",
+                        swf: "{{asset('storage/panos/').'/'.$gid }}/vtour/tour.swf",
                         id: "krpanoSWFObject",
-                        xml: "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.xml",
+                        xml: "{{asset('storage/panos/').'/'.$gid }}/vtour/tour.xml",
                         target: "pano",
                         passQueryParameters: true,
                         onready: krpano_onready_callback,
                     });
+
                     function krpano_onready_callback(krpano_interface) {
                         krpano = krpano_interface;
                     }
                 }
             });
+
         })
 
 
-
-
-        /*embedpano({
-            swf: "{{asset('storage/panos/').'/'.$panoId }}/vtour/tour.swf",
-            id: "krpanoSWFObject",
-            xml: xmlPath,
-            target: "pano",
-            passQueryParameters: true,
-            onready: krpano_onready_callback,
-        });
-        function krpano_onready_callback(krpano_interface) {
-            krpano = krpano_interface;
-        }*/
     </script>
-
 </div>
 
 </body>
