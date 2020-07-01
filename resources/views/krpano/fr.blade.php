@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html >
+<html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>demo</title>
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=0, user-scalable=no" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="keywords" content="your keywords" />
-    <meta name="description" content="your description" />
-    <link rel="stylesheet" type="text/css" href="{{asset('public/static/pano')}}/css/p.vr.css" />
-    <link rel="stylesheet" type="text/css" href="{{asset('public/static/pano')}}/css/pc.min.css" media="screen and (min-width:1025px)">
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=0, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="keywords" content="your keywords"/>
+    <meta name="description" content="your description"/>
+    <link rel="stylesheet" type="text/css" href="{{asset('public/static/pano')}}/css/p.vr.css"/>
+    <link rel="stylesheet" type="text/css" href="{{asset('public/static/pano')}}/css/pc.min.css"
+          media="screen and (min-width:1025px)">
 </head>
 
 <body>
 <section class="main vr-index">
-    <div class="info-container" >
+    <div class="info-container">
         <div class="house-info-wrapper" style="display: block">
             <ul class="select-container clearfix">
                 <li class="select-item active" data-class="select-1">房源信息</li>
@@ -27,25 +28,25 @@
                         <li class="text-item">
                             <span class="title">售价</span>
 
-                            <span class="data">{{$houseInfo =="" ? "" : $houseInfo->Price}}万元</span>
+                            <span class="data">{{$houseInfo->Price}}{{$houseInfo->PriceUnit}}</span>
                         </li>
                         <li class="text-item">
                             <span class="title">单价</span>
-                            <span class="data">{{$houseInfo =="" ? "" : $houseInfo->UnitPrice}}元/m²</span>
+                            <span class="data">{{$houseInfo->UnitPrice}}{{$houseInfo->UnitPriceUnit}}</span>
                         </li>
                         <li class="text-item">
                             <span class="title">户型</span>
-                            <span class="data">{{$houseInfo =="" ? "" : $houseInfo->CountF}}室{{$houseInfo =="" ? "" : $houseInfo->CountT}}厅{{$houseInfo =="" ? "" : $houseInfo->CountW}}</span>
+                            <span class="data">{{$houseInfo =="" ? "" : $houseInfo->CountF."室"}}{{$houseInfo =="" ? "" : $houseInfo->CountT."厅"}}{{$houseInfo =="" ? "" : $houseInfo->CountW."卫"}}</span>
                         </li>
                         <li class="text-item">
                             <span class="title">面积</span>
-                            <span class="data">{{$houseInfo =="" ? "" : $houseInfo->ProducingArea}}㎡</span>
+                            <span class="data">{{$houseInfo =="" ? "" : $houseInfo->ProducingArea."㎡"}}</span>
                         </li>
                         <li class="text-item">
                             <span class="title">电梯</span>
                             <span class="data">
-                                {{$houseInfo =="" ? "无电梯" : $houseInfo->HasElevator}}
-                               {{-- {{ $houseInfo->HasElevator ? '有电梯' : '无电梯' }}--}}
+                                {{$houseInfo->HasElevatorName}}
+                                {{-- {{ $houseInfo->HasElevator ? '有电梯' : '无电梯' }}--}}
                             </span>
                         </li>
                         <li class="text-item">
@@ -62,7 +63,7 @@
                         </li>
                         <li class="text-item">
                             <span class="title">挂牌</span>
-                            <span class="data">{{$houseInfo =="" ? "" : $houseInfo->ListedTime}}</span>
+                            <span class="data">{{$houseInfo =="" ? "" :  date('Y.m.d',strtotime($houseInfo->ListedTime)) }}</span>
                         </li>
                         <li class="text-item">
                             <span class="title">年代</span>
@@ -76,7 +77,7 @@
                 </li>
 
                 <li class="content-item select-2" style="display: none">
-                    <div id="map-container" ></div>
+                    <div id="map-container"></div>
                     <div class="more-container">
                         <span class="fr_info">更多房源信息</span>
                         <i class="icon-arrow"></i>
@@ -94,27 +95,30 @@
 <script>
     $(function () {
         frClick();
-        mapInit();
         changeTab();
     });
 
-    function frClick(){
+    function frClick() {
         $(".fr_info").click(function () {
-            location.href = "http://www.baidu.com";
+            window.open("{{$houseInfo->SiteUrl}}");
         })
     }
 
     function mapInit() {
-        var map = new BMap.Map("map-container");
-        var point = new BMap.Point(114, 39, 30.501);
-        map.centerAndZoom(point, -10);
-        var myIcon = new BMap.Icon("{{asset('public/static/pano')}}/css/icon/icon-location.png", new BMap.Size(22, 22), {
-            imageSize: new BMap.Size(22, 22)
+        var Longitude = "{{$houseInfo->Longitude}}";
+        var Latitude = "{{$houseInfo->Latitude}}";
+        var _map = new BMap.Map("map-container");
+        var pt = new BMap.Point(Longitude, Latitude);
+        _map.centerAndZoom(pt, 12);
+        //var mapicon = new BMap.Icon("{{asset('public/static/pano')}}/css/icon/icon-location.png", new BMap.Size(50, 50));
+        var mapicon = new BMap.Icon("{{asset('public/static/pano')}}/css/icon/icon-location.png", new BMap.Size(30, 30), {
+            imageSize: new BMap.Size(30, 30)
         });
-        var marker = new BMap.Marker(point, {
-            icon: myIcon
-        })
-        map.addOverlay(marker);
+        var marker = new BMap.Marker(pt, {icon: mapicon});
+        _map.addOverlay(marker);
+        marker.disableMassClear();
+        //_map.disableDragging();
+
     }
 
 
@@ -124,6 +128,9 @@
             $tab.addClass("active").siblings().removeClass("active");
             var selectedClass = $tab.attr("data-class");
             $(".contents-container").children("." + selectedClass).show().siblings().hide();
+            if ($tab.attr("data-class") == "select-2") {
+                mapInit();
+            }
         });
     }
 

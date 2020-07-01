@@ -18,70 +18,109 @@ class UploadController extends Controller
         return view('krpano.uploads');
     }
 
+
     public function getPanoUri(Request $request)
     {
         $houseCode = $request->hc;
         $agentCode = $request->ac;
         $gid = $request->gid;
         $CityID = $request->cs;
-        $flagType = $request->flagType;
-        $sourceType = $request->sourceType;
+        $flagType = $request->ft;
+        $sourceType = $request->st;
+        $houseType = $request->ht;  //2:出售  | 3:出租 (备注：区分出售vr和出租vr)
+        $panoUri = $request->getUri();
 
+        //vtourskin.xml 更改plugin name="WebVR"  的设置
+        editVskinWebVR($gid);
+        
+        if ($houseType == ""){
+            $houseType = 2;
+        }
 
+        if ($sourceType == 2 || $sourceType == 3) {      //  0:pc, 1:wap, 2:android, 3:ios, 4:wechart
+            editTourShare($gid, true);
+            editTourBar($gid,true);
+        } else {
+            editTourShare($gid, false);
+            editTourBar($gid,false);
 
+            $isPhone = isMobile();
+            if ($isPhone) {
+                $sourceType = 1;
+            } else {
+                $sourceType = 0;
+            }
+        }
 
-        if ($houseCode == "{0}" && $agentCode == "{1}" && $CityID == "{2}" ) {
+        if ($houseCode == "{0}" && $agentCode == "{1}" && $CityID == "{2}") {
             $title = "";
             $thumb = "";
+            $agentID = "";
+            $agentName = "";
+            $agentPhone = "";
+            $houseID = "";
             //更改tour.xml 里的Title为空
-            editTourTitle($gid,"");
+            editTourTitle($gid, "");
             //更改vtourskin.xml 里的ImageUrl 和Mobile 为空
-            editVskinImageurlMobile($gid,"","","");
+            editVskinImageurlMobile($gid, "", "", "");
 
-            return view("krpano.new", ["gid" => $gid, "title" => $title, "thumb" => $thumb,  "houseCode" => $houseCode, "agentCode" => $agentCode, "CityID" => $CityID]);
+            return view("krpano.new", ["gid" => $gid, "title" => $title, "agentID" => $agentID, "agentPhone" => $agentPhone, "agentName" => $agentName, "thumb" => $thumb,
+                "houseID" => $houseID, "houseCode" => $houseCode, "agentCode" => $agentCode, "CityID" => $CityID]);
         }
 
         //不传 房源/经纪人/城市ID 的情况
-        if ($houseCode == "" && $agentCode== "" && $CityID ==""){
+        if ($houseCode == "" && $agentCode == "" && $CityID == "") {
             $title = "";
             $thumb = "";
+            $agentID = "";
+            $agentName = "";
+            $agentPhone = "";
+            $houseID = "";
             //更改tour.xml 里的Title为空
-            editTourTitle($gid,"");
+            editTourTitle($gid, "");
             //更改vtourskin.xml 里的ImageUrl 和Mobile 为空
-            editVskinImageurlMobile($gid,"","","");
-            return view("krpano.new", ["gid" => $gid, "title" => $title, "thumb" => $thumb,  "houseCode" => $houseCode, "agentCode" => $agentCode, "CityID" => $CityID]);
+            editVskinImageurlMobile($gid, "", "", "");
+            return view("krpano.new", ["gid" => $gid, "title" => $title, "agentID" => $agentID, "agentPhone" => $agentPhone, "agentName" => $agentName, "thumb" => $thumb,
+                "houseID" => $houseID, "houseCode" => $houseCode, "agentCode" => $agentCode, "CityID" => $CityID]);
         }
 
-
-        if (!$flagType) {
+        if ($flagType == "") {
             $flagType = 0;
         }
-        if (!$sourceType) {
-            $sourceType = 0;
-        }
 
-
-        $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetSaleHouseDetailByCode?HouseSysCode=" . $houseCode . "&flagType=" . $flagType . "&CityID=" . $CityID);
-        $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCode?id=" . $agentCode . "&sourceType=" . $sourceType . "&cityID=" . $CityID);
+        $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetShareHouseDetailByCode?HouseSysCode=" . $houseCode . "&flagType=" . $flagType . "&CityID=" . $CityID."&houseType=".$houseType);
+        $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCodeVr?id=" . $agentCode . "&sourceType=" . $sourceType . "&cityID=" . $CityID);
 
         $houseData = json_decode($houseApi);
         $agentData = json_decode($agentApi);
 
-
         //房源信息
         if ($houseData->Code == 2000 && $houseData->Data) {
             $title = $houseData->Data->Title;
-            editTourTitle($gid,$title);
+            $title = mb_substr($title, 0, 15, 'utf-8') . "...";
+
+            editTourTitle($gid, $title);
             Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
+            $charTitle = "全景看房 | " . $houseData->Data->BuildingName . " " . $houseData->Data->CountF . "室" . $houseData->Data->CountT . "厅";
+            $houseID = $houseData->Data->ID;                    //房源自增长ID
+            $houseNum = $houseData->Data->CertificationID;      //房源编号
+
+            DB::update("update panos set houseCode='" . $houseCode . "',cityName='" . $CityID . "',panoUrl='".$panoUri."',title='".$title."',pano_id='".$houseID."',houseNum='".$houseNum."' where gid=?", [$gid]);
+
         } else {
             $title = "";
             Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
-            editTourTitle($gid,$title);
+            editTourTitle($gid, $title);
+            $charTitle = "";
+            $houseID = "";
+            $houseNum = "";
+
+            DB::update("update panos set houseCode='" . $houseCode . "',cityName='" . $CityID . "',panoUrl='".$panoUri."',title='".$title."',pano_id='".$houseID."',houseNum='".$houseNum."' where gid=?", [$gid]);
         }
+
 
         //经纪人信息
         if ($agentData->Code == 2000 && $agentData->Data) {
-            //Cache::forever("agentInfo" . "_" . $panoId, $agentData->Data);
             $agentId = $agentData->Data->AgentID;   //int  房源id
             // 扫码拨号 agentid 从上面接口获取
             $chatCode = "http://jjwechatapi.jjw.com/api/SmallProgram/GetHouseAgentImg?houseid=0&agentid=" . $agentId . "&phonePosition=73";
@@ -91,8 +130,8 @@ class UploadController extends Controller
             $storeName = $agentData->Data->StoreName;   //所属门店
             $agentName = $agentData->Data->AgentName;   //发布人
             $agentImgUrl = $agentData->Data->ImageUrl;
-            if ($agentImgUrl == ""){
-                $agentImgUrl = "../../../../static/images/manager.png";
+            if ($agentImgUrl == "") {
+                $agentImgUrl = "/pano/storage/static/images/manager.png";
             }
             $agentPhone = $agentData->Data->Mobile;
             $agentID = $agentData->Data->AgentID;
@@ -100,7 +139,6 @@ class UploadController extends Controller
             //更改vtourskin.xml 里的ImageUrl 和Mobile
             editVskinImageurlMobile($gid,$agentImgUrl,$agentPhone,true);
 
-            $userId = $agentData->Data->ID;
             $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
             $kfData = json_decode($kf)->Data;
             foreach ($kfData as $cityVal) {
@@ -108,6 +146,9 @@ class UploadController extends Controller
                     $cityName = $cityVal->CityName;
                 }
             }
+
+            DB::update("update panos set agentCode='" . $agentCode . "',user_id='".$agentID."',storeName='".$storeName."',agentName='".$agentName."' where gid=?", [$gid]);
+
 
         } else {  //如果经纪人数据为空 则获取400电话
             //拿到房源ID 下的城市ID用来获取该客服400电话
@@ -126,10 +167,11 @@ class UploadController extends Controller
                 }
             }
             $agentPhone = $CustomerService400;
-            $userId = time();
-
+            $agentID = "";
             //更改vtourskin.xml 里的ImageUrl 和Mobile
-            editVskinImageurlMobile($gid,$agentImgUrl,$agentPhone,false);
+            editVskinImageurlMobile($gid, $agentImgUrl, $agentPhone, false);
+
+            DB::update("update panos set agentCode='" . $agentCode . "',user_id='".$agentID."',storeName='".$storeName."',agentName='".$agentName."' where gid=?", [$gid]);
         }
 
         //缩略图
@@ -143,7 +185,8 @@ class UploadController extends Controller
         //$result = DB::select('select imgData from uploads  where gid=?', [$gid]);
         //$zh_name = json_decode($result[0]->imgData)->zh_name;
         //$res_panos = DB::select('select houseCode,agentCode from panos  where gid=?', [$gid]);
-        return view("krpano.new", ["gid" => $gid, "title" => $title, "agentID"=>$agentID, "agentPhone"=>$agentPhone,"agentName"=>$agentName, "thumb" => $thumb, "userId" => $userId, "houseCode" => $houseCode, "agentCode" => $agentCode, "CityID" => $CityID]);
+        return view("krpano.new", ["gid" => $gid, "title" => $charTitle, "agentID" => $agentID, "agentPhone" => $agentPhone, "agentName" => $agentName, "thumb" => $thumb,
+            "houseID" => $houseID, "houseCode" => $houseCode, "agentCode" => $agentCode, "CityID" => $CityID]);
 
     }
 
@@ -439,8 +482,8 @@ class UploadController extends Controller
                 //changVtourskinXml($imgRealDir . 'vtour/skin/vtourskin.xml', $gid, $agentCode, $CityID, $agentImgUrl, $agentPhone);
                 //changTourXml($imgRealDir . 'vtour/tour.xml', $zh_name, $title, $houseCode, $CityID);
 
-                $agentImgUrl = "../../../../static/images/manager.png";
-                $agentPhone = "NULL";
+                $agentImgUrl = "/pano/storage/static/images/manager.png";
+                $agentPhone = "";
                 $title = "";
 
                 changVtourskinXml($imgRealDir . 'vtour/skin/vtourskin.xml', $gid, $agentImgUrl, $agentPhone);

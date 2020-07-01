@@ -28,8 +28,8 @@ function changVtourskinXml($vtourXmlUrl,$panoId,$agentImgUrl,$agentPhone)
         easeOutQuint, set(layer[skin_thumbs_container].visible, false););
         );
         if(layer[skin_thumbs].state == 'closed',
-        set(layer[icon_title_down].url, '../../static/images/arrow-down-fill.png'),
-        set(layer[icon_title_down].url, '../../static/images/arrow-up-fill.png');
+        set(layer[icon_title_down].url, '/pano/storage/static/images/arrow-down-fill.png'),
+        set(layer[icon_title_down].url, '/pano/storage/static/images/arrow-up-fill.png');
         );";
 
     //a.只显示小行星而不显示任何皮肤,只待小行星结束后才显示皮肤
@@ -187,7 +187,7 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $phoneValuePc->addAttribute("url","%SWFPATH%/plugins/textfield.swf");
     $phoneValuePc->addAttribute("html",$agentPhone?$agentPhone:"NULL");
     $phoneValuePc->addAttribute("css","color:#FFFFFF;font-family:Arial;font-size:18px;font-weight:bold;");
-    $phoneValuePc->addAttribute("x","110");
+    $phoneValuePc->addAttribute("x","90");
     // 添加 sweep_code_pc
     $sweepCodePc = $backPhonePc->addChild("layer");
     $sweepCodePc->addAttribute("name","sweep_code_pc");
@@ -417,17 +417,17 @@ function startpic($xmlFile = null)
     //container背景
     $layerContainer = $vtourDocXml->createElement("layer");
     $layerContainer->setAttribute("name", "startpic_container");
-    $layerContainer->setAttribute("preload", "true");
+    $layerContainer->setAttribute("preload", "false");
     $layerContainer->setAttribute("alpha", "1");
     $layerContainer->setAttribute("children", "true");
     $layerContainer->setAttribute("visible", "true");
     $layerContainer->setAttribute("zorder", "90");
-    $layerContainer->setAttribute("url", "../../../static/images/background.jpg");
+    $layerContainer->setAttribute("url", "/pano/storage/static/images/backgroundd.png");
     $layerContainer->setAttribute("maskchildren", "true");
     $layerContainer->setAttribute("keep", "true");
     $layerContainer->setAttribute("width", "100%");
     $layerContainer->setAttribute("height", "100%");
-    $layerContainer->setAttribute("bgalpha", "4");
+    $layerContainer->setAttribute("bgalpha", "5");
 
     //loading_back_icon
     $layerLoadingBack = $vtourDocXml->createElement("layer");
@@ -468,7 +468,7 @@ function startpic($xmlFile = null)
     $layerLogo->setAttribute("width", "410px");
     $layerLogo->setAttribute("height", "110px");
     $layerLogo->setAttribute("url", "../../../static/images/logo.png");
-    $layerLogo->setAttribute("scale", "0.4");
+    $layerLogo->setAttribute("scale", "0.45");
     $layerLogo->setAttribute("onloaded", "tween(alpha,1.0);tween(layer[skin_title_pr].alpha,1.0);");
     $layerLogo->setAttribute("enabled", "false");
 
@@ -533,10 +533,10 @@ function startpic($xmlFile = null)
     $layerTitle->setAttribute("align", "top");
     $layerTitle->setAttribute("zorder", "100");
     $layerTitle->setAttribute("url", "%SWFPATH%/plugins/textfield.swf");
-    $layerTitle->setAttribute("html", "全景模式   弹指可触");
+    $layerTitle->setAttribute("html", "全景模式  弹指可触");
     $layerTitle->setAttribute("css", "text-align:center; color:#F2F2F2; font-family:SimHei; font-weight:bold; font-size:14px;");
     $layerTitle->setAttribute("x", "0");
-    $layerTitle->setAttribute("y", "38.5%");
+    $layerTitle->setAttribute("y", "40%");
     $layerTitle->setAttribute("enabled", "false");
 
     //logo  title  进度条 百分比进度条  追加至外层的Container区域
@@ -910,6 +910,9 @@ function addVr($xmlFile = null)
     $vrAllScreen->setAttribute("backgroundcolor","0x000000");
     $vrAllScreen->setAttribute("backgroundalpha","0.5");
     $vrAllScreen->setAttribute("url","%SWFPATH%/plugins/textfield.swf");
+    $vrAllScreen->setAttribute("onclick","if(layer[vr_all_screen].visible,set(layer[vr_all_screen].visible, 'false'),
+           set(layer[set_alert_table].visible, 'false');set(layer[vr_all_screen].visible, 'true'););");
+
     // vr_title_master
     $vrTitleMaster = $vtourDocXml->createElement("layer");
     $vrTitleMaster->setAttribute("name","vr_title_master");
@@ -1057,7 +1060,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $layerButton->setAttribute("enabled", "true");
     $layerButton->setAttribute("align", "topcenter");
     $layerButton->setAttribute("y", "15");
-    $layerButton->setAttribute("width", "18%");
+    $layerButton->setAttribute("width", "260");
     $layerButton->setAttribute("height", "32");
     $layerButton->setAttribute("css", "text-align:center;color:#FFFFFF;font-family:Arial;font-weight:bold;font-size:14px;");
     $layerButton->setAttribute("zorder", "15");
@@ -1066,7 +1069,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     set(layer[top_shade_layer].visible,false);
         set(layer[top_back_layer].visible,true);
         remove_iframe(iframelayer);
-        set(layer[icon].url, '../../static/images/down.png');
+        set(layer[icon].url, '/pano/storage/static/images/down.png');
         set(layer[iframelayer].visible,false),
         set(layer[top_back_layer].visible,false);
         set(layer[top_shade_layer].visible,true);
@@ -1074,13 +1077,13 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
         set(layer[set_alert_table].visible,false);
         set(layer[iframelayer_new].visible,false);
         remove_iframe(iframelayer_new);
-        set(layer[icon].url, '../../static/images/up.png');
+        set(layer[icon].url, '/pano/storage/static/images/up.png');
         call_iframe(iframelayer,/pano/krpano/fr/".$paonId."););");
 
     //icon 上下标签图标
     $layerIcon = $vtourDocXml->createElement("layer");
     $layerIcon->setAttribute("name","icon");
-    $layerIcon->setAttribute("url","../../../static/images/down.png");
+    $layerIcon->setAttribute("url","/pano/storage/static/images/down.png");
     $layerIcon->setAttribute("zorder","10");
     $layerIcon->setAttribute("scale","1.3");
     $layerIcon->setAttribute("keep","true");
@@ -1119,6 +1122,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $leftIcon->setAttribute("y","15");
     $leftIcon->setAttribute("visible","false");
     $leftIcon->setAttribute("devices","touchdevice");
+    $leftIcon->setAttribute("onclick","jscall(Back())");
 
     //right_share
     $rightShare = $vtourDocXml->createElement("layer");
@@ -1133,8 +1137,9 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $rightShare->setAttribute("y","20");
     $rightShare->setAttribute("visible","false");
     $rightShare->setAttribute("devices","touchdevice");
-    $rightShare->setAttribute("onclick","if(layer[share_alert_table].visible,set(layer[share_alert_table].visible,false),
-                    set(layer[share_alert_table].visible,true);set(layer[set_alert_table].visible,false);)");
+    /*$rightShare->setAttribute("onclick","if(layer[share_alert_table].visible,set(layer[share_alert_table].visible,false),
+                    set(layer[share_alert_table].visible,true);set(layer[set_alert_table].visible,false);)");*/
+    $rightShare->setAttribute("onclick","jscall(Share())");
 
 
     //right_set_pc

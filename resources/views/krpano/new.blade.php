@@ -63,13 +63,19 @@
         var CityID = "{{$CityID}}";
         var title = "{{$title}}";
         var thumb = "{{$thumb}}";
-        var vrUri =  window.location.href;
+        var vrUri = window.location.href;
 
         var agentID = "{{$agentID}}";
         var agentName = "{{$agentName}}";
         var agentPhone = "{{$agentPhone}}";
+        var houseID = "{{$houseID}}";
+        var houseType = getQueryVariable("ht");
 
-
+        if (houseType ==2){
+            var PhonePosition = 74;
+        }else if (houseType ==3){
+            var PhonePosition = 75;
+        }
 
         if (sourceType == null) {
             var u = navigator.userAgent;
@@ -83,14 +89,65 @@
             }
         }
 
+        //在线咨询经纪人
         function LineConsult() {
-            document.location = "js://lineconsult?AgentSysCode="+agentCode+"&AgentName="+agentName+"&Mobile="+ agentPhone +"&AgentID="+agentID;
-            window.webkit.messageHandlers.lineconsult.postMessage({ 'AgentSysCode': agentCode, 'AgentName': agentName, 'Mobile':agentPhone, 'AgentID':agentID});
+            document.location = "js://lineconsult?AgentSysCode=" + agentCode + "&AgentName=" + agentName + "&Mobile=" + agentPhone + "&AgentID=" + agentID;
+            window.webkit.messageHandlers.lineconsult.postMessage({
+                'AgentSysCode': agentCode,
+                'AgentName': agentName,
+                'Mobile': agentPhone,
+                'AgentID': agentID
+            });
         }
 
-        //test
-        function alal() {
-            alert("alalalalalalalalalalalalalalalalalal");
+        //电话联系经纪人
+        function Mobile() {
+            ClickTel();         //记录埋点
+            document.location = "js://mobile?Mobile=" + agentPhone;
+            window.webkit.messageHandlers.mobile.postMessage({Mobile: agentPhone});
+        }
+
+
+        function Share_vr() {
+            document.location = "js://shareVR";
+            window.webkit.messageHandlers.shareVR.postMessage({});
+        }
+
+        function Back() {
+            document.location = "js://back";
+            window.webkit.messageHandlers.back.postMessage({});
+        }
+
+        var height = ""
+        function AdjustTopSpace () {
+            //document.location = "js://back";
+            window.webkit.messageHandlers.AdjustTopSpace.postMessage({Height:height});
+        }
+
+        //埋点
+        function ClickTel() {
+            var url = "http://flume.t.jjw.com/api/Shunt/Index";
+            var data = {
+                Data: '{"AgentID":' + agentID + ',"AgentMobile":"' + agentPhone + '","HouseID":' + houseID + ',"PhonePosition":' + PhonePosition + ',"HouseSysCode":"' + houseCode + '"}',
+                DataType: 3
+            };
+            setTimeout(function () {
+                $.ajax({
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    type: "POST",
+                    dataType: 'json',
+                    async: true,
+                    url: url + "?r=" + new Date().getTime(),
+                    data: data,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function (e) {
+                        return;
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        return;
+                    }
+            }, 10);
         }
 
 
@@ -102,7 +159,7 @@
 
         //分享描述文本
         function shareDescriptions() {
-            return "沙发上，地铁上，随时随地，VR实景看房.";
+            return "看房不出门，一触即到!";
         }
 
         //分享标题图片
@@ -128,15 +185,10 @@
             return (false);
         }
 
-
-        function f() {
-
-        }
-
         var krpano = null;
         var sign = null;
 
-        ///var xmlPath = "{{asset('storage/panos/').'/'.$gid }}/vtour/tour.xml";
+
         var xmlPath = "{{asset('storage/panos/').'/'.$gid }}/vtour/tour_pro.xml";
 
         $(function () {
@@ -175,7 +227,6 @@
                     }
                 }
             });
-
         })
 
 

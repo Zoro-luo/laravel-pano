@@ -18,15 +18,15 @@ function d($data)
  */
 function clearDir($path = null)
 {
-    if(is_dir($path)){
+    if (is_dir($path)) {
         $p = scandir($path);
-        foreach($p as $val){
-            if($val !="." && $val !=".."){
-                if(is_dir($path.$val)){         //如果是目录则递归子目录，继续操作
-                    clearDir($path.$val.'/');      //子目录中操作删除文件夹和文件
-                    @rmdir($path.$val.'/');     //目录清空后删除空文件夹
-                }else{
-                    unlink($path.$val);         //文件则直接删除
+        foreach ($p as $val) {
+            if ($val != "." && $val != "..") {
+                if (is_dir($path . $val)) {         //如果是目录则递归子目录，继续操作
+                    clearDir($path . $val . '/');      //子目录中操作删除文件夹和文件
+                    @rmdir($path . $val . '/');     //目录清空后删除空文件夹
+                } else {
+                    unlink($path . $val);         //文件则直接删除
                 }
             }
         }
@@ -74,40 +74,39 @@ function keepArrKey($arr1, $arr2, $key = '')
  * @param $temp
  * @return array|false
  */
-function numAbc($arr,$temp){
+function numAbc($arr, $temp)
+{
     //$temp = array("A","B","C","D","E","G","H","I");
-    $diff = count($temp)-count($arr);
-    if ($diff >= 0){
-        $newTemp = array_slice($temp,0,count($arr));
-        $newArr = array_combine($newTemp,$arr);
+    $diff = count($temp) - count($arr);
+    if ($diff >= 0) {
+        $newTemp = array_slice($temp, 0, count($arr));
+        $newArr = array_combine($newTemp, $arr);
         return $newArr;
     }
 
 }
 
 
-function houseApi($propertyCode,$CityID,$VrUrl,$VRTitleUrl,$PlatForm){
-
-    //$url = "http://192.168.1.79:51314/SProperty/HouseApi/PropertyExploration/VRPropertyExplorationCallback";
+function houseApi($propertyCode, $CityID, $VrUrl, $VRTitleUrl, $PlatForm)
+{
     $url = "http://wf.t.jjw.com:8889/Api/PropertyExploration/VRPropertyExplorationCallback";
     //请求头
     //$headers[]  =  "Content-Type:application/x-www-form-urlencoded";
-    $headers[]  =  "Content-Type:application/json";
-    $headers[]  =  "ERPSignSecret:E10ADC3949BA59ABBE56E057F20F883E";
-    $headers[]  =  "ERPVersion: JJW";
-    $headers[]  =  "PlatForm:1";
-    $headers[]  =  "Client-Mac:Accept-Encoding:gzip";
-    //$headers[]  =  "Cookie:ERP=AF5071EE81E387E47076D8E693C2FFB465A70730B1D453CA3C74B5A29AB68ED94B84C3566B0ED1DFBCFE5CE8435348C16B4CD77B1D88D606973A21DBA8242A1D478D3E8A91A900E8CC120D6EEA671E79C0759FA911165D5FB5B65DA0958BC2AC4C98B94A570EAE095331898B764848050BF24B5741160FE6CC1BFED3335C2A244ABC4398811F6379B74ABCC0C1B834E49F2F1743728116991626A50EA777FC0762B9920D50ACEE672B62C401101EB499C222107846A7D8EBC9467BF656059924; ERPUSERINFO=b2a7e1d225ce705d2ab4ce058e0f138cae98c2894dad7a3586399c6fa5e91b05101359132d0b165f43f5f8ca19ecd41943ecf3605ae943e839f4ee77ba284fe3e2bc03fa70633739edc7f94a68bf646b682673db642fd82ce27e7b9c035d6f5071e575af6457178074c45391f36abb86208ae8668db7b105a29f17f5049c0b443963151388710fc34885b2302bab8a595c1cff7e945d17c5761c4fb32089e1880bc54ed09e4d40696ff1a5e208920717a952d3626169d520b393a0b441511591fb384f5529db34414d6738996e5731537bfe193d475c700b940739b6667687308928fc1fefefc774c0656e6cb3040237ee84be9f130a5d183b9063320f7997cc71099d8fc6f157fafbe8ba8bcc2262b5e2ac75d1d707bf5bd680394955436f423d702197841bd538f701968d8f044458247fac7aecf5724a407a97dcefaf067535ee0b3db69f2b7ff490b6ffae9b38fdcf32a29b15062f3b92d963770fa557532a882661fbb7569b1107bf59eea338541447cd2d5707a10366b31809d2d9c28c36a2d51ff2bf563ea1440b180ae1e5c138a179012241251fdff5fb63f22feea30c199c57fbadccd5eb25fa2469a25b15";
-    $headers[]  =  "Cookie:ERP-Test=BD429CD317369A5C0F1D8B8730E5491BAA198F75E061BDC0D13045F823BB98B7069D55546F5ED99ED5E725F80F6821300008AB8EC7F01D81F592665FB0B8402957A352CA400DA30F2EC6695344496AD9E9458E66F7FC018F5498A7D23FEC2E3C2FAFFE694A235AF30A2194E816B56CB50E953FEC7882EDE8B7638278C0CFE721347C477BC8743E829FB92DE30DB84714C0D2AE32E12A064E74BD4C23BD8BA879DC29C4A38E5214BB891AF26E28AB55B44036F42DEA286212091E2FF8B31E33BC";
+    $headers[] = "Content-Type:application/json";
+    $headers[] = "ERPSignSecret:E10ADC3949BA59ABBE56E057F20F883E";
+    $headers[] = "ERPVersion: JJW";
+    $headers[] = "PlatForm:1";
+    $headers[] = "Client-Mac:Accept-Encoding:gzip";
+    $headers[] = "Cookie:ERP-Test=BD429CD317369A5C0F1D8B8730E5491BAA198F75E061BDC0D13045F823BB98B7069D55546F5ED99ED5E725F80F6821300008AB8EC7F01D81F592665FB0B8402957A352CA400DA30F2EC6695344496AD9E9458E66F7FC018F5498A7D23FEC2E3C2FAFFE694A235AF30A2194E816B56CB50E953FEC7882EDE8B7638278C0CFE721347C477BC8743E829FB92DE30DB84714C0D2AE32E12A064E74BD4C23BD8BA879DC29C4A38E5214BB891AF26E28AB55B44036F42DEA286212091E2FF8B31E33BC";
 
     //初始化
     $curl = curl_init();
     //设置抓取的url
     curl_setopt($curl, CURLOPT_URL, $url);
     //设置头文件的信息作为数据流输出
-    curl_setopt($curl, CURLOPT_HEADER,0);
+    curl_setopt($curl, CURLOPT_HEADER, 0);
     //设置请求头
-    curl_setopt($curl, CURLOPT_HTTPHEADER,$headers);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     //设置获取的信息以文件流的形式返回，而不是直接输出。
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     //设置post方式提交
@@ -117,9 +116,9 @@ function houseApi($propertyCode,$CityID,$VrUrl,$VRTitleUrl,$PlatForm){
     $post_data = array(
         "CityID" => $CityID,
         'PropertyCode' => $propertyCode,
-        'VrUrl'=>$VrUrl,
-        'VRTitleUrl' =>$VRTitleUrl,
-        'PlatForm'=>$PlatForm,
+        'VrUrl' => $VrUrl,
+        'VRTitleUrl' => $VRTitleUrl,
+        'PlatForm' => $PlatForm,
     );
     $post_data = json_encode($post_data);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
@@ -128,22 +127,66 @@ function houseApi($propertyCode,$CityID,$VrUrl,$VRTitleUrl,$PlatForm){
     //关闭URL请求
     curl_close($curl);
     //显示获得的数据
-
     print_r($data);
 }
 
 //tour.xml 里的Title
-function editTourTitle($gid,$title){
+function editTourTitle($gid, $title)
+{
+    /*    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+        $tourXmlStr = file_get_contents($tourXml);
+        $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
+        $button_title = $tourXmlObj->layer[16];
+        $button_title["html"] = $title;
+        file_put_contents($tourXml, $tourXmlObj->asXML());*/
+}
+
+//vtourskin.xml 更改plugin name="WebVR"  的设置
+function editVskinWebVR($gid)
+{
+    $vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin.xml";
+    $vtourskinStr = file_get_contents($vtourskinXml);
+    $vtourskinObj = new \SimpleXMLElement($vtourskinStr);
+
+
+    $pluginDOC = $vtourskinObj->plugin[0];
+    $pluginDOC['multireslock.mobile.or.tablet'] = "true";
+    $pluginDOC['mobilevr_screensize'] = "auto";
+    $pluginDOC['devices'] = "all";
+    $pluginDOC['mobilevr_wakelock'] = "false";
+    $pluginDOC['mobilevr_fake_support'] = "true";
+    file_put_contents($vtourskinXml, $vtourskinObj->asXML());
+}
+
+//u+app
+function editTourShare($gid, $flag)
+{
     $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
     $tourXmlStr = file_get_contents($tourXml);
     $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
-    $button_title = $tourXmlObj->layer[16];
-    $button_title["html"] = $title;
+    $left_icon = $tourXmlObj->layer[5];
+    $right_share = $tourXmlObj->layer[6];
+    if ($flag) {
+        $left_icon["visible"] = "true";
+        $left_icon["y"]= "5%";
+        $left_icon["onclick"] = "jscall(Back())";
+        $right_share["visible"] = "true";
+        $right_share["y"] = "5%";
+        $right_share["onclick"] = "jscall(Share_vr())";
+    } else {
+        $left_icon["visible"] = "false";
+        $left_icon["y"]= "15";
+        $left_icon["onclick"] = "jscall(Back())";
+        $right_share["visible"] = "false";
+        $right_share["y"] = "20";
+        $right_share["onclick"] = "";
+    }
     file_put_contents($tourXml, $tourXmlObj->asXML());
 }
 
 //更改vtourskin.xml 里的ImageUrl 和Mobile
-function editVskinImageurlMobile ($gid ,$userUrl,$phoneHtml,$flag){
+function editVskinImageurlMobile($gid, $userUrl, $phoneHtml, $flag)
+{
     $vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin.xml";
     $vtourskinStr = file_get_contents($vtourskinXml);
     $vtourskinObj = new \SimpleXMLElement($vtourskinStr);
@@ -151,7 +194,7 @@ function editVskinImageurlMobile ($gid ,$userUrl,$phoneHtml,$flag){
     $father_control_bar_pc = $vtourskinObj->layer[2]->layer[0]->layer[0]->layer[3];
     $user_icon_pc = $father_control_bar_pc->layer[2]->layer[0]->layer[0];
     $user_icon_pc["url"] = $userUrl;
-    $phone_value_pc =  $father_control_bar_pc->layer[2]->layer[1];
+    $phone_value_pc = $father_control_bar_pc->layer[2]->layer[1];
     $phone_value_pc["html"] = $phoneHtml;
     //更改移动端经纪人图形
     $father_control_bar = $vtourskinObj->layer[2]->layer[0]->layer[0]->layer[4];
@@ -159,19 +202,98 @@ function editVskinImageurlMobile ($gid ,$userUrl,$phoneHtml,$flag){
     $skin_user["url"] = $userUrl;
     $skin_talk = $father_control_bar->layer[2];
     $skin_phone = $father_control_bar->layer[3];
-    //如果维护人为空 则隐藏再线聊
-    if ($flag == false){
+    //没有维护人时候 只显示打电话
+    if ($flag == false) {
         $skin_talk["visible"] = "false";
         $skin_talk["onclick"] = "";
-        $skin_phone["onclick"] = "openurl('tel:".$phoneHtml."')";
-    }else{
+        //$skin_phone["onclick"] = "openurl('tel:".$phoneHtml."')";
+        $skin_phone["onclick"] = "jscall(Mobile())";
+        $skin_phone["x"] = "10%";
+    } else {
         $skin_talk["visible"] = "true";
         $skin_talk["onclick"] = "jscall(LineConsult())";
-        $skin_phone["onclick"] = "openurl('tel:".$phoneHtml."')";
+        //$skin_phone["onclick"] = "openurl('tel:".$phoneHtml."')";
+        $skin_phone["onclick"] = "jscall(Mobile())";
+        $skin_phone["x"] = "48%";
     }
 
     file_put_contents($vtourskinXml, $vtourskinObj->asXML());
 }
+
+//调整APP端VR导航的高度位置
+function editTourBar($gid,$flag){
+    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    $tourXmlStr = file_get_contents($tourXml);
+    $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
+    $top_back_layer = $tourXmlObj->layer[4];
+    $top_shade_layer = $tourXmlObj->layer[7];
+    $button_3 = $tourXmlObj->layer[16];
+
+
+    if ($flag){
+        $top_back_layer["y"] = "3%";
+        $top_shade_layer["y"] = "3.3%";
+        $button_3["y"] = "4.8%";
+    }else{
+        $top_back_layer["y"] = "1";
+        $top_shade_layer["y"] = "5";
+        $button_3["y"] = "15";
+    }
+    file_put_contents($tourXml, $tourXmlObj->asXML());
+
+}
+
+//判断是否是手机端
+function isMobile()
+{
+    // 如果有HTTP_X_WAP_PROFILE则一定是移动设备
+    if (isset($_SERVER['HTTP_X_WAP_PROFILE'])) {
+        return true;
+    }
+    // 如果via信息含有wap则一定是移动设备,部分服务商会屏蔽该信息
+    if (isset($_SERVER['HTTP_VIA'])) {
+        // 找不到为flase,否则为true
+        return stristr($_SERVER['HTTP_VIA'], "wap") ? true : false;
+    }
+    // 脑残法，判断手机发送的客户端标志,兼容性有待提高。其中'MicroMessenger'是电脑微信
+    if (isset($_SERVER['HTTP_USER_AGENT'])) {
+        $clientkeywords = array('nokia', 'sony', 'ericsson', 'mot', 'samsung', 'htc', 'sgh', 'lg', 'sharp', 'sie-', 'philips', 'panasonic', 'alcatel', 'lenovo', 'iphone', 'ipod', 'blackberry', 'meizu', 'android', 'netfront', 'symbian', 'ucweb', 'windowsce', 'palm', 'operamini', 'operamobi', 'openwave', 'nexusone', 'cldc', 'midp', 'wap', 'mobile', 'MicroMessenger');
+        // 从HTTP_USER_AGENT中查找手机浏览器的关键字
+        if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT']))) {
+            return true;
+        }
+    }
+    // 协议法，因为有可能不准确，放到最后判断
+    if (isset ($_SERVER['HTTP_ACCEPT'])) {
+        // 如果只支持wml并且不支持html那一定是移动设备
+        // 如果支持wml和html但是wml在html之前则是移动设备
+        if ((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false || (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html')))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+/**
+ * 将字符串参数变为数组
+ * @param $query
+ * @return array
+ */
+function convertUrlQuery($query)
+{
+    $queryParts = explode('&', $query);
+    $params = array();
+    foreach ($queryParts as $param) {
+        $item = explode('=', $param);
+        $params[$item[0]] = $item[1];
+    }
+    return $params;
+}
+
+
+
 
 
 

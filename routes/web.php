@@ -31,7 +31,6 @@ Route::group(['middleware' => ['auth.member']], function () {
 
 });
 
-
 //////// 多图片表单上传
 Route::get('krpano/indexs', 'Krpano\\UploadController@indexs');                     //多图片 上传全景图表单
 Route::post('krpano/uploads', 'Krpano\\UploadController@panos');                     //多图片 上传全景api
@@ -79,25 +78,32 @@ Route::post('/vr/make', 'Krpano\\UploadController@makeHouseApi');
 
 //经纪人信息
 Route::get('/krpano/vr/{panoId}', function ($panoId){
-    $agentInfo = Cache::get("agentInfo"."_".$panoId,"NULL");
+    $agentInfo = Cache::get("agentInfo"."_".$panoId,"");
     return view('krpano.vr',['agentInfo'=>$agentInfo]);
 });
 
 //扫码拨号
 Route::get('krpano/code/{panoId}', function ($panoId){
-    $chatCode = Cache::get("chatCode"."_".$panoId,"NULL");
+    $chatCode = Cache::get("chatCode"."_".$panoId,"");
     return view('krpano.code',['chatCode'=>$chatCode]);
 });
 
 //扫码分享
 Route::get('krpano/share/{panoId}', function ($panoId){
-    $agentInfo = Cache::get("agentInfo"."_".$panoId,"NULL");
-    return view('krpano.sweepShare',['agentInfo'=>$agentInfo]);
+
+    $sweepShare = DB::select('select panoUrl from panos  where gid=?', [$panoId]);
+    $panoUrl = $sweepShare[0]->panoUrl;
+
+    $uriQuery = parse_url($panoUrl, PHP_URL_QUERY);
+    $arrQuery = convertUrlQuery($uriQuery);     //将地址参数字符串变为数组
+    $arrQuery = json_encode($arrQuery);
+
+    return view('krpano.sweepShare',['panoUrl'=>$panoUrl,"arrQuery"=>$arrQuery]);
 });
 
 //维护人头像
 Route::get('krpano/agent/{panoId}', function ($panoId){
-    $agentInfo = Cache::get("agentInfo"."_".$panoId,"NULL");
+    $agentInfo = Cache::get("agentInfo"."_".$panoId,"");
     return view('krpano.agent',['agentInfo'=>$agentInfo]);
 });
 

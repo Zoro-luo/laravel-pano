@@ -14,6 +14,7 @@
         <style>
             .back_img{
                 color: #fff; text-align: center; font-size: 14px;
+                padding-top: 25px;
             }
             .back_img p{
                 margin: 11px 0;
@@ -23,13 +24,13 @@
             }
         </style>
 
-       {{-- <script type="text/javascript">
+        {{--<script type="text/javascript">
             jQuery(function(){
                 jQuery('#qrcode').qrcode({
                     render: "canvas",
                     width: 140,
                     height: 140,
-                    text: "{{ $agentInfo=="NULL" ? "NULL" : $agentInfo->Mobile }}"
+                    text: "{{$chatCode}}"
                 });
             })
         </script>--}}
@@ -37,7 +38,6 @@
     <body>
         <div class="back_img">
             <img src="{{$chatCode}}" width="140px" height="140px">
-            <div id="qrcode"></div>
             <p>微信扫码拨号</p>
         </div>
     </body>

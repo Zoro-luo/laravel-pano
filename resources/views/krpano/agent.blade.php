@@ -19,7 +19,7 @@
     </style>
 </head>
 <body>
-<img src="{{$agentInfo =="NULL" ? "NULL" : $agentInfo->ImageUrl}}" alt="" />
+<img src="{{$agentInfo =="" ? "" : $agentInfo->ImageUrl}}" alt="" />
 </body>
 
 
