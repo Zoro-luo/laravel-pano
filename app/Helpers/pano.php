@@ -81,6 +81,7 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $skin_scroll_layer['width'] = 'get:skin_settings.layout_maxwidth';
     $skin_scroll_layer['y_offset'] = '0';
 
+
     //VR 移动端退出交互
     $pluginDOC = $vtourXmlObj->plugin[0];
     $pluginDOC['onexitvr'] = "webvr_onexitvr(); skin_webvr_setup(); skin_reloadscene_webvr();set(layer[vr_all_screen].visible, 'false');";

@@ -107,7 +107,6 @@
             window.webkit.messageHandlers.mobile.postMessage({Mobile: agentPhone});
         }
 
-
         function Share_vr() {
             document.location = "js://shareVR";
             window.webkit.messageHandlers.shareVR.postMessage({});

@@ -32,7 +32,7 @@ class UploadController extends Controller
 
         //vtourskin.xml 更改plugin name="WebVR"  的设置
         editVskinWebVR($gid);
-        
+
         if ($houseType == ""){
             $houseType = 2;
         }
@@ -43,7 +43,6 @@ class UploadController extends Controller
         } else {
             editTourShare($gid, false);
             editTourBar($gid,false);
-
             $isPhone = isMobile();
             if ($isPhone) {
                 $sourceType = 1;

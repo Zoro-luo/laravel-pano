@@ -53,6 +53,7 @@
             return o
         }
 
+
         jQuery(function () {
             var panoUrl = "{{$panoUrl}}";
             var jsonUrl = parseQuery(panoUrl);

@@ -101,6 +101,7 @@ Route::get('krpano/share/{panoId}', function ($panoId){
     return view('krpano.sweepShare',['panoUrl'=>$panoUrl,"arrQuery"=>$arrQuery]);
 });
 
+
 //维护人头像
 Route::get('krpano/agent/{panoId}', function ($panoId){
     $agentInfo = Cache::get("agentInfo"."_".$panoId,"");

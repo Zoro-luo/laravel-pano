@@ -243,6 +243,7 @@ function editTourBar($gid,$flag){
 
 }
 
+
 //判断是否是手机端
 function isMobile()
 {
