@@ -78,16 +78,16 @@ class VrController extends Controller
     public function turnup(Request $request)
     {
         $panoId = $request->panoId;
-        $panoData = DB::select('select status from panos where pano_id=?', [$panoId]);
+        $panoData = DB::select('select status from panos where gid=?', [$panoId]);
         if ($panoData[0]->status == "2") {   //下线
-            $affected = DB::update("update panos set status= '1' where pano_id=?", [$panoId]);
+            $affected = DB::update("update panos set status= '1' where gid=?", [$panoId]);
             file_get_contents("http://120.76.210.152:8034/api/PanoRamaAPI/UpdateLine?SysCode=C025FAD876904306AAE5216982E2E8EC&state=1&time=" . time());
         } elseif ($panoData[0]->status == "1") {   //上线
-            $affected = DB::update("update panos set status= '2' where pano_id=?", [$panoId]);
+            $affected = DB::update("update panos set status= '2' where gid=?", [$panoId]);
             file_get_contents("http://120.76.210.152:8034/api/PanoRamaAPI/UpdateLine?SysCode=C025FAD876904306AAE5216982E2E8EC&state=0&time=" . time());
         }
         if ($affected) {
-            $panoData = DB::select('select * from panos where pano_id=?', [$panoId]);
+            $panoData = DB::select('select * from panos where gid=?', [$panoId]);
             return $panoData;
         }
     }
@@ -121,7 +121,7 @@ class VrController extends Controller
             }
             file_put_contents($xmlPreFile, $tourXmlObj->asXML());
         }
-        $panoData = DB::select('select status from panos where pano_id=?', [$panoId]);
+        $panoData = DB::select('select status from panos where gid=?', [$panoId]);
         if ($panoData[0]->status == "1") {   //已上线
             return "online";
         } else {

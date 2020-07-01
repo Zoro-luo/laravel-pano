@@ -133,7 +133,7 @@
                                 <div>{{$pano->id}}</div>
                             </div>
                             <div class="table-text table-text2">
-                                <div>VR{{$pano->pano_id}}</div>
+                                <div>VR{{$pano->gid}}</div>
                             </div>
 
                             <div class="table-text table-text2">
@@ -170,17 +170,17 @@
                             <div class="table-text table-text10">
 
                                 @if($count > 0)
-                                    <a class="text-btn" href="{{url('vr/edit/'.$pano->pano_id)}}"
+                                    <a class="text-btn" href="{{url('vr/edit/'.$pano->gid)}}"
                                        target="_blank">编辑模型</a>
                                 @else
                                     <a class="text-btn" target="_blank">编辑模型</a>
                                 @endif
 
                                 <span class="vertical-line">|</span>
-                                <div class="text-btn" onclick="listPreview({{$pano->pano_id}})">预览</div>
+                                <div class="text-btn" onclick="listPreview({{$pano->gid}})">预览</div>
                                 <span class="vertical-line">|</span>
                                 <div class="text-btn  error-btn"
-                                     onclick="turnup({{$pano->pano_id}})">{{$pano->status == "2" ? "上线" : "下线"}}</div>
+                                     onclick="turnup({{$pano->gid}})">{{$pano->status == "2" ? "上线" : "下线"}}</div>
                             </div>
                         </div>
                     @endforeach
@@ -245,7 +245,6 @@
                 window.open("{{url('vr/online')}}" + "/" + panoId);
             }
         })
-
     }
 
     //点击预览另打开预览窗口页
@@ -269,6 +268,7 @@
     //上下线操作
     function turnup(paonId) {
         var panoId = paonId;
+
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             url: "{{url('vr/turnup')}}",
@@ -277,18 +277,19 @@
             success: function (e) {
                 var panoStr = `<div class="table-item index-${e[0]['pano_id']}">
                             <div class="table-text table-text1"><div>${e[0]['id']}</div></div>
-                            <div class="table-text table-text2"><div>VR${e[0]['pano_id']}</div></div>
+                            <div class="table-text table-text2"><div>VR${e[0]['gid']}</div></div>
+                            <div class="table-text table-text2"><div> ${e[0]['check_at'] == "1" ? "未检查" : "合规"} </div></div>
                             <div class="table-text table-text3"><div>${e[0]['house_name']}</div></div>
-                            <div class="table-text table-text4"><div>${e[0]['house_name']}-${e[0]['house_type']}随时看房</div></div>
-                            <div class="table-text table-text5"><div>${e[0]['pano_id']}</div></div>
+                            <div class="table-text table-text4"><div>${e[0]['title']}</div></div>
+                            <div class="table-text table-text5"><div>${e[0]['houseNum']}</div></div>
                             <div class="table-text table-text6"><div>${e[0]['storeName']}</div></div>
                             <div class="table-text table-text7"><div>${e[0]['agentName']}</div></div>
                             <div class="table-text table-text8"><div>${e[0]['updated_at']}</div></div>
                             <div class="table-text table-text9"><div class="">${e[0]['status'] == "1" ? "已上线" : "未上线"}</div></div>
                             <div class="table-text table-text10">
-                            <a class="text-btn" href="javascript:;" onclick="listUpdate('${e[0]['pano_id']}')" target="_blank">编辑模型</a>
-                            <span class="vertical-line">|</span><div class="text-btn" onclick="listPreview('${e[0]['pano_id']}')" >预览</div>
-                                <span class="vertical-line">|</span><div class="text-btn  error-btn" onclick="turnup('${e[0]['pano_id']}')" >${e[0]['status'] == "2" ? "上线" : "下线"}</div>
+                            <a class="text-btn" href="javascript:;" onclick="listUpdate('${e[0]['gid']}')" target="_blank">编辑模型</a>
+                            <span class="vertical-line">|</span><div class="text-btn" onclick="listPreview('${e[0]['gid']}')" >预览</div>
+                                <span class="vertical-line">|</span><div class="text-btn  error-btn" onclick="turnup('${e[0]['gid']}')" >${e[0]['status'] == "2" ? "上线" : "下线"}</div>
                             </div></div>`;
 
                 $(".index-" + e[0]['pano_id'] + "").html("").replaceWith(panoStr);
