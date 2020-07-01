@@ -118,11 +118,11 @@
             window.webkit.messageHandlers.back.postMessage({});
         }
 
-        var height = ""
+        /*var height = ""
         function AdjustTopSpace () {
             //document.location = "js://back";
             window.webkit.messageHandlers.AdjustTopSpace.postMessage({Height:height});
-        }
+        }*/
 
         //埋点
         function ClickTel() {
