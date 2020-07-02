@@ -146,6 +146,7 @@
                     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                         return;
                     }
+                });
             }, 10);
         }
 
