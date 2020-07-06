@@ -51,6 +51,12 @@ class UploadController extends Controller
             }
         }
 
+        if ($sourceType == 0){
+            editTourStart($gid,"pc");       //全景加载页进度条PC 和 移动端
+        }else{
+            editTourStart($gid,"wap");
+        }
+
         if ($houseCode == "{0}" && $agentCode == "{1}" && $CityID == "{2}") {
             $title = "";
             $thumb = "";
@@ -98,7 +104,7 @@ class UploadController extends Controller
             $title = $houseData->Data->Title;
             $title = mb_substr($title, 0, 15, 'utf-8') . "...";
 
-            editTourTitle($gid, $title);
+            //editTourTitle($gid, $title);
             Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
             $charTitle = "全景看房 | " . $houseData->Data->BuildingName . " " . $houseData->Data->CountF . "室" . $houseData->Data->CountT . "厅";
             $houseID = $houseData->Data->ID;                    //房源自增长ID
@@ -109,7 +115,7 @@ class UploadController extends Controller
         } else {
             $title = "";
             Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
-            editTourTitle($gid, $title);
+            //editTourTitle($gid, $title);
             $charTitle = "";
             $houseID = "";
             $houseNum = "";
@@ -248,7 +254,7 @@ class UploadController extends Controller
             $agentCode = $request->get("agentCode");        //经纪人ID
 
             $gid = $request->get("gid");
-            $gid = "4444";
+            $gid = "888888";
 
             //临时默认值
             /*$houseCode = "1912111727175A792253BBA34D0A8A47";
@@ -276,10 +282,6 @@ class UploadController extends Controller
             $pano->houseCode = $houseCode;
             $pano->agentCode = $agentCode;
 
-            //$pano->storeName = $storeName;
-            //$pano->agentName = $agentName;
-            //$pano->cityName = $cityName;
-            //$pano->title = $title;
             $pano->houseNum = $houseNum;
             $pano->house_name = $houseName;
             $pano->house_used = $houseUsed;
@@ -337,9 +339,6 @@ class UploadController extends Controller
                         $r['houseCode'] = $houseCode;
                         $r['agentCode'] = $agentCode;
 
-                        //$r['title'] = $title;
-                        //$r['agentImgUrl'] = $agentImgUrl;
-                        //$r['agentPhone'] = $agentPhone;
                         $r['house_name'] = $houseName;
                         $r['house_type'] = $houseType;
                         $r['imgRealDir'] = $res->getPath();

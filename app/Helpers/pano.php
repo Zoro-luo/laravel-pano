@@ -418,45 +418,47 @@ function startpic($xmlFile = null)
     //container背景
     $layerContainer = $vtourDocXml->createElement("layer");
     $layerContainer->setAttribute("name", "startpic_container");
-    $layerContainer->setAttribute("preload", "false");
+    $layerContainer->setAttribute("preload", "true");
     $layerContainer->setAttribute("alpha", "1");
     $layerContainer->setAttribute("children", "true");
     $layerContainer->setAttribute("visible", "true");
+    $layerContainer->setAttribute("devices", "html5+!touchdevice");
     $layerContainer->setAttribute("zorder", "90");
-    $layerContainer->setAttribute("url", "/pano/storage/static/images/backgroundd.png");
+    $layerContainer->setAttribute("type", "container");
+    $layerContainer->setAttribute("bgcolor", "0x00020202");
     $layerContainer->setAttribute("maskchildren", "true");
+    $layerContainer->setAttribute("bgcolor", "0x00020202");
     $layerContainer->setAttribute("keep", "true");
     $layerContainer->setAttribute("width", "100%");
     $layerContainer->setAttribute("height", "100%");
-    $layerContainer->setAttribute("bgalpha", "5");
+    $layerContainer->setAttribute("bgalpha", "1");
 
     //loading_back_icon
-    $layerLoadingBack = $vtourDocXml->createElement("layer");
-    $layerLoadingBack->setAttribute("name","loading_back");
-    $layerLoadingBack->setAttribute("type","container");
-    $layerLoadingBack->setAttribute("url","%SWFPATH%/plugins/textfield.swf");
-    $layerLoadingBack->setAttribute("keep","true");
-    $layerLoadingBack->setAttribute("devices","touchdevice");
-    $layerLoadingBack->setAttribute("width","25");
-    $layerLoadingBack->setAttribute("height","25");
-    $layerLoadingBack->setAttribute("background","false");
-    $layerLoadingBack->setAttribute("align","lefttop");
-    $layerLoadingBack->setAttribute("x","5%");
-    $layerLoadingBack->setAttribute("y","5%");
-    //追加至外层的Container区域
-    $layerContainer->appendChild($layerLoadingBack);
+//    $layerLoadingBack = $vtourDocXml->createElement("layer");
+//    $layerLoadingBack->setAttribute("name","loading_back");
+//    $layerLoadingBack->setAttribute("type","container");
+//    $layerLoadingBack->setAttribute("url","%SWFPATH%/plugins/textfield.swf");
+//    $layerLoadingBack->setAttribute("keep","true");
+//    $layerLoadingBack->setAttribute("devices","touchdevice");
+//    $layerLoadingBack->setAttribute("width","25");
+//    $layerLoadingBack->setAttribute("height","25");
+//    $layerLoadingBack->setAttribute("background","false");
+//    $layerLoadingBack->setAttribute("align","lefttop");
+//    $layerLoadingBack->setAttribute("x","5%");
+//    $layerLoadingBack->setAttribute("y","5%");
+//    $layerContainer->appendChild($layerLoadingBack);        //追加至外层的Container区域
     //退出icon
-    $loadingBackIcon = $vtourDocXml->createElement("layer");
-    $loadingBackIcon->setAttribute("name","loading_back_icon");
-    $loadingBackIcon->setAttribute("url","../../../static/images/loading-left.png");
-    $loadingBackIcon->setAttribute("scale","0.22");
-    $loadingBackIcon->setAttribute("zorder","12");
-    $loadingBackIcon->setAttribute("style","skin_base|skin_glow");
-    $loadingBackIcon->setAttribute("keep","true");
-    $loadingBackIcon->setAttribute("visible","false");
-    $loadingBackIcon->setAttribute("onclick","");
-    //追加至loading_back_icon
-    $layerLoadingBack->appendChild($loadingBackIcon);
+//    $loadingBackIcon = $vtourDocXml->createElement("layer");
+//    $loadingBackIcon->setAttribute("name","loading_back_icon");
+//    $loadingBackIcon->setAttribute("url","../../../static/images/loading-left.png");
+//    $loadingBackIcon->setAttribute("scale","0.22");
+//    $loadingBackIcon->setAttribute("zorder","12");
+//    $loadingBackIcon->setAttribute("style","skin_base|skin_glow");
+//    $loadingBackIcon->setAttribute("keep","true");
+//    $loadingBackIcon->setAttribute("visible","false");
+//    $loadingBackIcon->setAttribute("onclick","");
+//    //追加至loading_back_icon
+//    $layerLoadingBack->appendChild($loadingBackIcon);
 
     //Logo
     $layerLogo = $vtourDocXml->createElement("layer");
@@ -464,14 +466,14 @@ function startpic($xmlFile = null)
     $layerLogo->setAttribute("zorder", "100");
     $layerLogo->setAttribute("keep", "true");
     $layerLogo->setAttribute("x", "0");
-    $layerLogo->setAttribute("y", "32%");
+    $layerLogo->setAttribute("y", "150");
     $layerLogo->setAttribute("align", "top");
-    $layerLogo->setAttribute("width", "410px");
-    $layerLogo->setAttribute("height", "110px");
-    $layerLogo->setAttribute("url", "../../../static/images/logo.png");
-    $layerLogo->setAttribute("scale", "0.45");
+    $layerLogo->setAttribute("width", "360px");
+    $layerLogo->setAttribute("height", "360px");
+    $layerLogo->setAttribute("url", "/pano/storage/static/images/startup1.gif");
+    $layerLogo->setAttribute("scale", "1");
     $layerLogo->setAttribute("onloaded", "tween(alpha,1.0);tween(layer[skin_title_pr].alpha,1.0);");
-    $layerLogo->setAttribute("enabled", "false");
+    $layerLogo->setAttribute("enabled", "true");
 
 
 
@@ -482,8 +484,9 @@ function startpic($xmlFile = null)
     $layerloadingbar->setAttribute("bgcolor", '0x0068696B');
     $layerloadingbar->setAttribute("bgalpha", '0.3');
     $layerloadingbar->setAttribute("align", 'top');
-    $layerloadingbar->setAttribute("y", '46%');
-    $layerloadingbar->setAttribute("width", '40%');
+    $layerloadingbar->setAttribute("x", '-10');
+    $layerloadingbar->setAttribute("y", '540');
+    $layerloadingbar->setAttribute("width", '25%');
     $layerloadingbar->setAttribute("height", '7');
     $layerloadingbar->setAttribute("enabled", 'false');
     $layerloadingbar->setAttribute("visible", 'false');
@@ -503,7 +506,7 @@ function startpic($xmlFile = null)
     $loadingbarFill = $vtourDocXml->createElement("layer");
     $loadingbarFill->setAttribute("name", "loadingbar_fill");
     $loadingbarFill->setAttribute("type", "container");
-    $loadingbarFill->setAttribute("bgcolor", "0x0064C506");
+    $loadingbarFill->setAttribute("bgcolor", "0x00FBFBFB");
     $loadingbarFill->setAttribute("bgalpha", "0.8");
     $loadingbarFill->setAttribute("align", "lefttop");
     $loadingbarFill->setAttribute("width", "0");
@@ -518,7 +521,8 @@ function startpic($xmlFile = null)
     $layerPercent->setAttribute("name", "loadingpercent_text");
     $layerPercent->setAttribute("url", "%SWFPATH%/plugins/textfield.swf");
     $layerPercent->setAttribute("align", "top");
-    $layerPercent->setAttribute("y", "48%");
+    $layerPercent->setAttribute("x", "13%");
+    $layerPercent->setAttribute("y", "535");
     $layerPercent->setAttribute("background", "false");
     $layerPercent->setAttribute("css", "color:#FFFFFF; font-family:Arial; font-weight:bold; font-size:12px; font-style:italic;");
     $layerPercent->setAttribute("textshadow", "2");
@@ -526,25 +530,25 @@ function startpic($xmlFile = null)
 
 
     //Title
-    $layerTitle = $vtourDocXml->createElement("layer");
-    $layerTitle->setAttribute("name", "skin_title_pr");
-    $layerTitle->setAttribute("background", "false");
-    $layerTitle->setAttribute("visible", "true");
-    $layerTitle->setAttribute("keep", "true");
-    $layerTitle->setAttribute("align", "top");
-    $layerTitle->setAttribute("zorder", "100");
-    $layerTitle->setAttribute("url", "%SWFPATH%/plugins/textfield.swf");
-    $layerTitle->setAttribute("html", "全景模式  弹指可触");
-    $layerTitle->setAttribute("css", "text-align:center; color:#F2F2F2; font-family:SimHei; font-weight:bold; font-size:14px;");
-    $layerTitle->setAttribute("x", "0");
-    $layerTitle->setAttribute("y", "40%");
-    $layerTitle->setAttribute("enabled", "false");
+//    $layerTitle = $vtourDocXml->createElement("layer");
+//    $layerTitle->setAttribute("name", "skin_title_pr");
+//    $layerTitle->setAttribute("background", "false");
+//    $layerTitle->setAttribute("visible", "true");
+//    $layerTitle->setAttribute("keep", "true");
+//    $layerTitle->setAttribute("align", "top");
+//    $layerTitle->setAttribute("zorder", "100");
+//    $layerTitle->setAttribute("url", "%SWFPATH%/plugins/textfield.swf");
+//    $layerTitle->setAttribute("html", "全景模式  弹指可触");
+//    $layerTitle->setAttribute("css", "text-align:center; color:#F2F2F2; font-family:SimHei; font-weight:bold; font-size:14px;");
+//    $layerTitle->setAttribute("x", "0");
+//    $layerTitle->setAttribute("y", "40%");
+//    $layerTitle->setAttribute("enabled", "false");
 
     //logo  title  进度条 百分比进度条  追加至外层的Container区域
     $layerContainer->appendChild($layerLogo);
     $layerContainer->appendChild($layerloadingbar);
     $layerContainer->appendChild($layerPercent);
-    $layerContainer->appendChild($layerTitle);
+//    $layerContainer->appendChild($layerTitle);
 
 
     /* events 事件区块 */
@@ -552,7 +556,7 @@ function startpic($xmlFile = null)
     $eventTag->setAttribute("name", "startlogoevents");
     $eventTag->setAttribute("keep", "true");
     $eventTag->setAttribute("onxmlcomplete", "loadingbar_startloading();");
-    $eventTag->setAttribute("onloadcomplete", "delayedcall(0.1,tween(layer[startpic_container].ox,-2500,1));delayedcall(0.5, loadingbar_stoploading() );");
+    $eventTag->setAttribute("onloadcomplete", "delayedcall(0.1,tween(layer[startpic_container].visible,false,1));  delayedcall(0.5, loadingbar_stoploading() );");
 
 
     /* 进度条start 事件区块 */
@@ -1422,7 +1426,7 @@ function changTourXml($xmlFile = null, $mb_name = null,$content,$paonId)
     /*************************
      * 更改skin_settings配置
      *************************/
-    $tourXmlObj->skin_settings['thumbs_opened'] = "false";           //是否在启动时弹出缩略图一栏
+    $tourXmlObj->skin_settings['thumbs_opened'] = "true";           //是否在启动时弹出缩略图一栏
     $tourXmlObj->skin_settings['thumbs_text'] = "true";             //是否在缩略图上显示名字
     $tourXmlObj->skin_settings['title'] = "true";                   //是否左下角显示title
     $tourXmlObj->skin_settings['loadingtext'] = "";                 //在全景图载入中时显示的文字

@@ -141,13 +141,43 @@ function editTourTitle($gid, $title)
         file_put_contents($tourXml, $tourXmlObj->asXML());*/
 }
 
+
+//全景启动页进度条PC 和 移动端
+function editTourStart($gid,$flag){
+    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    $tourXmlStr = file_get_contents($tourXml);
+    $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
+    $startpic_container = $tourXmlObj->layer[3];
+    $skin_title_logo3 = $startpic_container->layer[0];
+    $loadingbar_bg = $startpic_container->layer[1];
+    $loadingpercent_text = $startpic_container->layer[2];
+
+    if ($flag == "pc"){
+        $startpic_container["devices"] = "html5+!touchdevice";
+        $skin_title_logo3["scale"] = "1";
+        $loadingbar_bg["x"] = "-10";
+        $loadingbar_bg["y"] = "540";
+        $loadingbar_bg["width"] = "25%";
+        $loadingpercent_text["x"] = "13%";
+        $loadingpercent_text["y"] = "535";
+    }else if ($flag == "wap"){
+        $startpic_container["devices"] = "touchdevice";
+        $skin_title_logo3["scale"] = "0.6";
+        $loadingbar_bg["x"] = "-15";
+        $loadingbar_bg["y"] = "380";
+        $loadingbar_bg["width"] = "45%";
+        $loadingpercent_text["x"] = "93";
+        $loadingpercent_text["y"] = "375";
+    }
+    file_put_contents($tourXml, $tourXmlObj->asXML());
+}
+
 //vtourskin.xml 更改plugin name="WebVR"  的设置
 function editVskinWebVR($gid)
 {
     $vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin.xml";
     $vtourskinStr = file_get_contents($vtourskinXml);
     $vtourskinObj = new \SimpleXMLElement($vtourskinStr);
-
 
     $pluginDOC = $vtourskinObj->plugin[0];
     $pluginDOC['multireslock.mobile.or.tablet'] = "true";
@@ -168,10 +198,10 @@ function editTourShare($gid, $flag)
     $right_share = $tourXmlObj->layer[6];
     if ($flag) {
         $left_icon["visible"] = "true";
-        $left_icon["y"]= "5%";
+        $left_icon["y"]= "5.5%";
         $left_icon["onclick"] = "jscall(Back())";
         $right_share["visible"] = "true";
-        $right_share["y"] = "5%";
+        $right_share["y"] = "5.5%";
         $right_share["onclick"] = "jscall(Share_vr())";
     } else {
         $left_icon["visible"] = "false";
@@ -231,13 +261,15 @@ function editTourBar($gid,$flag){
 
 
     if ($flag){
-        $top_back_layer["y"] = "3%";
-        $top_shade_layer["y"] = "3.3%";
-        $button_3["y"] = "4.8%";
+        $top_back_layer["y"] = "3.5%";
+        $top_shade_layer["y"] = "3.8%";
+        $button_3["y"] = "5.3%";
+
     }else{
-        $top_back_layer["y"] = "1";
-        $top_shade_layer["y"] = "5";
-        $button_3["y"] = "15";
+        $top_back_layer["y"] = "1.5";
+        $top_shade_layer["y"] = "5.5";
+        $button_3["y"] = "15.5";
+
     }
     file_put_contents($tourXml, $tourXmlObj->asXML());
 

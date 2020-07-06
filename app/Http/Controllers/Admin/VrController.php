@@ -195,9 +195,9 @@ class VrController extends Controller
         if ($vtourLayerArr[12]["visible"] == "false") {      //显示 right_set_pc
             $vtourLayerArr[12]["visible"] = "true";
         }
-        if ($tourXmlObj->skin_settings['thumbs_opened'] == "true") {   //关闭 skin_settings['thumbs_opened']
-            $tourXmlObj->skin_settings['thumbs_opened'] = "false";
-        }
+//        if ($tourXmlObj->skin_settings['thumbs_opened'] == "true") {   //关闭 skin_settings['thumbs_opened']
+//            $tourXmlObj->skin_settings['thumbs_opened'] = "false";
+//        }
         if ($tourXmlObj->autorotate['enabled'] == "false") {  //打开 自动旋转
             $tourXmlObj->autorotate['enabled'] = "true";
         }
