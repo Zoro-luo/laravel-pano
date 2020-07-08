@@ -198,10 +198,10 @@ function editTourShare($gid, $flag)
     $right_share = $tourXmlObj->layer[6];
     if ($flag) {
         $left_icon["visible"] = "true";
-        $left_icon["y"]= "5.5%";
+        $left_icon["y"]= "6%";
         $left_icon["onclick"] = "jscall(Back())";
         $right_share["visible"] = "true";
-        $right_share["y"] = "5.5%";
+        $right_share["y"] = "6%";
         $right_share["onclick"] = "jscall(Share_vr())";
     } else {
         $left_icon["visible"] = "false";
@@ -261,15 +261,13 @@ function editTourBar($gid,$flag){
 
 
     if ($flag){
-        $top_back_layer["y"] = "3.5%";
-        $top_shade_layer["y"] = "3.8%";
-        $button_3["y"] = "5.3%";
-
+        $top_back_layer["y"] = "4%";
+        $top_shade_layer["y"] = "4.3%";
+        $button_3["y"] = "5.8%";
     }else{
-        $top_back_layer["y"] = "1.5";
-        $top_shade_layer["y"] = "5.5";
-        $button_3["y"] = "15.5";
-
+        $top_back_layer["y"] = "2";
+        $top_shade_layer["y"] = "6";
+        $button_3["y"] = "16";
     }
     file_put_contents($tourXml, $tourXmlObj->asXML());
 

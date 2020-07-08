@@ -1094,7 +1094,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $layerIcon->setAttribute("keep","true");
     $layerIcon->setAttribute("align","right");
     $layerIcon->setAttribute("y","-3");
-    $layerIcon->setAttribute("x","1");
+    $layerIcon->setAttribute("x","18");
     //追加至button_3
     $layerButton->appendChild($layerIcon);
 
@@ -1123,7 +1123,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $leftIcon->setAttribute("align","lefttop");
     $leftIcon->setAttribute("style","skin_base|skin_glow");
     $leftIcon->setAttribute("keep","true");
-    $leftIcon->setAttribute("x","5%");
+    $leftIcon->setAttribute("x","30");
     $leftIcon->setAttribute("y","15");
     $leftIcon->setAttribute("visible","false");
     $leftIcon->setAttribute("devices","touchdevice");
@@ -1138,7 +1138,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $rightShare->setAttribute("align","righttop");
     $rightShare->setAttribute("style","skin_base|skin_glow");
     $rightShare->setAttribute("keep","true");
-    $rightShare->setAttribute("x","22");
+    $rightShare->setAttribute("x","30");
     $rightShare->setAttribute("y","20");
     $rightShare->setAttribute("visible","false");
     $rightShare->setAttribute("devices","touchdevice");
@@ -1175,7 +1175,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $rightSet->setAttribute("align","righttop");
     $rightSet->setAttribute("style","skin_base|skin_glow");
     $rightSet->setAttribute("keep","true");
-    $rightSet->setAttribute("x","25");
+    $rightSet->setAttribute("x","20");
     $rightSet->setAttribute("y","150");
     $rightSet->setAttribute("visible","true");
     $rightSet->setAttribute("devices","touchdevice");
@@ -1261,7 +1261,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $rightVr->setAttribute("align","righttop");
     $rightVr->setAttribute("style","skin_base|skin_glow");
     $rightVr->setAttribute("keep","true");
-    $rightVr->setAttribute("x","25");
+    $rightVr->setAttribute("x","20");
     $rightVr->setAttribute("y","90");
     $rightVr->setAttribute("visible","true");
     $rightVr->setAttribute("devices","touchdevice");
