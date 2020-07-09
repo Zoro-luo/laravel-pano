@@ -1090,11 +1090,25 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $layerIcon->setAttribute("name","icon");
     $layerIcon->setAttribute("url","/pano/storage/static/images/down.png");
     $layerIcon->setAttribute("zorder","10");
-    $layerIcon->setAttribute("scale","1.3");
+    $layerIcon->setAttribute("scale","0.18");
     $layerIcon->setAttribute("keep","true");
     $layerIcon->setAttribute("align","right");
     $layerIcon->setAttribute("y","-3");
     $layerIcon->setAttribute("x","18");
+    $layerIcon->setAttribute("onclick","if(layer[iframelayer].visible,
+    set(layer[top_shade_layer].visible,false);
+        set(layer[top_back_layer].visible,true);
+        remove_iframe(iframelayer);
+        set(layer[icon].url, '/pano/storage/static/images/down.png');
+        set(layer[iframelayer].visible,false),
+        set(layer[top_back_layer].visible,false);
+        set(layer[top_shade_layer].visible,true);
+        set(layer[top_shade_layer_pc].visible,true);
+        set(layer[set_alert_table].visible,false);
+        set(layer[iframelayer_new].visible,false);
+        remove_iframe(iframelayer_new);
+        set(layer[icon].url, '/pano/storage/static/images/up.png');
+        call_iframe(iframelayer,/pano/krpano/fr/".$paonId."););");
     //追加至button_3
     $layerButton->appendChild($layerIcon);
 
