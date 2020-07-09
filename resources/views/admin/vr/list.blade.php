@@ -312,7 +312,12 @@
                 status_url = search.status;
             }
 
-            $.ajax({
+
+            console.log(cityName_url);
+            console.log(status_url);
+
+
+           /* $.ajax({
              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
              url: "{{url('vr/list')}}",
                 type: "GET",
@@ -323,7 +328,7 @@
                     // window.location.href = "/pano/vr/list?cityName=" + cityName_url + "&status=" + status_url;
                     window.location.href = "/pano/vr/list?cityName=" + search.city + "&status=" + search.status;
                 }
-            })
+            })*/
         });
 
 

@@ -38,11 +38,11 @@ class UploadController extends Controller
         }
 
         if ($sourceType == 2 || $sourceType == 3) {      //  0:pc, 1:wap, 2:android, 3:ios, 4:wechart
-            editTourShare($gid, true);
-            editTourBar($gid,true);
+           // editTourShare($gid, true);
+           // editTourBar($gid,true);
         } else {
-            editTourShare($gid, false);
-            editTourBar($gid,false);
+           // editTourShare($gid, false);
+            //editTourBar($gid,false);
             $isPhone = isMobile();
             if ($isPhone) {
                 $sourceType = 1;
@@ -51,11 +51,11 @@ class UploadController extends Controller
             }
         }
 
-        if ($sourceType == 0){
+       /* if ($sourceType == 0){
             editTourStart($gid,"pc");       //全景加载页进度条PC 和 移动端
         }else{
             editTourStart($gid,"wap");
-        }
+        }*/
 
         if ($houseCode == "{0}" && $agentCode == "{1}" && $CityID == "{2}") {
             $title = "";
@@ -99,13 +99,23 @@ class UploadController extends Controller
         $houseData = json_decode($houseApi);
         $agentData = json_decode($agentApi);
 
+        if (!is_dir(storage_path('files'))) {
+            mkdir(storage_path('files'), 0777, true);
+        }
+
         //房源信息
         if ($houseData->Code == 2000 && $houseData->Data) {
             $title = $houseData->Data->Title;
             $title = mb_substr($title, 0, 15, 'utf-8') . "...";
 
+            $fileName = $gid.".txt";
+            $filePath = storage_path("files\\").$fileName;
+            if (!file_exists($filePath)){
+                file_put_contents($filePath, json_encode($houseData->Data));
+            }
+
             //editTourTitle($gid, $title);
-            Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
+            //Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
             $charTitle = "全景看房 | " . $houseData->Data->BuildingName . " " . $houseData->Data->CountF . "室" . $houseData->Data->CountT . "厅";
             $houseID = $houseData->Data->ID;                    //房源自增长ID
             $houseNum = $houseData->Data->CertificationID;      //房源编号

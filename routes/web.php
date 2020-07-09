@@ -58,7 +58,12 @@ Route::post('krpano/pano', 'Krpano\\PanoController@panoImgs');          //切片
 
 //房源信息
 Route::get('/krpano/fr/{panoId}', function($panoId){
-    $houseInfo = Cache::get("houseInfo"."_".$panoId,"");
+
+    $fileName = $panoId.".txt";
+    $filePath = storage_path("files\\").$fileName;
+    $houseInfo = file_get_contents($filePath);
+    $houseInfo = json_decode($houseInfo);
+    //$houseInfo = Cache::get("houseInfo"."_".$panoId,"");
     return view('krpano.fr',['houseInfo'=>$houseInfo]);
 });
 
