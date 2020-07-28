@@ -58,13 +58,43 @@ Route::post('krpano/pano', 'Krpano\\PanoController@panoImgs');          //切片
 
 //房源信息
 Route::get('/krpano/fr/{panoId}', function($panoId){
-
     $fileName = $panoId.".txt";
     $filePath = storage_path("files\\").$fileName;
-    $houseInfo = file_get_contents($filePath);
-    $houseInfo = json_decode($houseInfo);
-    //$houseInfo = Cache::get("houseInfo"."_".$panoId,"");
-    return view('krpano.fr',['houseInfo'=>$houseInfo]);
+
+    if (file_exists($filePath)){
+        $tourXml = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
+        $tourXmlStr = file_get_contents($tourXml);
+        $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
+        $button_3 = $tourXmlObj->layer[16];
+        $button_3["onclick"] = "if(layer[iframelayer].visible,
+    set(layer[top_shade_layer].visible,false);
+        set(layer[top_back_layer].visible,true);
+        remove_iframe(iframelayer);
+        set(layer[icon].url, '/pano/storage/static/images/down.png');
+        set(layer[iframelayer].visible,false),
+        set(layer[top_back_layer].visible,false);
+        set(layer[top_shade_layer].visible,true);
+        set(layer[top_shade_layer_pc].visible,true);
+        set(layer[set_alert_table].visible,false);
+        set(layer[iframelayer_new].visible,false);
+        remove_iframe(iframelayer_new);
+        set(layer[icon].url, '/pano/storage/static/images/up.png');
+        call_iframe(iframelayer,/pano/krpano/fr/".$panoId."););";
+        file_put_contents($tourXml, $tourXmlObj->asXML());
+
+        $houseInfo = file_get_contents($filePath);
+        $houseInfo = json_decode($houseInfo);
+
+        //$houseInfo = Cache::get("houseInfo"."_".$panoId,"");
+        return view('krpano.fr',['houseInfo'=>$houseInfo]);
+    }else{
+        $tourXml = storage_path("panos") . "\\" . $panoId . "\\vtour\\tour.xml";
+        $tourXmlStr = file_get_contents($tourXml);
+        $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
+        $button_3 = $tourXmlObj->layer[16];
+        $button_3["onclick"] = "";
+        file_put_contents($tourXml, $tourXmlObj->asXML());
+    }
 });
 
 
