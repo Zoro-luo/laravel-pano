@@ -7,50 +7,72 @@ use App\Model\Pano;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Monolog\Handler\IFTTTHandler;
 
 class VrController extends Controller
 {
     //vr 列表页
     public function index(Request $request)
     {
+
         $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
         $kfData = json_decode($kf)->Data;
-        foreach ($kfData as $kfVal) {
-            $CityName[] = $kfVal->CityName;
+
+        foreach ($kfData as $kfKey => $kfVal) {
+            $CityName[$kfKey + 1] = $kfVal->CityName;
         }
 
-        $perPage = 5;
+        $perPage = 10;
         $cityName = $request->cityName;
         $status = $request->status;
-        if ($status == "已上线"){
-            $status_at = 1;
-        }else{
-            $status_at = 2;
-        }
-        $keywords = $request->keywords;
+        $keywords = trim($request->keywords);
         $createtTime = $request->createtTime;
+        $timeFlag = uniqid($createtTime);
+
         $where = new Pano();
-        if ($cityName){
-            if ($cityName == "全部"){
+        if ($cityName) {
+            if ($cityName == "-1") {     //全部
                 $where = $where;
-            }else{
-                $where = $where->where("cityName","=",$cityName);
+            } else {
+                $where = $where->where("cityName", "=", $cityName);
             }
         }
-        if ($status){
-            if ($status == "全部"){
+        if ($status) {
+            if ($status == "-1") {       //全部
                 $where = $where;
-            }else{
-                $where = $where->where("status","=",$status_at);
+            } else {
+                $where = $where->where("status", "=", $status);
             }
         }
-        $panos = $where->paginate($perPage);
+        if ($keywords) {
+            $where = $where
+                ->where("house_name", "like", "%".$keywords."%")
+                ->orWhere("title", "like", "%".$keywords."%")
+                ->orWhere("houseNum", "=", $keywords)
+                ->orWhere("agentName", "like", "%".$keywords."%");
+        }
+        if ($createtTime) {
+            // 2020/07/14 - 2020/07/17
+            $createtTimeArr = explode("-", $createtTime);
+            $cTime_left = strtotime($createtTimeArr[0]);
+            $cTime_right = strtotime($createtTimeArr[1]);
+            if ($cTime_left == $cTime_right) {
+                $where = $where->where("updated_time","=","$cTime_right");
+            } else {
+                $where = $where->whereBetween("updated_time",[strtotime($cTime_left),strtotime($cTime_right)]);
+            }
+        }
+
+
+        //过滤掉没有全景地址和不合规的全景数据
+        $panos = $where->where("panoUrl", "<>", null)->where("check_at", "<>", "3")->paginate($perPage);
 
         $panos->cityName = $cityName;
         $panos->status = $status;
         //$panos = Pano::where('cityName','=','武汉')->paginate($perPage);
         $count = $panos->total();
-        return view('admin.vr.list', ['panos' => $panos, 'count' => $count, 'perPage' => $perPage, 'cityName' => $CityName]);
+        return view('admin.vr.list', ['panos' => $panos, 'count' => $count, 'perPage' => $perPage, 'cityName' => $CityName,'keywords'=>$keywords,"time"=>$timeFlag]);
+        //return view('admin.vr.list', ['panos' => $panos, 'count' => $count, 'perPage' => $perPage, 'cityName' => $CityName]);
     }
 
     //编辑页的预览视图

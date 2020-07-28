@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,10 +31,27 @@
                     <div class="separator item-center">:</div>
                     <div class="flex-right display_flex">
                         <div class="my-select my-select1" @click-list="getCity">
-                            <div class="my-select-btn"><span class="btn-text cityName">{{$panos->cityName}} </span><i
-                                        class="iconfont iconUtubiao-13"></i></div>
+                            <div class="my-select-btn"><span class="btn-text cityName">
+                                    @if($panos->cityName == "-1" ) 全部
+                                    @elseif($panos->cityName == "1") 武汉
+                                    @elseif($panos->cityName == "2") 汉川
+                                    @elseif($panos->cityName == "3") 测试城市
+                                    @elseif($panos->cityName == "4")武穴
+                                    @elseif($panos->cityName == "5")苏州
+                                    @elseif($panos->cityName == "6")钟祥
+                                    @elseif($panos->cityName == "7")罗田
+                                    @elseif($panos->cityName == "8")宜昌
+                                    @elseif($panos->cityName == "9")大冶
+                                    @elseif($panos->cityName == "10")宜昌2.0升级
+                                    @elseif($panos->cityName == "11")郑州
+                                    @elseif($panos->cityName == "12")长沙
+                                    @elseif($panos->cityName == "13")仙桃
+                                    @elseif($panos->cityName == "14")麻城
+                                    @elseif($panos->cityName == "15")咸宁
+                                    @endif
+                                </span><i class="iconfont iconUtubiao-13"></i></div>
                             <ul class="my-select-list">
-                                <li class="on" name="cityName">全部</li>
+                                <li class="on" name="cityName" item="-1">全部</li>
                                 @foreach($cityName as $k=>$v)
                                     <li name="cityName" item="{{$k}}">{{$v}}</li>
                                 @endforeach
@@ -48,12 +65,16 @@
                     <div class="separator item-center">:</div>
                     <div class="flex-right display_flex">
                         <div class="my-select my-select1" @click-list="getStatus">
-                            <div class="my-select-btn"><span class="btn-text status">{{$panos->status}}</span><i
-                                        class="iconfont iconUtubiao-13"></i></div>
+                            <div class="my-select-btn"><span class="btn-text status">
+                                    @if($panos->status == "-1" ) 全部
+                                    @elseif($panos->status == "1" ) 已上线
+                                    @elseif($panos->status == "2" ) 未上线
+                                    @endif
+                                </span><i class="iconfont iconUtubiao-13"></i></div>
                             <ul class="my-select-list">
-                                <li class="on">全部</li>
-                                <li>已上线</li>
-                                <li>未上线</li>
+                                <li class="on" item="-1">全部</li>
+                                <li item="1">已上线</li>
+                                <li item="2">未上线</li>
                             </ul>
                         </div>
                     </div>
@@ -62,8 +83,13 @@
                     <div class="flex-left item-center">关键字</div>
                     <div class="separator item-center">:</div>
                     <div class="flex-right">
-                        <div class="my-input"><input type="text" class="inputs keywords"
-                                                     placeholder="楼盘名称/房源名称/房源ID/创建人"></div>
+{{--                         @if($keywords)--}}
+{{--                            <div class="my-input"><input type="text" class="inputs keywords" placeholder="{{$keywords}}"></div>--}}
+{{--                         @else--}}
+{{--                            <div class="my-input"><input type="text" class="inputs keywords" placeholder="楼盘名称/房源名称/房源编号/发布人"></div>--}}
+{{--                         @endif--}}
+
+                             <div class="my-input"><input type="text" class="inputs keywords" placeholder="楼盘名称/房源名称/房源编号/发布人"></div>
                     </div>
                 </div>
                 <div class="flex-list">
@@ -82,7 +108,6 @@
         </div>
         <div class="list-box selects-table-marign">
             <div class="my-table my-table-10 table-big">
-
                 @if($count > 0 )
                     <div class="ele-scroll table-header">
                         <div class="list-top">
@@ -162,7 +187,7 @@
                                 <div>{{$pano->agentName}}</div>
                             </div>
                             <div class="table-text table-text8">
-                                <div>{{$pano->updated_at}}</div>
+                                <div>{{date('Y-m-d H:i',$pano->updated_time)}}</div>
                             </div>
                             <div class="table-text table-text9">
                                 <div class="">{{$pano->status == "1" ? "已上线" : "未上线"}}</div>
@@ -201,8 +226,9 @@
 </body>
 <script src="{{asset('public/static/hotsport')}}/js/jquery-1.8.3.min.js"></script>
 <!-- <script src="js/layer/layer.js"></script> -->
-<script src="{{asset('public/static/hotsport')}}/js/common.js"></script>
 <script src="{{asset('public/static/hotsport')}}/js/laydate/laydate.js"></script>
+<script src="{{asset('public/static/hotsport')}}/js/common.js"></script>
+
 <!-- <script src="js/echarts.simple.min.js"></script> -->
 <script>
     var search = {
@@ -211,11 +237,13 @@
     }
 
     function getCity(event) {
-        search.city = $(event.target).text();
+        //search.city = $(event.target).text();
+        search.city = $(event.target).attr("item");
     }
 
     function getStatus(event) {
-        search.status = $(event.target).text();
+        //search.status = $(event.target).text();
+        search.status = $(event.target).attr("item");
         //console.log( $(event.target).text() )
     }
 
@@ -284,7 +312,7 @@
                             <div class="table-text table-text5"><div>${e[0]['houseNum']}</div></div>
                             <div class="table-text table-text6"><div>${e[0]['storeName']}</div></div>
                             <div class="table-text table-text7"><div>${e[0]['agentName']}</div></div>
-                            <div class="table-text table-text8"><div>${e[0]['updated_at']}</div></div>
+                            <div class="table-text table-text8"><div>${e[0]['updated_time']}</div></div>
                             <div class="table-text table-text9"><div class="">${e[0]['status'] == "1" ? "已上线" : "未上线"}</div></div>
                             <div class="table-text table-text10">
                             <a class="text-btn" href="javascript:;" onclick="listUpdate('${e[0]['gid']}')" target="_blank">编辑模型</a>
@@ -300,35 +328,62 @@
     $(function () {
         //搜索提交
         $(".my-btn").click(function () {
+
+            var times = "{{$time}}";
+
             var keywords = $(".keywords").val();
             var createtTime = $("#createtTime").val();
+            createtTime = createtTime.replace(/\s*/g,"");       //去除字符串空白字符
 
             var cityName_url = getQueryVariable("cityName");
             var status_url = getQueryVariable("status");
-            if (cityName_url == false ){
+            if (cityName_url == '') {
                 cityName_url = search.city;
-            }
-            if (status_url == false ){
-                status_url = search.status;
-            }
-
-
-            console.log(cityName_url);
-            console.log(status_url);
-
-
-           /* $.ajax({
-             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-             url: "{{url('vr/list')}}",
-                type: "GET",
-                // data: {"cityName": cityName_url, "status": status_url},
-                data: {"cityName": search.city, "status": search.status},
-                success: function (e) {
-                    console.log(e);
-                    // window.location.href = "/pano/vr/list?cityName=" + cityName_url + "&status=" + status_url;
-                    window.location.href = "/pano/vr/list?cityName=" + search.city + "&status=" + search.status;
+            } else {
+                if ($(".cityName").hasClass("active")) {
+                    cityName_url = search.city;
+                } else {
+                    cityName_url = getQueryVariable("cityName");
                 }
-            })*/
+            }
+
+            if (status_url == '') {
+                status_url = search.status;
+            } else {
+                if ($(".status").hasClass("active")) {
+                    status_url = search.status;
+                } else {
+                    status_url = getQueryVariable("status");
+                }
+            }
+
+            // if (keywords == ''){
+            //     var keywords_placeholder = $(".keywords").attr("placeholder");
+            //     if (keywords_placeholder == "楼盘名称/房源名称/房源编号/发布人"){
+            //         keywords = '';
+            //     }
+            //     keywords = keywords_placeholder;
+            // }
+
+
+            $.ajax({
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                url: "{{url('vr/list')}}",
+                type: "GET",
+                data: {
+                    "cityName": cityName_url,
+                    "status": status_url,
+                    "keywords": keywords,
+                    "createtTime": createtTime
+                },
+                success: function (e) {
+
+                    console.log(e);
+                      //window.location.href = "/pano/vr/list?cityName="+cityName_url+"&status="+status_url+"&keywords="+keywords+"&time="+times;
+                      window.location.href = "/pano/vr/list?cityName="+cityName_url+"&status="+status_url+"&keywords="+keywords;
+                }
+            })
+
         });
 
 

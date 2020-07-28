@@ -306,6 +306,17 @@ function isMobile()
 }
 
 
+// tour.xml  startlogoevents
+//调客户端的方法解决客户端启动VR的空白页
+function editTourStartlogoevents($gid){
+    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    $tourXmlStr = file_get_contents($tourXml);
+    $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
+    $startlogoevents = $tourXmlObj->events[0];
+    $startlogoevents["onloadcomplete"]="jscall(hideHUD());delayedcall(0.1,tween(layer[startpic_container].ox,-2500,1));delayedcall(0.5, loadingbar_stoploading() );";
+    file_put_contents($tourXml, $tourXmlObj->asXML());
+}
+
 
 /**
  * 将字符串参数变为数组

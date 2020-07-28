@@ -117,6 +117,13 @@
             window.webkit.messageHandlers.back.postMessage({});
         }
 
+        //调客户端的方法解决客户端启动VR的空白页
+        function hideHUD() {
+            document.location = "js://hideHUD";
+            window.webkit.messageHandlers.hideHUD.postMessage({});
+        }
+
+
         /*var height = ""
         function AdjustTopSpace () {
             //document.location = "js://back";
@@ -168,9 +175,9 @@
         }
 
         //分享落地页
-        function shareUrl() {
-            return vrUri;
-        }
+        /*function shareUrl() {
+            //return vrUri;
+        }*/
 
         //获取url参数
         function getQueryVariable(variable) {

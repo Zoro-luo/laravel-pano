@@ -100,7 +100,41 @@
 
     function frClick() {
         $(".fr_info").click(function () {
-            window.open("{{$houseInfo->SiteUrl}}");
+            let ua = navigator.userAgent //用户代理头信息
+            let isAnd = ua.indexOf("originFromAndWebView") > -1;
+            let isIos = ua.indexOf("JiJia-Client-iOS") > -1;
+            //判断是否APP
+            if (isAnd || isIos) {
+                //console.log('app')
+                let ft = "{{$houseInfo->flagType}}";
+                if ( ft == '1') {       //B端
+                    let hc = "{{$houseInfo->SysCode}}";
+                    if (isIos) {
+                        window.webkit.messageHandlers.jumpToPropertyDetail.postMessage(hc) //iOS
+                    } else {
+                        window.location = `js://jumpToPropertyDetail?Code=${hc}` //Android
+                    }
+                } else {
+                    //console.log('c')
+                    let id = "{{$houseInfo->ID}}";      //房源id
+                    let housetype = "{{$houseInfo->HouseType}}";    //房源类型
+                    let purposetype = "{{$houseInfo->PurposeType}}";    //用途
+                    if (isIos) {
+                        window.webkit.messageHandlers.linktohousedetail.postMessage({
+                            id,
+                            housetype,
+                            purposetype,
+                        }) //iOS
+                    } else {
+                        window.location =
+                            `js://linktohousedetail?id=${id}&housetype=${housetype}&purposetype=${purposetype}` //Android
+                    }
+                }
+            } else {
+                //console.log('不是app')
+                window.open("{{$houseInfo->SiteUrl}}");
+            }
+
         })
     }
 
