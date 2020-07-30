@@ -271,7 +271,7 @@ class UploadController extends Controller
             $agentCode = $request->get("agentCode");        //经纪人ID
 
             $gid = $request->get("gid");
-            $gid = "EQWQWAA";
+            $gid = "EQWQWAA2";
 
 
             //临时默认值
@@ -385,7 +385,7 @@ class UploadController extends Controller
         if ($r["msg"] == "Success") {
             $result = DB::select('select imgData from uploads where gid=?', [$gid]);
             if ($result) {
-                $delRes = DB::delete('delete from uploads where gid=' . $gid);
+                $delRes = DB::delete('delete from uploads where gid=?', [$gid]);
                 if ($delRes) {
                     DB::table('uploads')->insert(array(
                         'imgData' => json_encode($r),
@@ -523,7 +523,6 @@ class UploadController extends Controller
                 $res['url'] = $this->http_host . $this->base_name . '/' . 'vr/uri/' . $gid . '?hc={0}&ac={1}&cs={2}';
 
                 $updated_at = date('Y-m-d', time());
-                $updated_at = strtotime($updated_at);
                 DB::update("update panos set panoUrl='" . $res['url'] . "',updated_at='" . $updated_at . "' where gid=?", [$gid]);
                 houseApi($propertyCode, $CityID, $res['url'], $thumb, 2);
             }
