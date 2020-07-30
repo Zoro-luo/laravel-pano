@@ -57,9 +57,9 @@ class VrController extends Controller
             $cTime_left = strtotime($createtTimeArr[0]);
             $cTime_right = strtotime($createtTimeArr[1]);
             if ($cTime_left == $cTime_right) {
-                $where = $where->where("updated_time","=","$cTime_right");
+                $where = $where->where("updated_at","=","$cTime_right");
             } else {
-                $where = $where->whereBetween("updated_time",[strtotime($cTime_left),strtotime($cTime_right)]);
+                $where = $where->whereBetween("updated_at",[strtotime($cTime_left),strtotime($cTime_right)]);
             }
         }
 
@@ -302,6 +302,7 @@ class VrController extends Controller
             $vtourLayerArr[10]["visible"] = "false";
         }
         if ($vtourLayerArr[12]["visible"] == "true") {      // 隐藏 right_set_pc
+
             $vtourLayerArr[12]["visible"] = "false";
         }
         if ($tourXmlObj->autorotate['enabled'] == "true") {  //关闭 自动旋转
@@ -354,9 +355,7 @@ class VrController extends Controller
             $views[0]['vlookat'] = $vlookat;
             //file_put_contents($xmlFile, $vtourXmlObj->asXML());
             file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
-
             $ress = ['h' => $hlookat, 'v' => $vlookat, 'title' => $sceneTitle];
-
             return $ress;
         }
     }

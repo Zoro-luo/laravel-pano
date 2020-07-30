@@ -187,7 +187,7 @@
                                 <div>{{$pano->agentName}}</div>
                             </div>
                             <div class="table-text table-text8">
-                                <div>{{date('Y-m-d H:i',$pano->updated_time)}}</div>
+                                <div>{{$pano->updated_at}}</div>
                             </div>
                             <div class="table-text table-text9">
                                 <div class="">{{$pano->status == "1" ? "已上线" : "未上线"}}</div>
@@ -312,7 +312,7 @@
                             <div class="table-text table-text5"><div>${e[0]['houseNum']}</div></div>
                             <div class="table-text table-text6"><div>${e[0]['storeName']}</div></div>
                             <div class="table-text table-text7"><div>${e[0]['agentName']}</div></div>
-                            <div class="table-text table-text8"><div>${e[0]['updated_time']}</div></div>
+                            <div class="table-text table-text8"><div>${e[0]['updated_at']}</div></div>
                             <div class="table-text table-text9"><div class="">${e[0]['status'] == "1" ? "已上线" : "未上线"}</div></div>
                             <div class="table-text table-text10">
                             <a class="text-btn" href="javascript:;" onclick="listUpdate('${e[0]['gid']}')" target="_blank">编辑模型</a>

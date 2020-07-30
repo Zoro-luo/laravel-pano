@@ -110,7 +110,7 @@
                 if ( ft == '1') {       //B端
                     let hc = "{{$houseInfo->SysCode}}";
                     if (isIos) {
-                        window.webkit.messageHandlers.jumpToPropertyDetail.postMessage(hc) //iOS
+                        window.webkit.messageHandlers.jumpToPropertyDetail.postMessage({'Code':hc}) //iOS
                     } else {
                         window.location = `js://jumpToPropertyDetail?Code=${hc}` //Android
                     }
