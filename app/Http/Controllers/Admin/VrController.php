@@ -162,8 +162,7 @@ class VrController extends Controller
         $vtourXmlStr = file_get_contents($xmlNewFile);
         $res = file_put_contents($xmlProFile, $vtourXmlStr);
         //2. 更改VR 状态为已上线
-        DB::update("update panos set status= '1' where pano_id=?", [$panoId]);
-
+        DB::update("update panos set status= '1' where gid=?", [$panoId]);
         return '200';
     }
 
