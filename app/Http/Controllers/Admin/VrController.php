@@ -27,7 +27,6 @@ class VrController extends Controller
         $status = $request->status;
         $keywords = trim($request->keywords);
         $createtTime = $request->createtTime;
-        $timeFlag = uniqid($createtTime);
 
         $where = new Pano();
         if ($cityName) {
@@ -46,24 +45,26 @@ class VrController extends Controller
         }
         if ($keywords) {
             $where = $where
-                ->where("house_name", "like", "%".$keywords."%")
-                ->orWhere("title", "like", "%".$keywords."%")
+                ->where("house_name", "like", "%" . $keywords . "%")
+                ->orWhere("title", "like", "%" . $keywords . "%")
                 ->orWhere("houseNum", "=", $keywords)
-                ->orWhere("agentName", "like", "%".$keywords."%");
+                ->orWhere("agentName", "like", "%" . $keywords . "%");
         }
         if ($createtTime) {
             // 2020/07/14 - 2020/07/17
             $createtTimeArr = explode("-", $createtTime);
-            $cTime_left = strtotime($createtTimeArr[0]);
-            $cTime_right = strtotime($createtTimeArr[1]);
+            $cTime_right_old = str_replace("/", "-", $createtTimeArr[1]);
+            $cTime_left_old = str_replace("/", "-", $createtTimeArr[0]);
+            $cTime_left = strtotime($cTime_left_old);
+            $cTime_right = strtotime($cTime_right_old);
+
             if ($cTime_left == $cTime_right) {
-                $where = $where->where("updated_at","=","$cTime_right");
+                $where = $where->whereDate("updated_at", $cTime_right_old);
             } else {
-                $where = $where->whereBetween("updated_at",[strtotime($cTime_left),strtotime($cTime_right)]);
+                $where = $where->whereDate("updated_at","<=",$cTime_right_old)
+                                ->whereDate("updated_at",">=",$cTime_left_old);
             }
         }
-
-
         //过滤掉没有全景地址和不合规的全景数据
         $panos = $where->where("panoUrl", "<>", null)->where("check_at", "<>", "3")->paginate($perPage);
 
@@ -71,7 +72,7 @@ class VrController extends Controller
         $panos->status = $status;
         //$panos = Pano::where('cityName','=','武汉')->paginate($perPage);
         $count = $panos->total();
-        return view('admin.vr.list', ['panos' => $panos, 'count' => $count, 'perPage' => $perPage, 'cityName' => $CityName,'keywords'=>$keywords,"time"=>$timeFlag]);
+        return view('admin.vr.list', ['panos' => $panos, 'count' => $count, 'perPage' => $perPage, 'cityName' => $CityName, 'keywords' => $keywords]);
         //return view('admin.vr.list', ['panos' => $panos, 'count' => $count, 'perPage' => $perPage, 'cityName' => $CityName]);
     }
 

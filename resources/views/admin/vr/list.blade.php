@@ -328,13 +328,9 @@
     $(function () {
         //搜索提交
         $(".my-btn").click(function () {
-
-            var times = "{{$time}}";
-
             var keywords = $(".keywords").val();
             var createtTime = $("#createtTime").val();
             createtTime = createtTime.replace(/\s*/g,"");       //去除字符串空白字符
-
             var cityName_url = getQueryVariable("cityName");
             var status_url = getQueryVariable("status");
             if (cityName_url == '') {
@@ -356,7 +352,6 @@
                     status_url = getQueryVariable("status");
                 }
             }
-
             // if (keywords == ''){
             //     var keywords_placeholder = $(".keywords").attr("placeholder");
             //     if (keywords_placeholder == "楼盘名称/房源名称/房源编号/发布人"){
@@ -364,8 +359,6 @@
             //     }
             //     keywords = keywords_placeholder;
             // }
-
-
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                 url: "{{url('vr/list')}}",
@@ -377,13 +370,9 @@
                     "createtTime": createtTime
                 },
                 success: function (e) {
-
-                    console.log(e);
-                      //window.location.href = "/pano/vr/list?cityName="+cityName_url+"&status="+status_url+"&keywords="+keywords+"&time="+times;
-                      window.location.href = "/pano/vr/list?cityName="+cityName_url+"&status="+status_url+"&keywords="+keywords;
+                      window.location.href = "/pano/vr/list?cityName="+cityName_url+"&status="+status_url+"&keywords="+keywords+"&createtTime="+createtTime;
                 }
             })
-
         });
 
 
