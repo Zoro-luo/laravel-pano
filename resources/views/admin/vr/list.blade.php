@@ -202,7 +202,7 @@
                                 @endif
 
                                 <span class="vertical-line">|</span>
-                                <div class="text-btn" onclick="listPreview({{$pano->gid}})">预览</div>
+                                <div class="text-btn" onclick="listPreview('{{$pano->gid}}')">预览</div>
                                 <span class="vertical-line">|</span>
                                 <div class="text-btn  error-btn"
                                      onclick="turnup({{$pano->gid}})">{{$pano->status == "2" ? "上线" : "下线"}}</div>
@@ -278,6 +278,7 @@
     //点击预览另打开预览窗口页
     function listPreview(paonId) {
         var panoId = paonId;
+        console.log(panoId);
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             url: "{{url('vr/seer')}}",

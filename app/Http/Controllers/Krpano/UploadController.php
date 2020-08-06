@@ -22,6 +22,9 @@ class UploadController extends Controller
     public function getPanoUri(Request $request)
     {
 
+
+
+
         $houseCode = $request->hc;
         $agentCode = $request->ac;
         $gid = $request->gid;
@@ -32,10 +35,10 @@ class UploadController extends Controller
         $panoUri = $request->getUri();
 
         //调客户端的方法解决客户端启动VR的空白页
-        editTourStartlogoevents($gid);
+        //editTourStartlogoevents($gid);
 
         //vtourskin.xml 更改plugin name="WebVR"  的设置
-        editVskinWebVR($gid);
+        //editVskinWebVR($gid);
 
         if ($houseType == "") {
             $houseType = 2;
@@ -119,7 +122,7 @@ class UploadController extends Controller
                 file_put_contents($filePath, json_encode($houseData->Data));
             }
 
-            //editTourTitle($gid, $title);
+            editTourTitle($gid, $title);
             //Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
             $charTitle = "全景看房 | " . $houseData->Data->BuildingName . " " . $houseData->Data->CountF . "室" . $houseData->Data->CountT . "厅";
             $houseID = $houseData->Data->ID;                    //房源自增长ID

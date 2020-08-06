@@ -22,7 +22,7 @@ class VrController extends Controller
             $CityName[$kfKey + 1] = $kfVal->CityName;
         }
 
-        $perPage = 10;
+        $perPage = 5;
         $cityName = $request->cityName;
         $status = $request->status;
         $keywords = trim($request->keywords);

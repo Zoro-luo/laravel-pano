@@ -133,18 +133,20 @@ function houseApi($propertyCode, $CityID, $VrUrl, $VRTitleUrl, $PlatForm)
 //tour.xml 里的Title
 function editTourTitle($gid, $title)
 {
-    /*    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+       //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+        $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
         $tourXmlStr = file_get_contents($tourXml);
         $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
         $button_title = $tourXmlObj->layer[16];
         $button_title["html"] = $title;
-        file_put_contents($tourXml, $tourXmlObj->asXML());*/
+        file_put_contents($tourXml, $tourXmlObj->asXML());
 }
 
 
 //全景启动页进度条PC 和 移动端
 function editTourStart($gid,$flag){
-    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
     $tourXmlStr = file_get_contents($tourXml);
     $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
     $startpic_container = $tourXmlObj->layer[3];
@@ -175,10 +177,10 @@ function editTourStart($gid,$flag){
 //vtourskin.xml 更改plugin name="WebVR"  的设置
 function editVskinWebVR($gid)
 {
-    $vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin.xml";
+    //$vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin.xml";
+    $vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin_new.xml";
     $vtourskinStr = file_get_contents($vtourskinXml);
     $vtourskinObj = new \SimpleXMLElement($vtourskinStr);
-
     $pluginDOC = $vtourskinObj->plugin[0];
     $pluginDOC['multireslock.mobile.or.tablet'] = "true";
     $pluginDOC['mobilevr_screensize'] = "auto";
@@ -191,7 +193,8 @@ function editVskinWebVR($gid)
 //u+app
 function editTourShare($gid, $flag)
 {
-    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
     $tourXmlStr = file_get_contents($tourXml);
     $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
     $left_icon = $tourXmlObj->layer[5];
@@ -217,7 +220,8 @@ function editTourShare($gid, $flag)
 //更改vtourskin.xml 里的ImageUrl 和Mobile
 function editVskinImageurlMobile($gid, $userUrl, $phoneHtml, $flag)
 {
-    $vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin.xml";
+    //$vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin.xml";
+    $vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin_new.xml";
     $vtourskinStr = file_get_contents($vtourskinXml);
     $vtourskinObj = new \SimpleXMLElement($vtourskinStr);
     //更改PC端经纪人头像和手机号
@@ -252,13 +256,13 @@ function editVskinImageurlMobile($gid, $userUrl, $phoneHtml, $flag)
 
 //调整APP端VR导航的高度位置
 function editTourBar($gid,$flag){
-    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
     $tourXmlStr = file_get_contents($tourXml);
     $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
     $top_back_layer = $tourXmlObj->layer[4];
     $top_shade_layer = $tourXmlObj->layer[7];
     $button_3 = $tourXmlObj->layer[16];
-
 
     if ($flag){
         $top_back_layer["y"] = "4%";
@@ -309,7 +313,8 @@ function isMobile()
 // tour.xml  startlogoevents
 //调客户端的方法解决客户端启动VR的空白页
 function editTourStartlogoevents($gid){
-    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
     $tourXmlStr = file_get_contents($tourXml);
     $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
     $startlogoevents = $tourXmlObj->events[0];
