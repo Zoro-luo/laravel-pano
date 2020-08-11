@@ -274,7 +274,7 @@ class UploadController extends Controller
             $agentCode = $request->get("agentCode");        //经纪人ID
 
             $gid = $request->get("gid");
-            $gid = "EQWQWAA2";
+            $gid = "EQWQWAA5";
 
 
             //临时默认值
@@ -309,13 +309,13 @@ class UploadController extends Controller
             $pano->house_type = $houseType;
             $pano->house_area = $houseArea;
             $pano->remark = $houseRemark;
-            $pano->created_at = date('Y-m-d H:i:s', time());
+            $pano->created_at = date('Y-m-d H:i:s.000', time());
             $pano->save();
 
             //同一个上传者 查场景id 如果有 则先删除id下的数据 再批量插入
             $result = DB::select('select pano_id,user_id from imgs where gid=?', [$gid]);
             if ($result) {
-                DB::delete("delete from imgs where gid= '$gid'");
+                DB::delete("delete from imgs where gid=?", [$gid]);
                 $path = $panoimgPath . $gid . '/';
                 clearDir($path);                    //删除目录以及子目录文件
             }
@@ -338,7 +338,7 @@ class UploadController extends Controller
 
                     $imgName = $min_v->getClientOriginalName();
                     $imgSize = $min_v->getClientSize();
-                    $imgCreated_at = date('Y-m-d H:i:s', $min_v->getaTime());
+                    $imgCreated_at = date('Y-m-d H:i:s.000', $min_v->getaTime());
                     DB::table('imgs')->insert(array(
                         'gid' => $gid,
                         'houseCode' => $houseCode,

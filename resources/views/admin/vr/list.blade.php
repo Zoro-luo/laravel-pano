@@ -205,7 +205,7 @@
                                 <div class="text-btn" onclick="listPreview('{{$pano->gid}}')">预览</div>
                                 <span class="vertical-line">|</span>
                                 <div class="text-btn  error-btn"
-                                     onclick="turnup({{$pano->gid}})">{{$pano->status == "2" ? "上线" : "下线"}}</div>
+                                     onclick="turnup('{{$pano->gid}}')">{{$pano->status == "2" ? "上线" : "下线"}}</div>
                             </div>
                         </div>
                     @endforeach
