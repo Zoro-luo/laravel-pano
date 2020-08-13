@@ -9,7 +9,6 @@ function d($data)
     echo '<pre>';
     var_dump($data);
     echo '</pre>';
-    exit;
 }
 
 /**
@@ -131,10 +130,10 @@ function houseApi($propertyCode, $CityID, $VrUrl, $VRTitleUrl, $PlatForm)
 }
 
 //tour.xml 里的Title
-function editTourTitle($gid, $title)
+function editTourTitle($tourXml, $title)
 {
-       //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
-        $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
+        //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
+        //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
         $tourXmlStr = file_get_contents($tourXml);
         $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
         $button_title = $tourXmlObj->layer[16];
@@ -144,9 +143,9 @@ function editTourTitle($gid, $title)
 
 
 //全景启动页进度条PC 和 移动端
-function editTourStart($gid,$flag){
+function editTourStart($tourXml,$flag){
     //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
-    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
+    //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
     $tourXmlStr = file_get_contents($tourXml);
     $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
     $startpic_container = $tourXmlObj->layer[3];
@@ -175,10 +174,10 @@ function editTourStart($gid,$flag){
 }
 
 //vtourskin.xml 更改plugin name="WebVR"  的设置
-function editVskinWebVR($gid)
+function editVskinWebVR($vtourskinXml)
 {
     //$vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin.xml";
-    $vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin_new.xml";
+    //$vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin_new.xml";
     $vtourskinStr = file_get_contents($vtourskinXml);
     $vtourskinObj = new \SimpleXMLElement($vtourskinStr);
     $pluginDOC = $vtourskinObj->plugin[0];
@@ -191,10 +190,10 @@ function editVskinWebVR($gid)
 }
 
 //u+app
-function editTourShare($gid, $flag)
+function editTourShare($tourXml, $flag)
 {
     //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
-    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
+    //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
     $tourXmlStr = file_get_contents($tourXml);
     $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
     $left_icon = $tourXmlObj->layer[5];
@@ -218,10 +217,10 @@ function editTourShare($gid, $flag)
 }
 
 //更改vtourskin.xml 里的ImageUrl 和Mobile
-function editVskinImageurlMobile($gid, $userUrl, $phoneHtml, $flag)
+function editVskinImageurlMobile($vtourskinXml, $userUrl, $phoneHtml, $flag)
 {
     //$vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin.xml";
-    $vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin_new.xml";
+    //$vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin_new.xml";
     $vtourskinStr = file_get_contents($vtourskinXml);
     $vtourskinObj = new \SimpleXMLElement($vtourskinStr);
     //更改PC端经纪人头像和手机号
@@ -255,9 +254,9 @@ function editVskinImageurlMobile($gid, $userUrl, $phoneHtml, $flag)
 }
 
 //调整APP端VR导航的高度位置
-function editTourBar($gid,$flag){
+function editTourBar($tourXml,$flag){
     //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
-    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
+    //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
     $tourXmlStr = file_get_contents($tourXml);
     $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
     $top_back_layer = $tourXmlObj->layer[4];
@@ -312,9 +311,9 @@ function isMobile()
 
 // tour.xml  startlogoevents
 //调客户端的方法解决客户端启动VR的空白页
-function editTourStartlogoevents($gid){
+function editTourStartlogoevents($tourXml){
     //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour.xml";
-    $tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
+    //$tourXml = storage_path("panos") . "\\" . $gid . "\\vtour\\tour_pro.xml";
     $tourXmlStr = file_get_contents($tourXml);
     $tourXmlObj = new \SimpleXMLElement($tourXmlStr);
     $startlogoevents = $tourXmlObj->events[0];

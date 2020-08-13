@@ -21,10 +21,6 @@ class UploadController extends Controller
 
     public function getPanoUri(Request $request)
     {
-
-
-
-
         $houseCode = $request->hc;
         $agentCode = $request->ac;
         $gid = $request->gid;
@@ -34,11 +30,23 @@ class UploadController extends Controller
         $houseType = $request->ht;  //2:出售  | 3:出租 (备注：区分出售vr和出租vr)
         $panoUri = $request->getUri();
 
+        //判断tour_pro.xml 和tour.xml 配置文件存在的逻辑
+        $name = "tour_pro";
+        $xml = storage_path("panos") . '\\' . $gid . '\\' . 'vtour' . '\\';
+        $xmlFile = $xml . $name . ".xml";
+        if (file_exists($xmlFile)) {
+            $vtourskinFile = $vtourskinXml = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin_new.xml";
+            $tourFile = $xml . "tour_pro" . ".xml";
+        } else {
+            $vtourskinFile = storage_path("panos") . "\\" . $gid . "\\vtour\\skin\\vtourskin.xml";
+            $tourFile = $xml . "tour" . ".xml";
+        }
+
         //调客户端的方法解决客户端启动VR的空白页
-        //editTourStartlogoevents($gid);
+        //editTourStartlogoevents($tourFile);
 
         //vtourskin.xml 更改plugin name="WebVR"  的设置
-        //editVskinWebVR($gid);
+        //editVskinWebVR($vtourskinFile);
 
         if ($houseType == "") {
             $houseType = 2;
@@ -46,11 +54,11 @@ class UploadController extends Controller
 
 
         if ($sourceType == 2 || $sourceType == 3) {      //  0:pc, 1:wap, 2:android, 3:ios, 4:wechart
-            // editTourShare($gid, true);
-            // editTourBar($gid,true);
+             //editTourShare($tourFile, true);
+             //editTourBar($tourFile,true);
         } else {
-            // editTourShare($gid, false);
-            //editTourBar($gid,false);
+             //editTourShare($tourFile, false);
+             //editTourBar($tourFile,false);
             $isPhone = isMobile();
             if ($isPhone) {
                 $sourceType = 1;
@@ -59,10 +67,10 @@ class UploadController extends Controller
             }
         }
 
-        /* if ($sourceType == 0){
-             editTourStart($gid,"pc");       //全景加载页进度条PC 和 移动端
+         /*if ($sourceType == 0){
+             editTourStart($tourFile,"pc");       //全景加载页进度条PC 和 移动端
          }else{
-             editTourStart($gid,"wap");
+             editTourStart($tourFile,"wap");
          }*/
 
         if ($houseCode == "{0}" && $agentCode == "{1}" && $CityID == "{2}") {
@@ -73,9 +81,9 @@ class UploadController extends Controller
             $agentPhone = "";
             $houseID = "";
             //更改tour.xml 里的Title为空
-            editTourTitle($gid, "");
+            //editTourTitle($tourFile, "");
             //更改vtourskin.xml 里的ImageUrl 和Mobile 为空
-            editVskinImageurlMobile($gid, "", "", "");
+            //editVskinImageurlMobile($vtourskinFile, "", "", "");
 
             return view("krpano.new", ["gid" => $gid, "title" => $title, "agentID" => $agentID, "agentPhone" => $agentPhone, "agentName" => $agentName, "thumb" => $thumb,
                 "houseID" => $houseID, "houseCode" => $houseCode, "agentCode" => $agentCode, "CityID" => $CityID]);
@@ -90,9 +98,9 @@ class UploadController extends Controller
             $agentPhone = "";
             $houseID = "";
             //更改tour.xml 里的Title为空
-            editTourTitle($gid, "");
+            //editTourTitle($tourFile, "");
             //更改vtourskin.xml 里的ImageUrl 和Mobile 为空
-            editVskinImageurlMobile($gid, "", "", "");
+            //editVskinImageurlMobile($vtourskinFile, "", "", "");
             return view("krpano.new", ["gid" => $gid, "title" => $title, "agentID" => $agentID, "agentPhone" => $agentPhone, "agentName" => $agentName, "thumb" => $thumb,
                 "houseID" => $houseID, "houseCode" => $houseCode, "agentCode" => $agentCode, "CityID" => $CityID]);
         }
@@ -122,7 +130,7 @@ class UploadController extends Controller
                 file_put_contents($filePath, json_encode($houseData->Data));
             }
 
-            editTourTitle($gid, $title);
+            editTourTitle($tourFile, $title);
             //Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
             $charTitle = "全景看房 | " . $houseData->Data->BuildingName . " " . $houseData->Data->CountF . "室" . $houseData->Data->CountT . "厅";
             $houseID = $houseData->Data->ID;                    //房源自增长ID
@@ -133,7 +141,7 @@ class UploadController extends Controller
         } else {
             $title = "";
             Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
-            //editTourTitle($gid, $title);
+            editTourTitle($tourFile, $title);
             $charTitle = "";
             $houseID = "";
             $houseNum = "";
@@ -160,7 +168,7 @@ class UploadController extends Controller
             $agentID = $agentData->Data->AgentID;
 
             //更改vtourskin.xml 里的ImageUrl 和Mobile
-            editVskinImageurlMobile($gid, $agentImgUrl, $agentPhone, true);
+            editVskinImageurlMobile($vtourskinFile, $agentImgUrl, $agentPhone, true);
 
             $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
             $kfData = json_decode($kf)->Data;
@@ -192,7 +200,7 @@ class UploadController extends Controller
             $agentPhone = $CustomerService400;
             $agentID = "";
             //更改vtourskin.xml 里的ImageUrl 和Mobile
-            editVskinImageurlMobile($gid, $agentImgUrl, $agentPhone, false);
+            editVskinImageurlMobile($vtourskinFile, $agentImgUrl, $agentPhone, false);
 
             DB::update("update panos set agentCode='" . $agentCode . "',user_id='" . $agentID . "',storeName='" . $storeName . "',agentName='" . $agentName . "' where gid=?", [$gid]);
         }
@@ -212,8 +220,6 @@ class UploadController extends Controller
             "houseID" => $houseID, "houseCode" => $houseCode, "agentCode" => $agentCode, "CityID" => $CityID]);
 
     }
-
-
 
 
     //VR房勘检查状态
@@ -425,7 +431,6 @@ class UploadController extends Controller
         //调用上传全景图的API
         $getFilesData = $this->panos($request);
         $getFilesData = json_decode($getFilesData);
-
 
 
         //接收参数

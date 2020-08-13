@@ -418,7 +418,7 @@ class VrController extends Controller
         if ($resHotSpot) {
             $pano_id = $resHotSpot[0]->pano_id;
             $hotsName = $resHotSpot[0]->hotsName;
-            $updated_at = date('Y-m-d H:i:s', time());
+            $updated_at = date('Y-m-d H:i:s.000', time());
             $affected = DB::update("update hotspots set linkedscene='" . $linkedTitle . "' ath='" . $ath . "',atv='" . $atv . "',updated_at='" . $updated_at . "' where pano_id=? and hotsName=?", [$pano_id, $hotsName]);
             if ($affected) {
                 var_dump("update success!");
@@ -431,7 +431,7 @@ class VrController extends Controller
             $hotspot->ath = $ath;
             $hotspot->atv = $atv;
             $hotspot->linkedscene = $linkedTitle;
-            $hotspot->created_at = date('Y-m-d H:i:s', time());
+            $hotspot->created_at = date('Y-m-d H:i:s.000', time());
             $hotspot->save();
         }
 
@@ -488,7 +488,7 @@ class VrController extends Controller
         $hotspot->atv = $atv;
         $hotspot->type = "point";
         $hotspot->linkedscene = $linkedscene;
-        $hotspot->created_at = date('Y-m-d H:i:s', time());
+        $hotspot->created_at = date('Y-m-d H:i:s.000', time());
         $res = $hotspot->save();
         if ($res) {
             //xml 追加新的热点标签
@@ -551,7 +551,7 @@ class VrController extends Controller
             $hotspot->atv = $atv;
             $hotspot->type = "hotspot";
             $hotspot->linkedscene = $linkedTitle;
-            $hotspot->created_at = date('Y-m-d H:i:s', time());
+            $hotspot->created_at = date('Y-m-d H:i:s.000', time());
             $result = $hotspot->save();
 
             if ($result) {     // 向xml中去旧添新
@@ -633,7 +633,7 @@ class VrController extends Controller
             $hotspot->atv = $atv;
             $hotspot->type = "point";
             $hotspot->linkedscene = $linkedTitle;
-            $hotspot->created_at = date('Y-m-d H:i:s', time());
+            $hotspot->created_at = date('Y-m-d H:i:s.000', time());
             $result = $hotspot->save();
             //插库成功后 向xml中去旧添新
             if ($result) {
