@@ -241,6 +241,10 @@ class VrController extends Controller
         $xmlFile = storage_path("panos") . "\\" . $pano_id . "\\vtour\\tour.xml";
         $xmlEditFile = storage_path("panos") . "\\" . $pano_id . "\\vtour\\tour_edit.xml";
         $skinXmlFile = storage_path("panos") . "\\" . $pano_id . "\\vtour\\skin\\vtourskin.xml";
+
+        //编辑页的漫游窗口Title 样子正常
+        editTourBar($xmlFile,false);
+
         //1. copy tour.xml 文件为tour_edit.xml
         $vtourXmlStr = file_get_contents($xmlFile);
         $res = file_put_contents($xmlEditFile, $vtourXmlStr);
