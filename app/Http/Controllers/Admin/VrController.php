@@ -66,7 +66,8 @@ class VrController extends Controller
             }
         }
         //过滤掉没有全景地址和不合规的全景数据
-        $panos = $where->where("panoUrl", "<>", null)->where("check_at", "<>", "3")->paginate($perPage);
+        //$panos = $where->where("panoUrl", "<>", null)->where("check_at", "<>", "3")->paginate($perPage);
+        $panos = $where->where("panoUrl", "<>", null)->paginate($perPage);
 
         $panos->cityName = $cityName;
         $panos->status = $status;
