@@ -286,7 +286,7 @@ class UploadController extends Controller
             $agentCode = "200525100905B8C328A8B74144489C7D";
 
             $gid = $request->get("gid");
-            $gid = "EQWQWAA9";
+            $gid = "EQWQWAA11";
 
             $houseNum = $request->get("houseNum");
             $houseName = $request->get("house_name");   //楼盘名称
@@ -360,7 +360,7 @@ class UploadController extends Controller
             $pano->save();
 
             //同一个上传者 查场景id 如果有 则先删除id下的数据 再批量插入
-            $result = DB::select('select pano_id,user_id from imgs where gid=?', [$gid]);
+            $result = DB::select('select houseCode,agentCode from imgs where gid=?', [$gid]);
             if ($result) {
                 DB::delete("delete from imgs where gid=?", [$gid]);
                 $path = $panoimgPath . $gid . '/';
@@ -369,11 +369,13 @@ class UploadController extends Controller
 
             //批量插入数据库
             $zh_name = array();
+            $i = 0;
             foreach ($fileNames as $key => $val) {
                 //索引数组key替换成大写字母
                 $temp = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N");
                 $newVal = numAbc($val, $temp);
                 foreach ($newVal as $min_k => $min_v) {
+                    $i++;
                     $key = trim($key, "'");
                     if (array_key_exists($key, ApiErrDesc::PANO_ARR_REPLACE)) {
                         if (count($newVal) == 1) {   //场景单图片不拼接大写字母
@@ -382,11 +384,11 @@ class UploadController extends Controller
                             $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key] . $min_k;
                         }
                     }
-
                     $imgName = $min_v->getClientOriginalName();
                     $imgSize = $min_v->getClientSize();
                     $imgCreated_at = date('Y-m-d H:i:s.000', $min_v->getaTime());
                     DB::table('imgs')->insert(array(
+                        'sortId'=> $i-1,
                         'gid' => $gid,
                         'houseCode' => $houseCode,
                         'agentCode' => $houseCode,
@@ -477,6 +479,7 @@ class UploadController extends Controller
         //$gid = $request->get("gid");
         $propertyCode = $request->get("PropertyCode");  //房源CODE
         $CityID = $request->get("CityID");              //当前登录人城市ID
+        $propertyCode = "578651";
 
         /*$result = DB::select('select imgData from uploads where gid=?', [$gid]);
         $imgData = $result[0]->imgData;
@@ -558,7 +561,7 @@ class UploadController extends Controller
                 changVtourskinXml($imgRealDir . 'vtour/skin/vtourskin.xml', $gid, $agentImgUrl, $agentPhone);
                 changTourXml($imgRealDir . 'vtour/tour.xml', $zh_name, $title, $gid);
 
-                DB::update("update panos set status=2 WHERE houseCode=? AND gid<>?",[$houseCode,$gid]);
+                DB::update("update panos set status=2 WHERE houseCode=? AND gid<>?", [$houseCode, $gid]);
 
 
                 foreach ($keepNameArr as $k_thumb => $v_mbName) {
@@ -573,7 +576,7 @@ class UploadController extends Controller
                 $res['url'] = $this->http_host . $this->base_name . '/' . 'vr/uri/' . $gid . '?hc={0}&ac={1}&cs={2}';
 
                 $updated_at = date('Y-m-d', time());
-                DB::update("update panos set panoUrl='" . $res['url'] . "',updated_at='" . $updated_at . "' where gid=?", [$gid]);
+                DB::update("update panos set panoUrl='" . $res['url'] . "',updated_at='" . $updated_at . "',PropertyCode='" . $propertyCode . "' where gid=?", [$gid]);
                 houseApi($propertyCode, $CityID, $res['url'], $thumb, 2);
             }
         } else {

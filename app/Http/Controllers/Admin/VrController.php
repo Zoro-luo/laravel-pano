@@ -61,8 +61,8 @@ class VrController extends Controller
             if ($cTime_left == $cTime_right) {
                 $where = $where->whereDate("updated_at", $cTime_right_old);
             } else {
-                $where = $where->whereDate("updated_at","<=",$cTime_right_old)
-                                ->whereDate("updated_at",">=",$cTime_left_old);
+                $where = $where->whereDate("updated_at", "<=", $cTime_right_old)
+                    ->whereDate("updated_at", ">=", $cTime_left_old);
             }
         }
         //过滤掉没有全景地址和不合规的全景数据
@@ -244,7 +244,7 @@ class VrController extends Controller
         $skinXmlFile = storage_path("panos") . "\\" . $pano_id . "\\vtour\\skin\\vtourskin.xml";
 
         //编辑页的漫游窗口Title 样子正常
-        editTourBar($xmlFile,false);
+        editTourBar($xmlFile, false);
 
         //1. copy tour.xml 文件为tour_edit.xml
         $vtourXmlStr = file_get_contents($xmlFile);
@@ -360,6 +360,16 @@ class VrController extends Controller
             $views[0]['vlookat'] = $vlookat;
             //file_put_contents($xmlFile, $vtourXmlObj->asXML());
             file_put_contents($xmlEditFile, $vtourXmlObj->asXML());
+
+            $panoRes = DB::select('select panoUrl,cityName,PropertyCode from panos where gid=?', [$panoId]);
+            $propertyCode = $panoRes[0]->PropertyCode;
+            $CityID = $panoRes[0]->cityName;
+            $url = $panoRes[0]->panoUrl;
+
+            $imgRes = DB::select('select thumb from imgs where gid=? and sortId=? and mb_name=?', [$panoId,$sceneIndex,$sceneTitle]);
+            $thumb = $imgRes[0]->thumb;
+            houseApi($propertyCode, $CityID, $url, $thumb, 2);
+
             $ress = ['h' => $hlookat, 'v' => $vlookat, 'title' => $sceneTitle];
             return $ress;
         }

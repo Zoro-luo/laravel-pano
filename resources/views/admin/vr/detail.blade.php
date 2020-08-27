@@ -116,9 +116,10 @@
                                             <li class="on">全部场景</li>
                                             <li>客厅</li>
                                             <li>卧室</li>
-                                            <li>卫生间</li>
                                             <li>厨房</li>
-                                            <li>外景房</li>
+                                            <li>餐厅</li>
+                                            <li>卫生间</li>
+                                            <li>阳台</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -751,7 +752,6 @@
                     "vlookat": vlookat
                 },
                 success: function (e) {
-                    // console.log(e);
                     $(".isScene").html(e.title);
                     krpano.call("lookat(" + e.h + "," + e.v + ",120)");
                     //krpano.call("loadpano(" + xmlPath + ", NULL, MERGE, BLEND(0.1));");
