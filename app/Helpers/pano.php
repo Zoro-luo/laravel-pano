@@ -1279,8 +1279,9 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $rightVr->setAttribute("y","90");
     $rightVr->setAttribute("visible","true");
     $rightVr->setAttribute("devices","touchdevice");
-    $rightVr->setAttribute("onclick","if(layer[vr_all_screen].visible,set(layer[vr_all_screen].visible, 'false'),
-           set(layer[set_alert_table].visible, 'false');set(layer[vr_all_screen].visible, 'true'););");
+    $rightVr->setAttribute("onclick","if(layer[vr_all_screen].visible,set(layer[vr_all_screen].visible, 'false'),set(layer[set_alert_table].visible, 'false');
+           remove_iframe(iframelayer);set(layer[icon].url, '/pano/storage/static/images/down.png');remove_iframe(iframelayer_new);set(layer[iframelayer].visible,'false');
+           set(layer[iframelayer_new].visible,'false');set(layer[vr_all_screen].visible, 'true'););");
 
     //action  [call_iframe]
     $actionCall = $vtourDocXml->createElement("action");

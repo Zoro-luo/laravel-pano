@@ -284,9 +284,10 @@ class UploadController extends Controller
             //临时默认值
             $houseCode = "5394C61B6BAB437E891F67E6501392F0";
             $agentCode = "200525100905B8C328A8B74144489C7D";
+            //$agentCode = "2007301937177055EFEB72A14E84B88D";
 
             $gid = $request->get("gid");
-            $gid = "EQWQWAA11";
+            $gid = "EQWQWAA12";
 
             $houseNum = $request->get("houseNum");
             $houseName = $request->get("house_name");   //楼盘名称
@@ -306,11 +307,11 @@ class UploadController extends Controller
             $CityID = 51;
             $sourceType = 0;        //  0:pc, 1:wap, 2:android, 3:ios, 4:wechart
 
+
             $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetShareHouseDetailByCode?HouseSysCode=" . $houseCode . "&flagType=" . $flagType . "&CityID=" . $CityID . "&houseType=2");
             $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCodeVr?id=" . $agentCode . "&sourceType=" . $sourceType . "&cityID=" . $CityID);
             $houseData = json_decode($houseApi);
             $agentData = json_decode($agentApi);
-
 
             if ($houseData->Code == 2000 && $houseData->Data) {
                 $pano_id = $houseData->Data->ID;
@@ -330,7 +331,6 @@ class UploadController extends Controller
                 $storeName = "";
                 $agentName = "";
             }
-
 
             //panos有记录则先删除再添加
             $resPanoData = DB::select('select houseCode from panos where gid=?', [$gid]);
