@@ -178,8 +178,22 @@ class UploadController extends Controller
                 }
             }
 
-            DB::update("update panos set agentCode='" . $agentCode . "',user_id='" . $agentID . "',storeName='" . $storeName . "',agentName='" . $agentName . "' where gid=?", [$gid]);
+            //2. 修改$vtourskinFile 经纪人显示
+            $tourSkinXmlStr = file_get_contents($vtourskinFile);
+            $tourSkinXmlObj = new \SimpleXMLElement($tourSkinXmlStr);
+            $vtourSkinLayerArr = $tourSkinXmlObj->xpath("layer");
+            /*$skin_thumbs = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[2]
+                ->xpath("layer")[0]->xpath("layer")[3];
+            if ($skin_thumbs["state"] == "closed") {             // skin_thumbs
+                $skin_thumbs["state"] = "opened";
+            }*/
+            $father_control_bar_pc = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[3];
+            if ($father_control_bar_pc["visible"] == "false") {  //father_control_bar_pc
+                $father_control_bar_pc["visible"] = "true";
+            }
+            file_put_contents($vtourskinFile, $tourSkinXmlObj->asXML());
 
+            DB::update("update panos set agentCode='" . $agentCode . "',user_id='" . $agentID . "',storeName='" . $storeName . "',agentName='" . $agentName . "' where gid=?", [$gid]);
 
         } else {  //如果经纪人数据为空 则获取400电话
             //拿到房源ID 下的城市ID用来获取该客服400电话
@@ -284,7 +298,7 @@ class UploadController extends Controller
             //临时默认值
             $houseCode = "5394C61B6BAB437E891F67E6501392F0";
             $agentCode = "200525100905B8C328A8B74144489C7D";
-            //$agentCode = "2007301937177055EFEB72A14E84B88D";
+            $agentCode = "2007301937177055EFEB72A14E84B88D";
 
             $gid = $request->get("gid");
             $gid = "EQWQWAA12";
@@ -312,6 +326,7 @@ class UploadController extends Controller
             $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCodeVr?id=" . $agentCode . "&sourceType=" . $sourceType . "&cityID=" . $CityID);
             $houseData = json_decode($houseApi);
             $agentData = json_decode($agentApi);
+            dd($agentData);
 
             if ($houseData->Code == 2000 && $houseData->Data) {
                 $pano_id = $houseData->Data->ID;
