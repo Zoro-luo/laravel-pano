@@ -186,7 +186,7 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $phoneValuePc->addAttribute("align","leftcenter");
     $phoneValuePc->addAttribute("zorder","14");
     $phoneValuePc->addAttribute("url","%SWFPATH%/plugins/textfield.swf");
-    $phoneValuePc->addAttribute("html",$agentPhone?$agentPhone:"NULL");
+    $phoneValuePc->addAttribute("html",$agentPhone?$agentPhone:"");
     $phoneValuePc->addAttribute("css","color:#FFFFFF;font-family:Arial;font-size:18px;font-weight:bold;");
     $phoneValuePc->addAttribute("x","90");
     // 添加 sweep_code_pc
@@ -1095,7 +1095,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $layerIcon->setAttribute("keep","true");
     $layerIcon->setAttribute("align","right");
     $layerIcon->setAttribute("y","-3");
-    $layerIcon->setAttribute("x","18");
+    $layerIcon->setAttribute("x","10");
     $layerIcon->setAttribute("onclick","if(layer[iframelayer].visible,
     set(layer[top_shade_layer].visible,false);
         set(layer[top_back_layer].visible,true);
@@ -1338,6 +1338,19 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $nadirlogo->setAttribute("scale", "0.8");
     $nadirlogo->setAttribute("rotate", "0.0");
 
+    //添加PC端的水印logo
+    $watermark_logo = $vtourDocXml->createElement("layer");
+    $watermark_logo->setAttribute("name","watermark_logo");
+    $watermark_logo->setAttribute("url","/pano/storage/static/images/logo.png");
+    $watermark_logo->setAttribute("scale","0.4");
+    $watermark_logo->setAttribute("devices","html5+!touchdevice");
+    $watermark_logo->setAttribute("zorder","15");
+    $watermark_logo->setAttribute("align","lefttop");
+    $watermark_logo->setAttribute("keep","true");
+    $watermark_logo->setAttribute("x","100");
+    $watermark_logo->setAttribute("y","30");
+    $watermark_logo->setAttribute("visible","true");
+
 
     //追加至根节点
     $krpanoNode->appendChild($topBackLayer);
@@ -1358,6 +1371,9 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $krpanoNode->appendChild($layerIframeNew);
     $krpanoNode->appendChild($layerIframe);
     $krpanoNode->appendChild($layerButton);
+
+    //水印logo [PC端]
+    $krpanoNode->appendChild($watermark_logo);
 
 
 
