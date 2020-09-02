@@ -14,6 +14,7 @@
 </head>
 
 <body>
+
 <section class="main vr-index">
     <!-- 内容展示 -->
 
@@ -23,7 +24,7 @@
                 <div class="info-top">
                     <div class="avatar-container">
                         <div class="avatar-wrapper">
-                            <img src="{{$agentInfo =="" ? "" : $agentInfo->ImageUrl}}" alt="">
+                            <img src="{{$agentInfo->ImageUrl =='' ? '/pano/storage/static/images/manager-img.png' : $agentInfo->ImageUrl}}" alt="">
                         </div>
                     </div>
                     <div class="details-container">
@@ -72,7 +73,9 @@
     });
     function frClick() {
         $(".btn").click(function () {
-            window.open("{{$agentInfo->SiteUrl}}");
+            //window.open("{{$agentInfo->SiteUrl}}");
+
+            top.location.href = "{{$agentInfo->SiteUrl}}";
         })
     }
 </script>

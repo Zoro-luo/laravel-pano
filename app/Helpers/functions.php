@@ -49,23 +49,6 @@ function filterArr($arr)
 }
 
 
-/**
- * 两个同key数组值整合成一个数组 key保持
- * @param $arr1
- * @param $arr2
- * @param string $key
- */
-function keepArrKey($arr1, $arr2, $key = '')
-{
-    $count = count($arr1);
-    for ($j = 0; $j < $count;) {
-        for ($i = 0; $i < $count; $i++) {
-            $arr2[$j][$key] = $arr1[$i];
-            $j++;
-        }
-    }
-}
-
 
 /**
  * 索引数组key替换成大写字母
@@ -252,6 +235,36 @@ function editVskinImageurlMobile($vtourskinXml, $userUrl, $phoneHtml, $flag)
 
     file_put_contents($vtourskinXml, $vtourskinObj->asXML());
 }
+
+
+
+//wap 小程序 无需IM按钮
+function checkVskinMobile($vtourskinXml,$flag)
+{
+    $vtourskinStr = file_get_contents($vtourskinXml);
+    $vtourskinObj = new \SimpleXMLElement($vtourskinStr);
+    //更改移动端经纪人图形
+    $father_control_bar = $vtourskinObj->layer[2]->layer[0]->layer[0]->layer[4];
+    $skin_talk = $father_control_bar->layer[2];
+    $skin_phone = $father_control_bar->layer[3];
+    if ($flag){
+        $skin_talk["visible"] = "true";
+        $skin_talk["onclick"] = "jscall(LineConsult())";
+        //$skin_phone["onclick"] = "openurl('tel:".$phoneHtml."')";
+        $skin_phone["onclick"] = "jscall(Mobile())";
+        $skin_phone["x"] = "48%";
+    }else{
+        $skin_talk["visible"] = "false";
+        $skin_talk["onclick"] = "";
+        //$skin_phone["onclick"] = "openurl('tel:".$phoneHtml."')";
+        $skin_phone["onclick"] = "jscall(Mobile())";
+        $skin_phone["x"] = "10%";
+    }
+    file_put_contents($vtourskinXml, $vtourskinObj->asXML());
+}
+
+
+
 
 //调整APP端VR导航的高度位置
 function editTourBar($tourXml,$flag){

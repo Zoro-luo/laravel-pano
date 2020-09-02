@@ -789,7 +789,7 @@ function addSetting($xmlFile = null)
     // gyro_off
     $gyroOff = $vtourDocXml->createElement("layer");
     $gyroOff->setAttribute("name","gyro_off");
-    $gyroOff->setAttribute("backgroundcolor","0x007F7F7F");
+    $gyroOff->setAttribute("backgroundcolor","0x0002C203");
     $gyroOff->setAttribute("roundedge","50");
     $gyroOff->setAttribute("visible","false");
     $gyroOff->setAttribute("align","leftcenter");
@@ -804,7 +804,7 @@ function addSetting($xmlFile = null)
     // gyro_on
     $gyroOn = $vtourDocXml->createElement("layer");
     $gyroOn->setAttribute("name","gyro_on");
-    $gyroOn->setAttribute("backgroundcolor","0x0002C203");
+    $gyroOn->setAttribute("backgroundcolor","0x007F7F7F");
     $gyroOn->setAttribute("roundedge","50");
     $gyroOn->setAttribute("visible","true");
     $gyroOn->setAttribute("align","rightcenter");
@@ -988,6 +988,7 @@ function addVr($xmlFile = null)
     $vrTiyanTitle->setAttribute("background","false");
     $vrTiyanTitle->setAttribute("keep","true");
     $vrTiyanTitle->setAttribute("url","%SWFPATH%/plugins/textfield.swf");
+    $vrTiyanTitle->setAttribute("devices","mobile");
     $vrTiyanTitle->setAttribute("align","center");
     $vrTiyanTitle->setAttribute("x","");
     $vrTiyanTitle->setAttribute("y","-1");
@@ -1478,8 +1479,15 @@ function changTourXml($xmlFile = null, $mb_name = null,$content,$paonId)
     /**********************
      * 循环更改xml场景title
      **********************/
-    keepArrKey($mb_name, $tourSceneArr, 'title');
-    //渲染xml
+    foreach ($tourSceneArr as $k=>$v){
+        $title = (array)($v['title']);
+        foreach ($mb_name as $mb_k=>$mb_v){
+            if ($title[0] == $mb_k){
+                $tourSceneArr[$k]["title"] = $mb_v;
+            }
+        }
+    }
+
     file_put_contents($xmlFile, $tourXmlObj->asXML());
 
 }

@@ -48,6 +48,7 @@ class UploadController extends Controller
         //vtourskin.xml 更改plugin name="WebVR"  的设置
         //editVskinWebVR($vtourskinFile);
 
+
         if ($houseType == "") {
             $houseType = 2;
         }
@@ -66,6 +67,14 @@ class UploadController extends Controller
                 $sourceType = 0;
             }
         }
+
+        //wap 小程序 无需IM按钮
+//        if ($sourceType == 1 || $sourceType == 4){
+//
+//            checkVskinMobile($vtourskinFile,false);
+//        }else{
+//            checkVskinMobile($vtourskinFile,true);
+//        }
 
         /*if ($sourceType == 0){
             editTourStart($tourFile,"pc");       //全景加载页进度条PC 和 移动端
@@ -162,7 +171,7 @@ class UploadController extends Controller
             $agentName = $agentData->Data->AgentName;   //发布人
             $agentImgUrl = $agentData->Data->ImageUrl;
             if ($agentImgUrl == "") {
-                $agentImgUrl = "/pano/storage/static/images/manager.png";
+                $agentImgUrl = "/pano/storage/static/images/manager-img.png";
             }
             $agentPhone = $agentData->Data->Mobile;
             $agentID = $agentData->Data->AgentID;
@@ -301,7 +310,7 @@ class UploadController extends Controller
             $agentCode = "2007301937177055EFEB72A14E84B88D";
 
             $gid = $request->get("gid");
-            $gid = "EQWQWAA12";
+            $gid = "EQWQWAA15";
 
             $houseNum = $request->get("houseNum");
             $houseName = $request->get("house_name");   //楼盘名称
@@ -326,7 +335,7 @@ class UploadController extends Controller
             $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCodeVr?id=" . $agentCode . "&sourceType=" . $sourceType . "&cityID=" . $CityID);
             $houseData = json_decode($houseApi);
             $agentData = json_decode($agentApi);
-            dd($agentData);
+
 
             if ($houseData->Code == 2000 && $houseData->Data) {
                 $pano_id = $houseData->Data->ID;
@@ -382,6 +391,8 @@ class UploadController extends Controller
                 clearDir($path);                    //删除目录以及子目录文件
             }
 
+
+
             //批量插入数据库
             $zh_name = array();
             $i = 0;
@@ -389,10 +400,12 @@ class UploadController extends Controller
                 //索引数组key替换成大写字母
                 $temp = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N");
                 $newVal = numAbc($val, $temp);
+
                 foreach ($newVal as $min_k => $min_v) {
                     $i++;
                     $key = trim($key, "'");
                     if (array_key_exists($key, ApiErrDesc::PANO_ARR_REPLACE)) {
+                        //$zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key];
                         if (count($newVal) == 1) {   //场景单图片不拼接大写字母
                             $zh_name[] = ApiErrDesc::PANO_ARR_REPLACE[$key];
                         } else {
@@ -443,6 +456,10 @@ class UploadController extends Controller
                     }
                 }
             }
+
+           /* d($zh_name);
+            dd("AAAAAAAAA");*/
+
         } else {
             $r['code'] = ApiErrDesc::NO_METHOD_POST[0];
             $r['msg'] = ApiErrDesc::NO_METHOD_POST[1];
@@ -494,6 +511,7 @@ class UploadController extends Controller
         //$gid = $request->get("gid");
         $propertyCode = $request->get("PropertyCode");  //房源CODE
         $CityID = $request->get("CityID");              //当前登录人城市ID
+        $CityID = 51;
         $propertyCode = "578651";
 
         /*$result = DB::select('select imgData from uploads where gid=?', [$gid]);
@@ -501,11 +519,11 @@ class UploadController extends Controller
         $getFilesData = json_decode($imgData); */
         $gid = $getFilesData->gid;
         $houseCode = $getFilesData->houseCode;
-
+        $agentCode = $getFilesData->agentCode;
 
         //$title = $getFilesData->title;
         //$houseCode = $getFilesData->houseCode;
-        //$agentCode = $getFilesData->agentCode;
+        //
         //$agentImgUrl = $getFilesData->agentImgUrl;
         //$agentPhone = $getFilesData->agentPhone;
         //$userId = $getFilesData->user_id;
@@ -520,6 +538,10 @@ class UploadController extends Controller
         $imgRealStr = implode(' ', $imgRealArr);
         $zh_name = $getFilesData->zh_name;
 
+        //dd($imgRealStr);
+
+        //dd($zh_name);
+        //dd($imgNameArr);
 
         //全景图上传不全返回错误信息
         if (count($imgNameArr) != count($zh_name)) {
@@ -528,7 +550,15 @@ class UploadController extends Controller
             $res['url'] = '';
             return json_encode($res);
         }
+
+        $imgNameNewArr= array();
+        foreach ($imgNameArr as $val){
+            $imgNameNewArr[] =  explode('.',$val)[0];
+        }
+
+        $keepNameNewArr =  array_combine($imgNameNewArr, $zh_name);
         $keepNameArr = array_combine($imgNameArr, $zh_name);
+
 
         //全景图存放路径
         $imgRealDir = $getFilesData->imgRealDir . '/';
@@ -569,12 +599,13 @@ class UploadController extends Controller
                 //changVtourskinXml($imgRealDir . 'vtour/skin/vtourskin.xml', $gid, $agentCode, $CityID, $agentImgUrl, $agentPhone);
                 //changTourXml($imgRealDir . 'vtour/tour.xml', $zh_name, $title, $houseCode, $CityID);
 
-                $agentImgUrl = "/pano/storage/static/images/manager.png";
+                $agentImgUrl = "/pano/storage/static/images/manager-img.png";
                 $agentPhone = "";
                 $title = "";
 
                 changVtourskinXml($imgRealDir . 'vtour/skin/vtourskin.xml', $gid, $agentImgUrl, $agentPhone);
-                changTourXml($imgRealDir . 'vtour/tour.xml', $zh_name, $title, $gid);
+                //changTourXml($imgRealDir . 'vtour/tour.xml', $zh_name, $title, $gid);
+                changTourXml($imgRealDir . 'vtour/tour.xml', $keepNameNewArr, $title, $gid);
 
                 DB::update("update panos set status=2 WHERE houseCode=? AND gid<>?", [$houseCode, $gid]);
 
@@ -588,7 +619,7 @@ class UploadController extends Controller
                 $res['msg'] = ApiErrDesc::SUCCESS_KRPANO[1];
                 //$res['pano_id'] = $panoId;
                 $res['gid'] = $gid;
-                $res['url'] = $this->http_host . $this->base_name . '/' . 'vr/uri/' . $gid . '?hc={0}&ac={1}&cs={2}';
+                $res['url'] = $this->http_host . $this->base_name . '/' . 'vr/uri/' . $gid . '?hc='.$houseCode.'&ac='.$agentCode.'&cs='.$CityID;
 
                 $updated_at = date('Y-m-d', time());
                 DB::update("update panos set panoUrl='" . $res['url'] . "',updated_at='" . $updated_at . "',PropertyCode='" . $propertyCode . "' where gid=?", [$gid]);

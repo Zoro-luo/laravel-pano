@@ -132,7 +132,8 @@
                 }
             } else {
                 //console.log('不是app')
-                window.open("{{$houseInfo->SiteUrl}}");
+                //window.open("{{$houseInfo->SiteUrl}}");
+                top.location.href = "{{$houseInfo->SiteUrl}}";
             }
 
         })
