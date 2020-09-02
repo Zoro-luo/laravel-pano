@@ -250,15 +250,15 @@ function checkVskinMobile($vtourskinXml,$flag)
     if ($flag){
         $skin_talk["visible"] = "true";
         $skin_talk["onclick"] = "jscall(LineConsult())";
-        //$skin_phone["onclick"] = "openurl('tel:".$phoneHtml."')";
         $skin_phone["onclick"] = "jscall(Mobile())";
+        $skin_phone["devices"] = "mobile";
         $skin_phone["x"] = "48%";
     }else{
         $skin_talk["visible"] = "false";
-        $skin_talk["onclick"] = "";
-        //$skin_phone["onclick"] = "openurl('tel:".$phoneHtml."')";
-        $skin_phone["onclick"] = "jscall(Mobile())";
-        $skin_phone["x"] = "10%";
+        $skin_talk["onclick"] = "jscall(LineConsult())";
+        $skin_phone["onclick"] = "jscall(wapMobile())";
+        $skin_phone["devices"] = "mobile";
+        $skin_phone["x"] = "20%";
     }
     file_put_contents($vtourskinXml, $vtourskinObj->asXML());
 }

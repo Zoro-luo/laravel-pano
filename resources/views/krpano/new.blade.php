@@ -100,6 +100,11 @@
             });
         }
 
+        //wap 和 微信打电话
+        function wapMobile() {
+            window.location.href = "tel:"+agentPhone;
+        }
+
         //电话联系经纪人
         function Mobile() {
             ClickTel();         //记录埋点

@@ -68,13 +68,9 @@ class UploadController extends Controller
             }
         }
 
-        //wap 小程序 无需IM按钮
-//        if ($sourceType == 1 || $sourceType == 4){
-//
-//            checkVskinMobile($vtourskinFile,false);
-//        }else{
-//            checkVskinMobile($vtourskinFile,true);
-//        }
+
+
+
 
         /*if ($sourceType == 0){
             editTourStart($tourFile,"pc");       //全景加载页进度条PC 和 移动端
@@ -234,6 +230,13 @@ class UploadController extends Controller
             $thumb = $result[0]->thumb;
         } else {
             $thumb = "";
+        }
+
+        //wap 小程序 无需IM按钮
+        if ($sourceType == 1 || $sourceType == 4){   //  0:pc, 1:wap, 2:android, 3:ios, 4:wechart
+            checkVskinMobile($vtourskinFile,false);
+        }else{
+            checkVskinMobile($vtourskinFile,true);
         }
 
         //$result = DB::select('select imgData from uploads  where gid=?', [$gid]);
