@@ -366,6 +366,19 @@ delete(global.lpinfo););,delete(global.lpinfo););););";
     $skin_phone->addAttribute("scale","0.5");
     $skin_phone->addAttribute("onclick","openurl('tel:123456789')");
 
+     //移动端的水印logo
+    $watermark_logo2 =  $fatherControlBar->addChild("layer");
+    $watermark_logo2->addAttribute("name","watermark_logo2");
+    $watermark_logo2->addAttribute("url","/pano/storage/static/images/logo.png");
+    $watermark_logo2->addAttribute("scale","0.2");
+    $watermark_logo2->addAttribute("devices","touchdevice");
+    $watermark_logo2->addAttribute("zorder","-150");
+    $watermark_logo2->addAttribute("align","lefttop");
+    $watermark_logo2->addAttribute("keep","true");
+    $watermark_logo2->addAttribute("x","0");
+    $watermark_logo2->addAttribute("y","-25");
+    $watermark_logo2->addAttribute("visible","true");
+
 
     //隐藏整个 [skin_control_bar] 层 为了自定义这个层 todo
     $skin_control_bar = $vtourXmlObj->layer[2]->layer[2];
