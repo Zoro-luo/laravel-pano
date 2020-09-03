@@ -802,9 +802,9 @@ function addSetting($xmlFile = null)
     // gyro_off
     $gyroOff = $vtourDocXml->createElement("layer");
     $gyroOff->setAttribute("name","gyro_off");
-    $gyroOff->setAttribute("backgroundcolor","0x0002C203");
+    $gyroOff->setAttribute("backgroundcolor","0x007F7F7F");
     $gyroOff->setAttribute("roundedge","50");
-    $gyroOff->setAttribute("visible","false");
+    $gyroOff->setAttribute("visible","true");
     $gyroOff->setAttribute("align","leftcenter");
     $gyroOff->setAttribute("x","4%");
     $gyroOff->setAttribute("width","14");
@@ -817,9 +817,9 @@ function addSetting($xmlFile = null)
     // gyro_on
     $gyroOn = $vtourDocXml->createElement("layer");
     $gyroOn->setAttribute("name","gyro_on");
-    $gyroOn->setAttribute("backgroundcolor","0x007F7F7F");
+    $gyroOn->setAttribute("backgroundcolor","0x0002C203");
     $gyroOn->setAttribute("roundedge","50");
-    $gyroOn->setAttribute("visible","true");
+    $gyroOn->setAttribute("visible","false");
     $gyroOn->setAttribute("align","rightcenter");
     $gyroOn->setAttribute("x","4%");
     $gyroOn->setAttribute("width","14");
