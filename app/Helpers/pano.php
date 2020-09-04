@@ -1249,7 +1249,7 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     //top_screen_pc
     $topScreenPc = $vtourDocXml->createElement("layer");
     $topScreenPc->setAttribute("name","top_screen_pc");
-    $topScreenPc->setAttribute("url","../../../static/images/screen-pc.png");
+    $topScreenPc->setAttribute("url","/pano/storage/static/images/screen_big.png");
     $topScreenPc->setAttribute("scale","0.95");
     $topScreenPc->setAttribute("width","54");
     $topScreenPc->setAttribute("height","54");
@@ -1260,7 +1260,8 @@ function addIframeFy($xmlFile = null, $content = '',$paonId)
     $topScreenPc->setAttribute("x","42");
     $topScreenPc->setAttribute("y","50");
     $topScreenPc->setAttribute("visible","true");
-    $topScreenPc->setAttribute("onclick","switch(fullscreen);");
+    $topScreenPc->setAttribute("onclick","switch(fullscreen);if(layer[top_screen_pc].url == '/pano/storage/static/images/screen_big.png',
+           set(layer[top_screen_pc].url,'/pano/storage/static/images/screen_small.png'),set(layer[top_screen_pc].url,'/pano/storage/static/images/screen_big.png');)");
     $topScreenPc->setAttribute("devices","html5+!touchdevice");
 
     //right_vr_pc
