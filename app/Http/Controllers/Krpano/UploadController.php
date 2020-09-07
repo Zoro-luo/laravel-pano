@@ -46,7 +46,7 @@ class UploadController extends Controller
         //editTourStartlogoevents($tourFile);
 
         //vtourskin.xml 更改plugin name="WebVR"  的设置
-        //editVskinWebVR($vtourskinFile);
+        editVskinWebVR($vtourskinFile);
 
 
         if ($houseType == "") {
@@ -135,7 +135,7 @@ class UploadController extends Controller
                 file_put_contents($filePath, json_encode($houseData->Data));
             }
 
-            editTourTitle($tourFile, $title);
+            //editTourTitle($tourFile, $title);
             //Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
             $charTitle = "全景看房 | " . $houseData->Data->BuildingName . " " . $houseData->Data->CountF . "室" . $houseData->Data->CountT . "厅";
             $houseID = $houseData->Data->ID;                    //房源自增长ID
@@ -146,7 +146,7 @@ class UploadController extends Controller
         } else {
             $title = "";
             Cache::forever("houseInfo" . "_" . $gid, $houseData->Data);
-            editTourTitle($tourFile, $title);
+            //editTourTitle($tourFile, $title);
             $charTitle = "";
             $houseID = "";
             $houseNum = "";
@@ -173,7 +173,7 @@ class UploadController extends Controller
             $agentID = $agentData->Data->AgentID;
 
             //更改vtourskin.xml 里的ImageUrl 和Mobile
-            editVskinImageurlMobile($vtourskinFile, $agentImgUrl, $agentPhone, true);
+            //editVskinImageurlMobile($vtourskinFile, $agentImgUrl, $agentPhone, true);
 
             $kf = file_get_contents("http://120.76.210.152:8099/api/Home/GetCityList");
             $kfData = json_decode($kf)->Data;
@@ -184,19 +184,19 @@ class UploadController extends Controller
             }
 
             //2. 修改$vtourskinFile 经纪人显示
-            $tourSkinXmlStr = file_get_contents($vtourskinFile);
-            $tourSkinXmlObj = new \SimpleXMLElement($tourSkinXmlStr);
-            $vtourSkinLayerArr = $tourSkinXmlObj->xpath("layer");
-            /*$skin_thumbs = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[2]
-                ->xpath("layer")[0]->xpath("layer")[3];
-            if ($skin_thumbs["state"] == "closed") {             // skin_thumbs
-                $skin_thumbs["state"] = "opened";
-            }*/
-            $father_control_bar_pc = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[3];
-            if ($father_control_bar_pc["visible"] == "false") {  //father_control_bar_pc
-                $father_control_bar_pc["visible"] = "true";
-            }
-            file_put_contents($vtourskinFile, $tourSkinXmlObj->asXML());
+//            $tourSkinXmlStr = file_get_contents($vtourskinFile);
+//            $tourSkinXmlObj = new \SimpleXMLElement($tourSkinXmlStr);
+//            $vtourSkinLayerArr = $tourSkinXmlObj->xpath("layer");
+//            /*$skin_thumbs = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[2]
+//                ->xpath("layer")[0]->xpath("layer")[3];
+//            if ($skin_thumbs["state"] == "closed") {             // skin_thumbs
+//                $skin_thumbs["state"] = "opened";
+//            }*/
+//            $father_control_bar_pc = $vtourSkinLayerArr[2]->xpath("layer")[0]->xpath("layer")[0]->xpath("layer")[3];
+//            if ($father_control_bar_pc["visible"] == "false") {  //father_control_bar_pc
+//                $father_control_bar_pc["visible"] = "true";
+//            }
+//            file_put_contents($vtourskinFile, $tourSkinXmlObj->asXML());
 
             DB::update("update panos set agentCode='" . $agentCode . "',user_id='" . $agentID . "',storeName='" . $storeName . "',agentName='" . $agentName . "' where gid=?", [$gid]);
 
@@ -219,7 +219,7 @@ class UploadController extends Controller
             $agentPhone = $CustomerService400;
             $agentID = "";
             //更改vtourskin.xml 里的ImageUrl 和Mobile
-            editVskinImageurlMobile($vtourskinFile, $agentImgUrl, $agentPhone, false);
+            //editVskinImageurlMobile($vtourskinFile, $agentImgUrl, $agentPhone, false);
 
             DB::update("update panos set agentCode='" . $agentCode . "',user_id='" . $agentID . "',storeName='" . $storeName . "',agentName='" . $agentName . "' where gid=?", [$gid]);
         }
@@ -234,9 +234,9 @@ class UploadController extends Controller
 
         //wap 小程序 无需IM按钮
         if ($sourceType == 1 || $sourceType == 4){   //  0:pc, 1:wap, 2:android, 3:ios, 4:wechart
-            checkVskinMobile($vtourskinFile,false);
+            //checkVskinMobile($vtourskinFile,false);
         }else{
-            checkVskinMobile($vtourskinFile,true);
+            //checkVskinMobile($vtourskinFile,true);
         }
 
         //$result = DB::select('select imgData from uploads  where gid=?', [$gid]);
@@ -313,7 +313,7 @@ class UploadController extends Controller
             $agentCode = "2007301937177055EFEB72A14E84B88D";
 
             $gid = $request->get("gid");
-            $gid = "EQWQWAA15";
+            $gid = "EQWQWAA17";
 
             $houseNum = $request->get("houseNum");
             $houseName = $request->get("house_name");   //楼盘名称
@@ -333,12 +333,10 @@ class UploadController extends Controller
             $CityID = 51;
             $sourceType = 0;        //  0:pc, 1:wap, 2:android, 3:ios, 4:wechart
 
-
             $houseApi = file_get_contents("http://120.76.210.152:8099/api/HouseAPI/GetShareHouseDetailByCode?HouseSysCode=" . $houseCode . "&flagType=" . $flagType . "&CityID=" . $CityID . "&houseType=2");
             $agentApi = file_get_contents("http://120.76.210.152:8099/api/Agent/GetAgentInfoByCodeVr?id=" . $agentCode . "&sourceType=" . $sourceType . "&cityID=" . $CityID);
             $houseData = json_decode($houseApi);
             $agentData = json_decode($agentApi);
-
 
             if ($houseData->Code == 2000 && $houseData->Data) {
                 $pano_id = $houseData->Data->ID;
@@ -368,7 +366,6 @@ class UploadController extends Controller
             $pano->gid = $gid;
             $pano->houseCode = $houseCode;
             $pano->agentCode = $agentCode;
-
             $pano->pano_id = $pano_id;
             $pano->title = $title;
             $pano->cityName = $CityID;
@@ -376,7 +373,6 @@ class UploadController extends Controller
             $pano->storeName = $storeName;
             $pano->agentName = $agentName;
             $pano->PrivateKey = $PrivateKey;
-
             $pano->houseNum = $houseNum;
             $pano->house_name = $houseName;
             $pano->house_used = $houseUsed;
@@ -403,7 +399,6 @@ class UploadController extends Controller
                 //索引数组key替换成大写字母
                 $temp = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N");
                 $newVal = numAbc($val, $temp);
-
                 foreach ($newVal as $min_k => $min_v) {
                     $i++;
                     $key = trim($key, "'");
@@ -436,10 +431,8 @@ class UploadController extends Controller
                         $r['code'] = ApiErrDesc::UPLOAD_SUCCESS[0];
                         $r['msg'] = ApiErrDesc::UPLOAD_SUCCESS[1];
                         $r['gid'] = $gid;
-
                         $r['houseCode'] = $houseCode;
                         $r['agentCode'] = $agentCode;
-
                         $r['house_name'] = $houseName;
                         $r['house_type'] = $houseType;
                         $r['imgRealDir'] = $res->getPath();
@@ -459,10 +452,6 @@ class UploadController extends Controller
                     }
                 }
             }
-
-           /* d($zh_name);
-            dd("AAAAAAAAA");*/
-
         } else {
             $r['code'] = ApiErrDesc::NO_METHOD_POST[0];
             $r['msg'] = ApiErrDesc::NO_METHOD_POST[1];
